@@ -5,10 +5,14 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/dons", name="donation_")
+ */
+
 class DonationController extends AbstractController
 {
     /**
-     * @Route("/dons", name="donation_list")
+     * @Route("", name="list")
      */
     public function list()
     {
@@ -18,7 +22,7 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/dons/{id}", name="donation_show")
+     * @Route("/{id}", name="show")
      */
     public function show()
     {
@@ -28,7 +32,7 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/dons/{id}/select", name="donation_select")
+     * @Route("/{id}/select", name="select")
      */
     public function select()
     {
@@ -36,7 +40,7 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/dons/{id}/deselect", name="donation_deselect")
+     * @Route("/{id}/deselect", name="deselect")
      */
     public function deselect()
     {
@@ -44,7 +48,7 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/dons/new", name="donation_new")
+     * @Route("/new", name="new")
      */
     public function new()
     {

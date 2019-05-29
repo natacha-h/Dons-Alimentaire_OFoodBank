@@ -5,10 +5,13 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/user", name="user_")
+ */
 class UserController extends AbstractController
 {
     /**
-     * @Route("/register", name="user_inscription")
+     * @Route("/register", name="inscription")
      */
     public function register()
     {
@@ -18,7 +21,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profil/{id}", name="user_show")
+     * @Route("/{id}", name="show")
      */
     public function show()
     {
@@ -28,7 +31,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/profil/{id}/edit", name="user_edit")
+     * @Route("/{id}/edit", name="edit")
      */
     public function edit()
     {

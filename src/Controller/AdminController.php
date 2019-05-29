@@ -5,10 +5,14 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/manage/user", name="admin_")
+ */
+
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/manage/user", name="admin_manage")
+     * @Route("", name="manage")
      */
     public function manage()
     {
@@ -18,7 +22,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/manage/user/{id}", name="admin_edit")
+     * @Route("/{id}", name="edit")
      */
     public function edit()
     {

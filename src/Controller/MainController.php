@@ -5,10 +5,13 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/", name="main_")
+ */
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="main_index")
+     * @Route("", name="index")
      */
     public function index()
     {
@@ -18,7 +21,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/informations", name="main_informations")
+     * @Route("/informations", name="informations")
      */
     public function informations()
     {
@@ -28,7 +31,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/contact", name="main_contact")
+     * @Route("contact", name="contact")
      */
     public function contact()
     {
@@ -38,7 +41,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/legal-mentions", name="main_legalMentions")
+     * @Route("legal-mentions", name="legalMentions")
      */
     public function legalMentions()
     {
@@ -48,7 +51,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/about", name="main_about")
+     * @Route("about", name="about")
      */
     public function about()
     {
