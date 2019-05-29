@@ -93,6 +93,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->donations = new ArrayCollection();
+        $this->is_active = true;
     }
 
     public function getId(): ?int
@@ -129,7 +130,7 @@ class User implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_USER'; //$this->getRole()->getCode();
 
         return array_unique($roles);
     }

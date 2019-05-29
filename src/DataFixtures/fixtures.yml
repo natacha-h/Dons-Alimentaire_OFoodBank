@@ -1,0 +1,46 @@
+parameters:
+    status_disponible: Disponible
+    status_reserve: Réservé
+    status_donne: Donné
+
+App\Entity\Address:
+    address_{1..20}:
+        number: '<randomDigitNotNull()>'
+        street: '<streetName()>'
+        zip_code: '<randomDigitNotNull()>'
+        city: '<city()>'
+
+App\Entity\Reward:
+    reward_{1..5}:
+        title: '<word()>'
+        code: '<current()>'
+        
+App\Entity\User:
+    user_{1..50}:
+        firstname: '<firstName()>'
+        lastname: '<lastName()>'
+        email: '<email()>'
+        password: '<password()>'
+        company: '<company()>'
+        phone_number: '<(1234567890)>' 
+        rating: '<numberBetween(1, 5)>'
+        points: '<numberBetween(1, 1000)>'   
+        address: '@address_*'
+        reward: '@reward_*'    
+
+        
+App\Entity\Donation:
+    donation_{1..50}:
+        title: '<word(40)>'
+        picture: '<imageUrl()>'
+        created_at: '<dateTime()>' 
+        updated_at: '<dateTime()>' 
+        giver: '@user_*'
+        collector: '@user_*'
+        status: '{1, 2, 3}'
+        address: '@address_*'
+        # products: '5x @product_*'
+
+
+
+    
