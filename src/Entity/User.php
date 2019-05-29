@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -67,6 +69,31 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $points;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
+     */
+    private $role;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Reward", inversedBy="users")
+     */
+    private $reward;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="users")
+     */
+    private $address;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Donation", mappedBy="giver")
+     */
+    private $donations;
+
+    public function __construct()
+    {
+        $this->donations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -226,6 +253,73 @@ class User implements UserInterface
     public function setPoints(int $points): self
     {
         $this->points = $points;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getReward(): ?Reward
+    {
+        return $this->reward;
+    }
+
+    public function setReward(?Reward $reward): self
+    {
+        $this->reward = $reward;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Donation[]
+     */
+    public function getDonations(): Collection
+    {
+        return $this->donations;
+    }
+
+    public function addDonation(Donation $donation): self
+    {
+        if (!$this->donations->contains($donation)) {
+            $this->donations[] = $donation;
+            $donation->setGiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonation(Donation $donation): self
+    {
+        if ($this->donations->contains($donation)) {
+            $this->donations->removeElement($donation);
+            // set the owning side to null (unless already changed)
+            if ($donation->getGiver() === $this) {
+                $donation->setGiver(null);
+            }
+        }
 
         return $this;
     }
