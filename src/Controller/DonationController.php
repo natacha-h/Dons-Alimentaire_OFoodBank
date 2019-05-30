@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Donation;
+use App\Form\DonationType;
+use App\Repository\CategoryRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/dons", name="donation_")
@@ -50,11 +54,13 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new()
+    public function new(Request $request)
     {
-        dump("hello");
+        $donation = new Donation();
+        $form = $this->createForm(DonationType::class, $donation);
+        $form->handleRequest($request);
         return $this->render('donation/new.html.twig', [
-            
-        ]);
+            'form' => $form->createView()
+        ]); 
     }
 }
