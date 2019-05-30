@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Backend\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +16,7 @@ class AdminController extends AbstractController
      */
     public function manage()
     {
-        return $this->render('admin/index.html.twig', [
+        return $this->render('Backend/admin/index.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }
@@ -26,7 +26,7 @@ class AdminController extends AbstractController
      */
     public function edit()
     {
-        return $this->render('admin/index.html.twig', [
+        return $this->render('Backend/admin/index.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }
