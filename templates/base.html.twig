@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
+    <body class="container">
         {# header #}
         <header>
             <div> {# ici le bloc avec le logo , la mini-nav Association/Commerçant et barre de recherche #}
@@ -29,6 +29,7 @@
 
             </div>
             {% block picture_header %}
+            {# Cacher la div en mobile : class="d-none d-md-block" #}
                 <div id="header-pic">
                     <img src="" alt="">
                 </div>                        
