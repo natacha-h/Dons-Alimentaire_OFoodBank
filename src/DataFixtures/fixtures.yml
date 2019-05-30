@@ -1,8 +1,8 @@
 parameters:
-    status_disponible: Disponible
-    status_reserve: Réservé
-    status_donne: Donné
-
+    status_Donné: Donné
+    status_Dispo: Disponible
+    status_Réservé: Réservé
+   
 App\Entity\Address:
     address_{1..20}:
         number: '<randomDigitNotNull()>'
@@ -28,6 +28,21 @@ App\Entity\User:
         address: '@address_*'
         reward: '@reward_*'    
 
+App\Entity\Status:
+    status_{Donné, Dispo, Réservé}:
+        name: '<current()>'
+
+App\Entity\Category:
+    category_{1..15}:
+        name: '<word()>'
+
+App\Entity\Product:
+    product_{1..50}:
+        name: '<word()>'
+        quantity: '<randomDigitNotNull(1, 10)>'
+        expiry_date: '<dateTime()>'
+        category: '@category_*'
+
         
 App\Entity\Donation:
     donation_{1..50}:
@@ -37,10 +52,9 @@ App\Entity\Donation:
         updated_at: '<dateTime()>' 
         giver: '@user_*'
         collector: '@user_*'
-        status: '{1, 2, 3}'
+        status: '@status_*'
         address: '@address_*'
-        # products: '5x @product_*'
+        products: '<randomDigitNotNull(1, 10)>x @product_*'
 
 
-
-    
+# ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
