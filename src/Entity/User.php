@@ -25,11 +25,6 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
@@ -93,6 +88,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->donations = new ArrayCollection();
+        $this->is_active = true;
     }
 
     public function getId(): ?int
@@ -127,11 +123,13 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        // $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = $this->getRole()->getReference();
 
         return array_unique($roles);
+
+        // return [$this->getRole()->getCode()]; //je doit retourner des chaine de caractere dans mon tableau
     }
 
     public function setRoles(array $roles): self
