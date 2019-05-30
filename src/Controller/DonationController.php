@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/dons", name="donation_")
  */
-
 class DonationController extends AbstractController
 {
     /**
@@ -23,7 +22,7 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="show")
+     * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
     public function show()
     {
@@ -49,12 +48,13 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="new")
+     * @Route("/new", name="new", methods={"POST", "GET"})
      */
     public function new()
     {
+        dump("hello");
         return $this->render('donation/new.html.twig', [
-            'controller_name' => 'DonationController',
+            
         ]);
     }
 }
