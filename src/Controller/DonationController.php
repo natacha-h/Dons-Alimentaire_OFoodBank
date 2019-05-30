@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Donation;
 
 /**
  * @Route("/dons", name="donation_")
@@ -23,12 +24,12 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="show")
+     * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
-    public function show()
+    public function show(Donation $donation)
     {
         return $this->render('donation/show.html.twig', [
-            'controller_name' => 'DonationController',
+            'donation' => $donation,
         ]);
     }
 

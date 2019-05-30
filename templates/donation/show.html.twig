@@ -1,7 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DonationController!{% endblock %}
+{% block title %}Détail du don{% endblock %}
 
 {% block body %}
+    {# {{dump(donation)}} #}
+    <h2 class="text-center">{{donation.title}} </h2>
 
+    <section id="donation-detail-head" class="container">
+        <img src="{{donation.picture}} " class="img-fluid" alt="Responsive image">
+        <i class="far fa-check-circle"></i>
+        {# <i class="fas fa-check-circle"></i> actif si user se positionne sur le don #}
+    </section>
+
+    <section id="donation-detail">
+
+        <div class="table-responsive-sm">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Quantité</th>
+                    <th scope="col">Date de péremption</th>
+                    </tr>
+                </thead>
+                {% for product in donation.products %}
+                {# {{dump(product)}} #}
+                    <tr>
+                        <td scope="row">{{product.name}} </td>
+                        <td>{{product.description}}</td>
+                        <td>{{product.quantity}}</td>
+                        <td>{{product.expiryDate|date("d/m/Y")}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </section>
 {% endblock %}
