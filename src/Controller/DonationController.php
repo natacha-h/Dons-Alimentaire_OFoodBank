@@ -16,7 +16,8 @@ class DonationController extends AbstractController
      */
     public function list()
     {
-        return $this->render('donation/index.html.twig', [
+
+        return $this->render('donation/list.html.twig', [
             'controller_name' => 'DonationController',
         ]);
     }
