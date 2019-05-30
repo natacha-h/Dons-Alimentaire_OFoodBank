@@ -1,7 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Page de profil{% endblock %}
 
 {% block body %}
+    <h2 class="text-center">Mon Profil</h2>
+    <h3 class="">{{ user.firstname }}</h3>
+    <h3 class="">{{ user.lastname }}</h3>
+    <h3 class="">{{ user.company }}</h3>
 
+    <h4 class="">Dons effectués</h4>
+    {% for donation in user.donations %}
+    <p>{{ donation.title }}</p>
+    {% endfor %}
 {% endblock %}
