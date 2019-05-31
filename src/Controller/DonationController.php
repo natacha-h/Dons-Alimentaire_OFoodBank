@@ -94,6 +94,13 @@ class DonationController extends AbstractController
     {
         if($request->isXmlHttpRequest()){
                 $donation = $request->request->get('donation');
+                // Je récupere les données
+
+                $newDon = new Donation();
+
+
+                
+
 
                 return $this->json($donation);
             } else {

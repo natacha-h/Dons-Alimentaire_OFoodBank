@@ -45,7 +45,11 @@
                     {{ form_row(row.name, { "id": "productName" }) }}
                     {{ form_row(row.quantity, { "id": "productQuantity"}) }}
                     {{ form_row(row.category, { "id": "productCategory" }) }}
-                    {{ form_row(row.expiry_date, {"id": "productDate"}) }}
+                    <div class="d-flex flex-direction-row">
+                        {{ form_row(row.expiry_date.day, {"id": "productDateDay"}) }}
+                        {{ form_row(row.expiry_date.month, {"id": "productDateMonth"}) }}
+                        {{ form_row(row.expiry_date.year, {"id": "productDateYear"}) }}
+                    </div>
                     {{ form_row(row.description, {"id": "productDescription"} ) }}
                     <button class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button>
                 {% endfor %}

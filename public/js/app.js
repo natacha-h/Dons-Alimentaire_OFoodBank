@@ -37,7 +37,12 @@ var app = {
         evt.preventDefault();
         console.log(app.productArray);
 
-        console.log($('#productDate').children('option:selected'));
+        var expiryDate = [];
+        expiryDate.push({
+            day: $('#productDateDay').val(),
+            month: $('#productDateMonth').val(),
+            year: $('#productDateYear').val()
+        })
 
         // Tableau d'infos d'un produit
         app.productArray.push(
@@ -45,7 +50,7 @@ var app = {
                 productName: $("#productName").val(),
                 productQuantity: $("#productQuantity").val(),
                 productCategory: $("#productCategory").val(),
-                productDate: $("#productDate").html(),
+                productDate: expiryDate,
                 productDescription: $("#productDescription").val(),
             }
         );
@@ -106,11 +111,9 @@ var app = {
             }
         // Ecouteur du retour de la requête en cas de succès
         ).done(function(result) {
-
-              // data correspond au contenu renvoyé par la réponse
+            
             console.log(result);
-            // On supprime la ligne du DOM (la tâche n'existe plus en back)
-                // window.location.href = 'http://127.0.0.1:8000/dons'; 
+            window.location.href = 'http://127.0.0.1:8000/dons'; 
         }).fail(function() {
             alert('ajax failed');
         });
