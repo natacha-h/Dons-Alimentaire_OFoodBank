@@ -9,6 +9,8 @@ var app = {
         // $button.one('click', app.handleClickNewProduct);
         app.displayButtonAddProduct();
 
+        $('.publish-don').on('click', app.handlePublishDon);
+
     },
     productArray: [],
     handleClickNewProduct: function(evt) {
@@ -62,6 +64,31 @@ var app = {
         var $button = $('<button>').addClass('btn btn-info').attr('type', 'submit').attr('value', 'Ajouter un produit').html('Ajouter un produit');
         $button.on('click', app.handleClickNewProduct);
         $('#btn-zone').append($button);
+    },
+    handlePublishDon: function(evt){
+        evt.preventDefault();
+        $.ajax(
+            // la variable 'ajaxDeleteURL' est définie via Twig
+            // list.html.twig (via une variable JS)
+            
+            {
+                url: 'http://127.0.0.1:8000/dons/new/ajax',
+                method: 'POST',
+                dataType: 'JSON',
+                data: {
+                    'products': app.productArray // je recupere l'attribut data-id dans la balise <form>
+                }
+            }
+        // Ecouteur du retour de la requête en cas de succès
+        ).done(function(result) {
+
+              // data correspond au contenu renvoyé par la réponse
+            console.log(result);
+            // On supprime la ligne du DOM (la tâche n'existe plus en back)
+                window.location.href = 'http://127.0.0.1:8000/dons'; 
+        }).fail(function() {
+            alert('ajax failed');
+          });
     }
 };
 

@@ -29,13 +29,13 @@
 
     </div>
 
-    <button class="btn btn-secondary float-right">Publier le don</button>
+    <button class="btn btn-secondary float-right publish-don">Publier le don</button>
 </form>
 
-            {{ form_start(form, {'attr': { 'novalidate': 'novalidate'}}) }}
+            {# {{ form_start(form, {'attr': { 'novalidate': 'novalidate'}}) }}
                 {{ form_widget(form) }}
                 <button type='submit' class="btn btn-secondary">Valider votre réponse</button>
-            {{ form_end(form) }}
+            {{ form_end(form) }} #}
 
 {# Template du formulaire d'ajout de produit au don #}
 <template id="form-template">
@@ -69,4 +69,10 @@
         <button type="submit" class="btn btn-secondary " id="btn-add-product">Enregistrer un produit</button>
     </form>
 </template>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        ajaxPublishURL = '{{ path('dons_new_ajax') }}';
+    </script>
 {% endblock %}

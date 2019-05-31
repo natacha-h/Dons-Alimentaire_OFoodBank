@@ -59,8 +59,27 @@ class DonationController extends AbstractController
         $donation = new Donation();
         $form = $this->createForm(DonationType::class, $donation);
         $form->handleRequest($request);
+
         return $this->render('donation/new.html.twig', [
             'form' => $form->createView()
         ]); 
     }
+
+    /**
+     * @Route("/new/ajax", name="new_ajax", methods={"POST"})
+     */
+    public function newAjax(Request $request)
+    {
+        if($request->isXmlHttpRequest()){
+                $products = $request->request->get('products');
+                    //je prevoit un retour de donnée structurée pour ajax
+                return $this->json(1);
+            } else {
+                return $this->createAccessDeniedException('methode non autorisée');
+            }
+        }
 }
+
+// Ajouter au fur et a mesure dans la base de données
+// A la fin de l'ajout des produits
+// Je récupere les id des produits
