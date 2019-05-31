@@ -24,7 +24,7 @@ class DonationController extends AbstractController
 
         return $this->render('donation/list.html.twig', [
             'donations' => $donations,
-        
+    
         ]);
     }
 

@@ -2,58 +2,58 @@
 
 {% block title %}liste des dons{% endblock %}
 
- 
+
 
 {% block body %}
 
 
- <h2 class="text-center">Liste des dons</h2>
+<h2 class="text-center">Liste des dons</h2>
 
 <div class="row justify-content-center">
-  <button type="bouton" class="btn btn-success">Nouveau Don</button>
-</div>
- 
- {% for donation in donations %}
-
-
- <div class="row">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-       <img src="{{donation.picture}}" class="card-img" alt="aleatoire"
-        <h3 class="card-title">{{donation.title}}</h3>
-        <p class="card-text">Crée le D/M/Y</small></p>
-        <p class="card-text">Date de péremption</small></p>
-        <a href="#" class="btn btn-primary">Plus d'infos</a>
-      </div>
-    </div>
-  </div>
- <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-       <img src="{{donation.picture}}" class="card-img" alt="aleatoire"
-        <h3 class="card-title">{{donation.title}}</h3>
-        <p class="card-text">Crée le D/M/Y</small></p>
-        <p class="card-text">Date de péremption</small></p>
-        <a href="#" class="btn btn-primary">Plus d'infos</a>
-      </div>
-    </div>
-  </div>
+    <button type="bouton" class="btn btn-success">Nouveau Don</button>
 </div>
 
-   {% endfor %}
- 
-    
+{% for donation in donations %}
 
-       
-       
-                
 
-       
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <img src="{{donation.picture}}" class="card-img" alt="aleatoire">
+                <h3 class="card-title">{{donation.title}}</h3>
+                <p class="card-text">Crée le D/M/Y</small></p>
+                <p class="card-text">Date de péremption</small></p>
+                <a href="#" class="btn btn-primary">Plus d'infos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <img src="{{donation.picture}}" class="card-img" alt="aleatoire">
+                <h3 class="card-title">{{donation.title}}</h3>
+                <p class="card-text">Crée le D/M/Y</small></p>
+                <p class="card-text">Date de péremption</small></p>
+                <a href="#" class="btn btn-primary">Plus d'infos</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-          
-        
-        
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
