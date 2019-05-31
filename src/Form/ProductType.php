@@ -17,12 +17,30 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('quantity', TextType::class)
-            ->add('description', TextareaType::class)
-            ->add('expiry_date', DateType::class)
+            ->add('name', TextType::class, [
+                'label' => 'Nom du produit',
+                'attr' => [
+                    'placeholder' => 'Saisir ici le nom du produit'
+                ]
+            ])
+            ->add('quantity', TextType::class, [
+                'label' => 'Nombre de produits',
+                'attr' => [
+                    'placeholder' => 'Saisir ici le nombre de produit'
+                ]
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Description du produit',
+                'attr' => [
+                    'placeholder' => 'Saisir ici une description du/des produits'
+                ]
+            ])
+            ->add('expiry_date', DateType::class, [
+                'label' => 'Date d\'expiration du produit'
+            ])
             ->add('category', EntityType::class, [
-                'class' => Category::class
+                'class' => Category::class,
+                'label' => 'Catégorie'
             ])
         ;
     }

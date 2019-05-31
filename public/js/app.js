@@ -36,27 +36,25 @@ var app = {
     handleValidProduct: function(evt){
         evt.preventDefault();
         console.log(app.productArray);
+
         app.productArray.push(
             {
-                // product: 'product',
-                productValue: $("#product").val(),
-                // quantity: 'quantity',
-                quantityValue: $("#quantity").val(),
-                // category: 'category',
-                categoryValue: $("#category").val(),
-                // description: 'description',
-                descriptionValue: $("#description").val(),
+                productName: $("#productName").val(),
+                productQuantity: $("#productQuantity").val(),
+                productCategory: $("#productCategory").val(),
+                productDate: $("#productDate").val(),
+                productDescription: $("#productDescription").val(),
             }
         );
-
+        
         app.displayListProduct();
         app.displayButtonAddProduct();
-        $('.form-product').remove();
+        $('#new-product-form').empty();
 
         console.log('Le produit est validé');
     },
     displayListProduct: function(){
-        var $productData = app.productArray[app.productArray.length-1].productValue + ' - Quantité : ' + app.productArray[app.productArray.length-1].quantityValue + ' - ' +app.productArray[app.productArray.length-1].categoryValue + ' - ' + app.productArray[app.productArray.length-1].descriptionValue;
+        var $productData = app.productArray[app.productArray.length-1].productName + ' - Quantité : ' + app.productArray[app.productArray.length-1].productQuantity + ' - ' +app.productArray[app.productArray.length-1].productCategory + ' - ' + app.productArray[app.productArray.length-1].productDescription;
         var $liElement = $('<li>').addClass('list-group-item').text($productData);
         $('.list-group').append($liElement);
     },
@@ -67,16 +65,26 @@ var app = {
     },
     handlePublishDon: function(evt){
         evt.preventDefault();
+
+        // Je recupere les infos du dons en général ainsi que les produits
+        var donationArray = [];
+
+        // Je récupere les données
+        donationArray.push({
+            donationTitle: $('#title-donation').val(),
+            donationPic: $('#donation-pic').val(),
+            products : app.productArray
+        })
+
         $.ajax(
             // la variable 'ajaxDeleteURL' est définie via Twig
-            // list.html.twig (via une variable JS)
-            
+            // list.html.twig (via une variable JS)   
             {
                 url: 'http://127.0.0.1:8000/dons/new/ajax',
                 method: 'POST',
                 dataType: 'JSON',
                 data: {
-                    'products': app.productArray // je recupere l'attribut data-id dans la balise <form>
+                    'donation': donationArray // je recupere l'attribut data-id dans la balise <form>
                 }
             }
         // Ecouteur du retour de la requête en cas de succès
@@ -88,7 +96,7 @@ var app = {
                 window.location.href = 'http://127.0.0.1:8000/dons'; 
         }).fail(function() {
             alert('ajax failed');
-          });
+        });
     }
 };
 
