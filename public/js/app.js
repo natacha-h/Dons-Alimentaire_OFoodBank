@@ -113,9 +113,9 @@ var app = {
         ).done(function(result) {
             
             console.log(result);
-            window.location.href = 'http://127.0.0.1:8000/dons'; 
+            // window.location.href = 'http://127.0.0.1:8000/dons'; 
         }).fail(function() {
-            alert('ajax failed');
+            alert('ajax failed pourquoi');
         });
     }
 };

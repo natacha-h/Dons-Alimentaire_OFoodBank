@@ -95,13 +95,24 @@ class DonationController extends AbstractController
         if($request->isXmlHttpRequest()){
                 $donation = $request->request->get('donation');
                 // Je récupere les données
-                dd($donation);
+                $donationDecode = json_decode($donation, true);
+                $donation = $donationDecode[0];
 
                 $newDon = new Donation();
-                $newDon->setTitle($donation[0]['donationTitle']);
-                $newDon->setImage($donation[0]['donationPic']);
+                $newDon->setTitle($donation['donationTitle']);
+                $newDon->setImage($donation['donationPic']);
 
-                foreach($donation['products'] as $product){
+                $newAddress = new Address();
+                $newAddress->setNumber($donation['address'][0]['number']);
+                $newAddress->setStreet($donation['address'][0]['street']);
+                $newAddress->setZipCode($donation['address'][0]['zipCode']);
+                $newAddress->setCity($donation['address'][0]['city']);
+                $em->persist($newAddress);
+                $em->flush();
+
+                $newDon->setAddress($newAddress);
+
+                foreach($donation['products'][0] as $product){
                     $newProd = new Product();
                     $newProd->setName($product['productName']);
                     $newProd->setQuantity($product['productQuantity']);
@@ -113,7 +124,7 @@ class DonationController extends AbstractController
                     $newProd->setCategory($category);
                     $newProd->setExpiryDate(new \Datetime);
                     $em->persist($newProd);
-
+                    $em->flush();
                     // J'ajoute le produit a la donation
                     $newDon->addProduct($product);
                 }
@@ -121,7 +132,7 @@ class DonationController extends AbstractController
                 $em->persist($newDon);
                 $em->flush();
 
-                return $this->json($donation);
+                return $this->json(json_encode($donationDecode));
             } else {
                 return $this->createAccessDeniedException('methode non autorisée');
             }
