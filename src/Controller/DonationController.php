@@ -95,7 +95,7 @@ class DonationController extends AbstractController
         if($request->isXmlHttpRequest()){
                 $donation = $request->request->get('donation');
 
-                return $this->json(1);
+                return $this->json($donation);
             } else {
                 return $this->createAccessDeniedException('methode non autorisée');
             }
