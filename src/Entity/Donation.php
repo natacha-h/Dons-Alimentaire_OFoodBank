@@ -39,16 +39,6 @@ class Donation
     private $updated_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="donations")
-     */
-    private $giver;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="donations")
-     */
-    private $collector;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Status", inversedBy="donations")
      */
     private $status;
@@ -62,6 +52,11 @@ class Donation
      * @ORM\ManyToMany(targetEntity="App\Entity\Product", inversedBy="donations")
      */
     private $products;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="donations")
+     */
+    private $user;
 
     public function __construct()
     {
@@ -121,30 +116,6 @@ class Donation
         return $this;
     }
 
-    public function getGiver(): ?User
-    {
-        return $this->giver;
-    }
-
-    public function setGiver(?User $giver): self
-    {
-        $this->giver = $giver;
-
-        return $this;
-    }
-
-    public function getCollector(): ?User
-    {
-        return $this->collector;
-    }
-
-    public function setCollector(?User $collector): self
-    {
-        $this->collector = $collector;
-
-        return $this;
-    }
-
     public function getStatus(): ?Status
     {
         return $this->status;
@@ -191,6 +162,18 @@ class Donation
         if ($this->products->contains($product)) {
             $this->products->removeElement($product);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
