@@ -7,12 +7,26 @@
     <h2 class="text-center">{{donation.title}} </h2>
 
     <section id="donation-detail-head" class="container">
-        <img src="{{donation.picture}} " class="img-fluid" alt="Responsive image">
-        <i class="far fa-check-circle"></i>
-        {# <i class="fas fa-check-circle"></i> actif si user se positionne sur le don #}
+        <img src="{{donation.picture}} " class="img-fluid" style=" max-width: 40%; " alt="Responsive image">
+
+        <div>
+            <i class="far fa-check-circle"></i>
+            {# <i class="fas fa-check-circle"></i> actif si user se positionne sur le don #}
+            <h3> Informations sur le donateur</h3>
+            <p>
+                {{ donation.giver.company}}
+            </p>
+            <p>
+                Contact : {{ donation.giver.firstname}} {{ donation.giver.lastname}} <br>
+                Téléphone : {{ donation.giver.phoneNumber}}
+                e-mail : {{ donation.giver.email}}
+                Note : {{ donation.giver.rating}}
+            </p>
+        </div>
     </section>
 
-    <section id="donation-detail">
+    <section id="donation-produits">
+        <h3> Liste des produits :</h3>
 
         <div class="table-responsive-sm">
 
@@ -35,6 +49,22 @@
                     </tr>
                 {% endfor %}
             </table>
+        </div>
+    </section>
+    <section id ="localisation">
+        {{ dump(donation.address.number)}}
+        <div class="card mb-3">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Localisation du don </h5>
+                <p class="card-text">  
+                    {{ donation.address.number}} {{donation.address.street}}
+                </p>
+                <p class="card-text">  
+                    {{ donation.address.zipCode}} {{donation.address.city}}
+                </p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
         </div>
     </section>
 {% endblock %}

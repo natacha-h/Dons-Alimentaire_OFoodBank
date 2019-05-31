@@ -4,14 +4,14 @@ liip_imagine:
     driver: "gd"
 
     filter_sets:
-        # thumb_back_list:
-        #     quality: 80
-        #     filters:
-                # thumbnail:
-                #     size: [100, 80]
-                #     mode: outbound
-                
-        my_ratio_down_scale_filter:
+        thumb_back_list:
+            quality: 80
             filters:
-                scale:
-                    to: 0.5
+                thumbnail:
+                    size: [32, 32]
+                    mode: outbound
+                
+        # my_ratio_down_scale_filter:
+        #     filters:
+        #         scale:
+        #             to: 0.5
