@@ -26,7 +26,8 @@ App\Entity\User:
         rating: '<numberBetween(1, 5)>'
         points: '<numberBetween(1, 1000)>'   
         address: '@address_*'
-        reward: '@reward_*'    
+        reward: '@reward_*' 
+
 
 App\Entity\Status:
     status_{Donné, Dispo, Réservé}:
@@ -50,8 +51,7 @@ App\Entity\Donation:
         picture: '<imageUrl()>'
         created_at: '<dateTime()>' 
         updated_at: '<dateTime()>' 
-        giver: '@user_*'
-        collector: '@user_*'
+        users: '<randomDigitNotNull(1, 10)>x @user_*'
         status: '@status_*'
         address: '@address_*'
         products: '<randomDigitNotNull(1, 10)>x @product_*'
