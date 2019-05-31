@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}liste des dons{% endblock %}
+
+ {#{% include "nav.html.twig" %}#}
+
+{% block body %}
+
+
+
+
+<div class="container">
+    <h2 class="text-center">Liste des dons</h2>
+
+        <button type="button" class="btn btn-success">Nouveau Don</button>
+        <div class="row">
+            {% for donation in donations %}
+
+
+                <img src="{{donation.picture}} " class="img-fluid" alt="Responsive image">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-info">Détails</button>
+
+            </div>
+        </div>
+
+            {% endfor %}
+        
+        
+
+
+
+{% endblock %}

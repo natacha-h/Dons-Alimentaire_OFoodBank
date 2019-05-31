@@ -2,22 +2,29 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Donation;
+use App\Repository\DonationRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/dons", name="donation_")
+ * @Route("/", name="donation_")
  */
 
 class DonationController extends AbstractController
 {
     /**
-     * @Route("", name="list")
+     * @Route("/dons", name="list", methods={"GET"})
      */
-    public function list()
+    public function list(DonationRepository $donationRepository)
     {
-        return $this->render('donation/index.html.twig', [
-            'controller_name' => 'DonationController',
+        // $repo = $this->getDoctrine()->getRepository(Donation::class);
+
+        $donations = $donationRepository->findAll();
+
+        return $this->render('donation/list.html.twig', [
+            'donations' => $donations,
+        
         ]);
     }
 
@@ -27,7 +34,7 @@ class DonationController extends AbstractController
     public function show()
     {
         return $this->render('donation/show.html.twig', [
-            'controller_name' => 'DonationController',
+            
         ]);
     }
 
