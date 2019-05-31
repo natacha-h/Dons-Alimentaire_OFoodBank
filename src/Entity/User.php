@@ -85,6 +85,7 @@ class User implements UserInterface
      */
     private $donations;
 
+
     public function __construct()
     {
         $this->donations = new ArrayCollection();
