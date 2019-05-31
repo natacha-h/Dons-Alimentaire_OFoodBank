@@ -5,7 +5,6 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
-use App\Entity\Donation;
 
 /**
  * @Route("/user", name="user_")
@@ -27,7 +26,7 @@ class UserController extends AbstractController
      */
     public function show(User $user)
     {   
-
+        
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
