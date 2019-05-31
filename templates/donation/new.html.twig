@@ -36,7 +36,7 @@
 
         </div>
 
-        <button class="btn btn-secondary float-right publish-don">Publier le don</button>
+        <button class="btn btn-secondary float-right publish-don" type="submit">Publier le don</button>
 
         <template id="form-template">
             <h5>Adresse de récupération du don</h5>
@@ -47,7 +47,7 @@
                     {{ form_row(row.category, { "id": "productCategory" }) }}
                     {{ form_row(row.expiry_date, {"id": "productDate"}) }}
                     {{ form_row(row.description, {"id": "productDescription"} ) }}
-                    <button type="submit" class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button>
+                    <button class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button>
                 {% endfor %}
             </div>
         </template>

@@ -9,7 +9,7 @@ var app = {
         // $button.one('click', app.handleClickNewProduct);
         app.displayButtonAddProduct();
 
-        $('.publish-don').on('click', app.handlePublishDon);
+        // $('.publish-don').on('click', app.handlePublishDon);
 
     },
     productArray: [],
@@ -63,41 +63,41 @@ var app = {
         $button.on('click', app.handleClickNewProduct);
         $('#btn-zone').append($button);
     },
-    handlePublishDon: function(evt){
-        evt.preventDefault();
+    // handlePublishDon: function(evt){
+    //     evt.preventDefault();
 
-        // Je recupere les infos du dons en général ainsi que les produits
-        var donationArray = [];
+    //     // Je recupere les infos du dons en général ainsi que les produits
+    //     var donationArray = [];
 
-        // Je récupere les données
-        donationArray.push({
-            donationTitle: $('#title-donation').val(),
-            donationPic: $('#donation-pic').val(),
-            products : app.productArray
-        })
+    //     // Je récupere les données
+    //     donationArray.push({
+    //         donationTitle: $('#title-donation').val(),
+    //         donationPic: $('#donation-pic').val(),
+    //         products : app.productArray
+    //     })
 
-        $.ajax(
-            // la variable 'ajaxDeleteURL' est définie via Twig
-            // list.html.twig (via une variable JS)   
-            {
-                url: 'http://127.0.0.1:8000/dons/new/ajax',
-                method: 'POST',
-                dataType: 'JSON',
-                data: {
-                    'donation': donationArray // je recupere l'attribut data-id dans la balise <form>
-                }
-            }
-        // Ecouteur du retour de la requête en cas de succès
-        ).done(function(result) {
+    //     $.ajax(
+    //         // la variable 'ajaxDeleteURL' est définie via Twig
+    //         // list.html.twig (via une variable JS)   
+    //         {
+    //             url: 'http://127.0.0.1:8000/dons/new/ajax',
+    //             method: 'POST',
+    //             dataType: 'JSON',
+    //             data: {
+    //                 'donation': donationArray // je recupere l'attribut data-id dans la balise <form>
+    //             }
+    //         }
+    //     // Ecouteur du retour de la requête en cas de succès
+    //     ).done(function(result) {
 
-              // data correspond au contenu renvoyé par la réponse
-            console.log(result);
-            // On supprime la ligne du DOM (la tâche n'existe plus en back)
-                window.location.href = 'http://127.0.0.1:8000/dons'; 
-        }).fail(function() {
-            alert('ajax failed');
-        });
-    }
+    //           // data correspond au contenu renvoyé par la réponse
+    //         console.log(result);
+    //         // On supprime la ligne du DOM (la tâche n'existe plus en back)
+    //             window.location.href = 'http://127.0.0.1:8000/dons'; 
+    //     }).fail(function() {
+    //         alert('ajax failed');
+    //     });
+    // }
 };
 
 $(app.init);

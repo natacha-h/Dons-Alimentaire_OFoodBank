@@ -7,6 +7,7 @@ use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,6 +22,11 @@ class ProductType extends AbstractType
                 'label' => 'Nom du produit',
                 'attr' => [
                     'placeholder' => 'Saisir ici le nom du produit'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom ne peut pas être vide'
+                    ])
                 ]
             ])
             ->add('quantity', TextType::class, [

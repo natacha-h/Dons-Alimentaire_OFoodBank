@@ -61,28 +61,27 @@ class DonationController extends AbstractController
     public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em)
     {
         $donation = new Donation();
-       
 
         $product = new Product();
-        $product->setName('Lustucru');
+        $product->setName('');
         $product->setQuantity(1);
-        $product->setDescription('des pates');
+        $product->setDescription('');
         $product->setExpiryDate(new \DateTime());
         $product->setCategory($cateRepo->findOneById(25));
 
-        // $address = new Address();
-        // $address->setNumber(5);
-        // $address->setStreet('rue de la paix');
-        // $address->setZipCode(75000);
-        // $address->setCity('Paris');
-        // $em->persist($address);
-
         $donation->addProduct($product);
-        // $donation->setAddress($address);
 
         $formDon = $this->createForm(DonationType::class, $donation);
 
         $formDon->handleRequest($request);
+
+        if ($formDon->isSubmitted() && $formDon->isValid()) {
+
+            $em->persist($donation);
+            $em->flush();
+            return $this->redirectToRoute('dons_list');
+        }
+
         return $this->render('donation/new.html.twig', [
             'formDon' => $formDon->createView()
         ]); 
