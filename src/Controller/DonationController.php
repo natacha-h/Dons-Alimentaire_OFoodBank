@@ -90,17 +90,36 @@ class DonationController extends AbstractController
     /**
      * @Route("/new/ajax", name="new_ajax", methods={"POST"})
      */
-    public function newAjax(Request $request)
+    public function newAjax(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em)
     {
         if($request->isXmlHttpRequest()){
                 $donation = $request->request->get('donation');
                 // Je récupere les données
+                dd($donation);
 
                 $newDon = new Donation();
+                $newDon->setTitle($donation[0]['donationTitle']);
+                $newDon->setImage($donation[0]['donationPic']);
 
+                foreach($donation['products'] as $product){
+                    $newProd = new Product();
+                    $newProd->setName($product['productName']);
+                    $newProd->setQuantity($product['productQuantity']);
+                    $newProd->setDescription($product['productDescription']);
 
+                    // Je récupere la categorie avec l'id de la catégorie
+                    $category = $cateRepo->findOneBy($product['productCategory']);
+                    // Je set la catégorie sur le produit
+                    $newProd->setCategory($category);
+                    $newProd->setExpiryDate(new \Datetime);
+                    $em->persist($newProd);
+
+                    // J'ajoute le produit a la donation
+                    $newDon->addProduct($product);
+                }
                 
-
+                $em->persist($newDon);
+                $em->flush();
 
                 return $this->json($donation);
             } else {
