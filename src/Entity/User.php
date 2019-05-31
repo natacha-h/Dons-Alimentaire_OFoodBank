@@ -81,14 +81,15 @@ class User implements UserInterface
     private $address;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Donation", mappedBy="giver")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Donation", mappedBy="users")
      */
     private $donations;
 
+
     public function __construct()
     {
-        $this->donations = new ArrayCollection();
         $this->is_active = true;
+        $this->donations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -303,7 +304,7 @@ class User implements UserInterface
     {
         if (!$this->donations->contains($donation)) {
             $this->donations[] = $donation;
-            $donation->setGiver($this);
+            $donation->addUser($this);
         }
 
         return $this;
@@ -313,12 +314,11 @@ class User implements UserInterface
     {
         if ($this->donations->contains($donation)) {
             $this->donations->removeElement($donation);
-            // set the owning side to null (unless already changed)
-            if ($donation->getGiver() === $this) {
-                $donation->setGiver(null);
-            }
+            $donation->removeUser($this);
         }
 
         return $this;
     }
+
+
 }
