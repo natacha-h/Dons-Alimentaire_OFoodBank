@@ -81,7 +81,7 @@ class User implements UserInterface
     private $address;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Donation", mappedBy="user")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Donation", mappedBy="users")
      */
     private $donations;
 
@@ -304,7 +304,7 @@ class User implements UserInterface
     {
         if (!$this->donations->contains($donation)) {
             $this->donations[] = $donation;
-            $donation->setUser($this);
+            $donation->addUser($this);
         }
 
         return $this;
@@ -314,13 +314,11 @@ class User implements UserInterface
     {
         if ($this->donations->contains($donation)) {
             $this->donations->removeElement($donation);
-            // set the owning side to null (unless already changed)
-            if ($donation->getUser() === $this) {
-                $donation->setUser(null);
-            }
+            $donation->removeUser($this);
         }
 
         return $this;
     }
+
 
 }
