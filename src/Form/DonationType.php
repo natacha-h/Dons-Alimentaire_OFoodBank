@@ -21,16 +21,21 @@ class DonationType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Titre du don',
                 'attr' => [
-                    'placeholder' => 'Saisir ici un nom pour le don'
+                    'placeholder' => 'Saisir ici un nom pour le don (exemple: "Don de produits frais")'
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le nom ne peut pas être vide'
+                        'message' => 'Veuillez renseigner un nom pour votre don'
                     ])
                 ]
             ])
             ->add('picture', TextType::class, [
-                'label' => 'Image illustrant le don'
+                'label' => 'Image illustrant le don',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez renseigner une image'
+                    ])
+                ]
             ])
             ->add('address', AddressType::class, [
                 'label' => false

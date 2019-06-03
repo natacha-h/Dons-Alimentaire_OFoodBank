@@ -63,15 +63,6 @@ class DonationController extends AbstractController
     {
         $donation = new Donation();
 
-        // Je crée un formulaire de base pour initialiser le template
-        $product = new Product();
-        $product->setName('');
-        $product->setQuantity(1);
-        $product->setDescription('');
-        $product->setExpiryDate(new \DateTime());
-        $product->setCategory($cateRepo->findOneById(64));
-
-        $donation->addProduct($product);
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
 

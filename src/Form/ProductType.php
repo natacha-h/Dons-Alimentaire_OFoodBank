@@ -25,7 +25,7 @@ class ProductType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le nom ne peut pas être vide'
+                        'message' => 'Veuillez renseigner un nom de produit'
                     ])
                 ]
             ])
@@ -33,6 +33,11 @@ class ProductType extends AbstractType
                 'label' => 'Nombre de produits',
                 'attr' => [
                     'placeholder' => 'Saisir ici le nombre de produit'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez renseigner une quantité'
+                    ])
                 ]
             ])
             ->add('description', TextareaType::class, [
@@ -43,7 +48,12 @@ class ProductType extends AbstractType
             ])
             ->add('expiry_date', DateType::class, [
                 'label' => 'Date d\'expiration du produit',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez renseigner une date d\'expiration'
+                    ])
+                ]
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
