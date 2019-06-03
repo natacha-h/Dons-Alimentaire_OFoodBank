@@ -4,6 +4,7 @@ namespace App\Controller\Backend;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\UserRepository;
 
 /**
  * @Route("/manage/user", name="admin_")
@@ -14,10 +15,13 @@ class AdminController extends AbstractController
     /**
      * @Route("", name="manage")
      */
-    public function manage()
+    public function manage(UserRepository $userRepository)
     {
-        return $this->render('Backend/admin/index.html.twig', [
-            'controller_name' => 'AdminController',
+        $users = $userRepository->findAll();
+
+
+        return $this->render('Backend/admin/manage.html.twig', [
+            'users' => $users
         ]);
     }
 
@@ -26,7 +30,7 @@ class AdminController extends AbstractController
      */
     public function edit()
     {
-        return $this->render('Backend/admin/index.html.twig', [
+        return $this->render('Backend/admin/edit.html.twig', [
             'controller_name' => 'AdminController',
         ]);
     }
