@@ -6,21 +6,32 @@
     {# {{dump(donation)}} #}
     <h2 class="text-center">{{donation.title}} </h2>
 
-    <section id="donation-detail-head" class="container">
-        <img src="{{donation.picture}} " class="img-fluid" style=" max-width: 40%; " alt="Responsive image">
+    <section id="donation-detail-head" class="row">
+        <img id="pic-donation" src="{{donation.picture}} " class="img-fluid" style="max-width: 50%;" alt="Responsive image">
 
-        <div>
-            <i class="far fa-check-circle"></i>
-            {# <i class="fas fa-check-circle"></i> actif si user se positionne sur le don #}
+        <div class="col-6">
+            <div id="select-donation">
+                <form action="{{path('donation_select', {'id': donation.id})}} " method="POST">
+                    <label for="select">
+                        Réserver ce don :
+                    </label>
+                    <button id="select">
+                        <i class="far fa-check-circle"></i>
+                    </button>
+                </form> 
+                {# <i class="fas fa-check-circle"></i> actif si user se positionne sur le don #}
+            
+            </div>
             <h3> Informations sur le donateur</h3>
+            {# {{ dump(user)}} #}
             <p>
-                {{ donation.giver.company}}
+                {{ user.company}}
             </p>
             <p>
-                Contact : {{ donation.giver.firstname}} {{ donation.giver.lastname}} <br>
-                Téléphone : {{ donation.giver.phoneNumber}}
-                e-mail : {{ donation.giver.email}}
-                Note : {{ donation.giver.rating}}
+                Contact : {{ user.firstname}} {{ user.lastname}} <br>
+                Téléphone : {{ user.phoneNumber}}
+                e-mail : {{ user.email}}
+                Note : {{ user.rating}} 
             </p>
         </div>
     </section>
