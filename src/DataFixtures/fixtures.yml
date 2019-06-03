@@ -44,16 +44,7 @@ App\Entity\Donation:
         created_at: '<dateTime()>' 
         updated_at: '<dateTime()>' 
         users: '@user_*'
-        status: '@status_*'
-        address: '@address_*'
 
-App\Entity\Product:
-    product_{1..50}:
-        name: '<word()>'
-        quantity: '<randomDigitNotNull(1, 10)>'
-        expiry_date: '<dateTime()>'
-        category: '@category_*'
-        donation: '@donation_*'
         
 
 
