@@ -48,21 +48,22 @@ class Donation
      */
     private $address;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Product", inversedBy="donations")
-     */
-    private $products;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="donations")
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="donation")
+     */
+    private $products;
+
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,31 +143,6 @@ class Donation
         return $this;
     }
 
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|User[]
@@ -189,6 +165,37 @@ class Donation
     {
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setDonation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getDonation() === $this) {
+                $product->setDonation(null);
+            }
         }
 
         return $this;
