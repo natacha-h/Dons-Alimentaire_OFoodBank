@@ -63,6 +63,7 @@ class DonationController extends AbstractController
     {
         $donation = new Donation();
 
+        // Je crée un formulaire de base pour initialiser le template
         $product = new Product();
         $product->setName('');
         $product->setQuantity(1);
@@ -90,14 +91,21 @@ class DonationController extends AbstractController
                 $em->persist($product);
             }
 
+            // Pour setter le giver je récupere le currentUser
+            // $donation->addUser($this->getUser());
+
             // Je persist la donation
             $em->persist($donation);
 
             // J'effectue toutes les insertions en bdd
             $em->flush();
 
-        }
+            // J'ajoute un flashMessage pour indiquer que tout s'est bien passé
+            $this->addFlash('success', 'Le don a bien été publié !');
+            // Je retourne a la liste des tags
+            return $this->redirectToRoute('donation_list');
 
+        }
         return $this->render('donation/new.html.twig', [
             'form' => $form->createView()
         ]); 

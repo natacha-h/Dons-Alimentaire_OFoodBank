@@ -82,7 +82,7 @@
 var $collectionHolder;
 
 // Prépare un bouton d'ajout
-var $addNewProduct = $('<a href="#" class="btn btn-info">Ajouter un nouveau produit</a>');
+var $addNewProduct = $('<a href="#" class="btn btn-info my-4 px-3">Ajouter un nouveau produit</a>');
 
 // Quand le document est pret
 $(document).ready(function(){
@@ -93,10 +93,10 @@ $(document).ready(function(){
     $collectionHolder.append($addNewProduct);
 
     // Je crée un index dans chaque formulaire en fonction de leur nombre
-    $collectionHolder.data('index', $collectionHolder.find('.panel').length);
+    $collectionHolder.data('index', $collectionHolder.find('.card').length);
 
     // J'ajoute un bouton de suppression de produit
-    $collectionHolder.find('.panel').each(function(){
+    $collectionHolder.find('.card').each(function(){
         addRemoveBtn($(this));
     });  
 
@@ -109,7 +109,7 @@ function addRemoveBtn ($panel) {
     var $removeBtn = $('<a href="#" class="btn btn-danger">Supprimer le produit de la liste</a>');
 
     // Je crée le footer du panel
-    var $panelFooter = $('<div class="panel-footer"></div>').append($removeBtn);
+    var $panelFooter = $('<div class="card-footer"></div>').append($removeBtn);
 
     // J'ajoute un event sur le click de ce bouton
     $removeBtn.on('click', handleRemoveBtnClick);
@@ -122,7 +122,7 @@ function handleRemoveBtnClick (event) {
     // console.log('suppression');
     event.preventDefault();
     // Je cible toute la div et sa parente de .panel
-    $(event.target).parents('.panel').slideUp(500, function(){
+    $(event.target).parents('.card').slideUp(500, function(){
         // Je supprime cet element a la fin de l'animation
         $(this).remove();
     });
@@ -151,10 +151,10 @@ function handleClickAddNewProduct (event) {
     $collectionHolder.data('index', index++);
 
     // Je peux maintenant crée le panel
-    var $panel = $('<div class="panel panel-warning"><div class="panel-heading"></div></div>');
+    var $panel = $('<div class="card bg-light mt-2"><div class="card-header"><h5>Description du produit</h5></div></div>');
 
     // Je crée le body et je lui ajoute le formulaire
-    var $panelBody = $('<div class="panel-body"></div>').append(newForm);
+    var $panelBody = $('<div class="card-body"></div>').append(newForm);
 
     // J'ajoute le panelBody dans le panel
     $panel.append($panelBody);

@@ -17,33 +17,35 @@
     {{ form_row(form.title, { 'id': 'title-donation' }) }}
     {{ form_row(form.picture, { 'id': 'donation-pic' }) }}
 
-    <h5>Adresse de récupération du don</h5>
-    <div class="col-12">
-        {# Affichage du formulaire d'adresse #}
-        {% for row in form.address %}
-            {{form_row(row)}}
-        {% endfor %}
-    </div>
-
-    <div id="form-template">
-        <h5>Description du produit</h5>
-        <div class="col-12" id='product_list' data-prototype="{{ form_widget(form.products.vars.prototype)|e('html_attr') }}">
-             {% for row in form.products %}
-                <div class="panel panel-warning">
-                    <div class="panel-heading">
-                    </div>
-                    <div class="panel-body">
-                        {{ form_row(row.name, { "id": "productName" }) }}
-                        {{ form_row(row.quantity, { "id": "productQuantity"}) }}
-                        {{ form_row(row.category, { "id": "productCategory" }) }}
-                        {{ form_row(row.expiry_date, {"id": "productDate"}) }}
-                        {{ form_row(row.description, {"id": "productDescription"} ) }}
-                        {# <button class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button> #}
-                    </div>
-                </div>
-            {% endfor %}
+    {# Affichage formulaire d'ajout d'adresse #}
+    <div class="card bg-light mb-4">
+        <div class="card-header">
+            <h5>Adresse de récupération du don</h5>
+        </div>
+        <div class="card-body">
+            {{form_row(form.address)}}
         </div>
     </div>
+
+    {# Affichage formulaire d'ajout de produit #}
+    <div  id='product_list' data-prototype="{{ form_widget(form.products.vars.prototype)|e('html_attr') }}">
+            {% for row in form.products %}
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h5>Description du produit</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_row(row.name, { "id": "productName" }) }}
+                    {{ form_row(row.quantity, { "id": "productQuantity"}) }}
+                    {{ form_row(row.category, { "id": "productCategory" }) }}
+                    {{ form_row(row.expiry_date, {"id": "productDate"}) }}
+                    {{ form_row(row.description, {"id": "productDescription"} ) }}
+                    {# <button class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button> #}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
 {{ form_end(form) }}
 
 {% endblock %}
