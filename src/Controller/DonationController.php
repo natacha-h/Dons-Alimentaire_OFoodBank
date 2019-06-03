@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\StatusRepository;
 
 /**
  * @Route("/dons", name="donation_")
@@ -58,7 +59,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em)
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo)
     {
         $donation = new Donation();
 
@@ -67,76 +68,41 @@ class DonationController extends AbstractController
         $product->setQuantity(1);
         $product->setDescription('');
         $product->setExpiryDate(new \DateTime());
-        $product->setCategory($cateRepo->findOneById(25));
+        $product->setCategory($cateRepo->findOneById(64));
 
         $donation->addProduct($product);
+        $donation->setCreatedAt(new \Datetime());
+        $donation->setUpdatedAt(new \Datetime());
 
-        $formDon = $this->createForm(DonationType::class, $donation);
+        $form = $this->createForm(DonationType::class, $donation);
+        $form->handleRequest($request);
 
-        $formDon->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Je lui fournis un status disponible directement
+            $status = $StatusRepo->findOneByName('Dispo');
+            $donation->setStatus($status);
 
-        if ($formDon->isSubmitted() && $formDon->isValid()) {
+            // Je persist l'adresse
+            $em->persist($donation->getAddress());
 
+            // Je persist tous les produits
+            foreach($donation->getProducts() as $product){
+                $em->persist($product);
+            }
+
+            // Je persist la donation
             $em->persist($donation);
+
+            // J'effectue toutes les insertions en bdd
             $em->flush();
-            return $this->redirectToRoute('dons_list');
+
         }
 
         return $this->render('donation/new.html.twig', [
-            'formDon' => $formDon->createView()
+            'form' => $form->createView()
         ]); 
     }
 
-    /**
-     * @Route("/new/ajax", name="new_ajax", methods={"POST"})
-     */
-    public function newAjax(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em)
-    {
-        if($request->isXmlHttpRequest()){
-                $donation = $request->request->get('donation');
-                // Je récupere les données
-                $donationDecode = json_decode($donation, true);
-                $donation = $donationDecode[0];
-
-                $newDon = new Donation();
-                $newDon->setTitle($donation['donationTitle']);
-                $newDon->setImage($donation['donationPic']);
-
-                $newAddress = new Address();
-                $newAddress->setNumber($donation['address'][0]['number']);
-                $newAddress->setStreet($donation['address'][0]['street']);
-                $newAddress->setZipCode($donation['address'][0]['zipCode']);
-                $newAddress->setCity($donation['address'][0]['city']);
-                $em->persist($newAddress);
-                $em->flush();
-
-                $newDon->setAddress($newAddress);
-
-                foreach($donation['products'][0] as $product){
-                    $newProd = new Product();
-                    $newProd->setName($product['productName']);
-                    $newProd->setQuantity($product['productQuantity']);
-                    $newProd->setDescription($product['productDescription']);
-
-                    // Je récupere la categorie avec l'id de la catégorie
-                    $category = $cateRepo->findOneBy($product['productCategory']);
-                    // Je set la catégorie sur le produit
-                    $newProd->setCategory($category);
-                    $newProd->setExpiryDate(new \Datetime);
-                    $em->persist($newProd);
-                    $em->flush();
-                    // J'ajoute le produit a la donation
-                    $newDon->addProduct($product);
-                }
-                
-                $em->persist($newDon);
-                $em->flush();
-
-                return $this->json(json_encode($donationDecode));
-            } else {
-                return $this->createAccessDeniedException('methode non autorisée');
-            }
-        }
 }
 
 // Ajouter au fur et a mesure dans la base de données

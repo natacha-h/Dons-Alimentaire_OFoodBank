@@ -42,7 +42,8 @@ class ProductType extends AbstractType
                 ]
             ])
             ->add('expiry_date', DateType::class, [
-                'label' => 'Date d\'expiration du produit'
+                'label' => 'Date d\'expiration du produit',
+                'widget' => 'single_text'
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,

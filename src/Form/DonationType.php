@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class DonationType extends AbstractType
 {
@@ -43,6 +44,11 @@ class DonationType extends AbstractType
                 'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true
+            ])
+            ->add('Publier le don', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-success'
+                ]
             ])
         ;
     }

@@ -5,56 +5,45 @@
 {% block body %}
 <h2 class="bg-secondary p-3 text-center text-white rounded-bottom">Faire un don</h2>
 
-<form class="my-4">
+<div class="my-5 products-list">
+    <h3>Liste des produits</h3>
+    <ul class="list-group">
+    </ul>
+</div>
 
-    <div class="my-5 products-list">
-        <h3>Liste des produits</h3>
-        <ul class="list-group">
-        </ul>
+
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    {{ form_row(form.title, { 'id': 'title-donation' }) }}
+    {{ form_row(form.picture, { 'id': 'donation-pic' }) }}
+
+    <h5>Adresse de récupération du don</h5>
+    <div class="col-12">
+        {# Affichage du formulaire d'adresse #}
+        {% for row in form.address %}
+            {{form_row(row)}}
+        {% endfor %}
     </div>
 
-
-    {{ form_start(formDon) }}
-
-        {{ form_row(formDon.title, { 'id': 'title-donation' }) }}
-        {{ form_row(formDon.picture, { 'id': 'donation-pic' }) }}
-        
-        <h5>Adresse de récupération du don</h5>
-        <div class="col-12">
-            {% for row in formDon.address %}
-                {{form_row(row)}}
+    <div id="form-template">
+        <h5>Description du produit</h5>
+        <div class="col-12" id='product_list' data-prototype="{{ form_widget(form.products.vars.prototype)|e('html_attr') }}">
+             {% for row in form.products %}
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                        {{ form_row(row.name, { "id": "productName" }) }}
+                        {{ form_row(row.quantity, { "id": "productQuantity"}) }}
+                        {{ form_row(row.category, { "id": "productCategory" }) }}
+                        {{ form_row(row.expiry_date, {"id": "productDate"}) }}
+                        {{ form_row(row.description, {"id": "productDescription"} ) }}
+                        {# <button class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button> #}
+                    </div>
+                </div>
             {% endfor %}
         </div>
-
-
-        <div id="new-product-form">
-            {# Zone affichage formulaire #}
-        </div>
-
-        {# Affichage du bouton d'ajout de produit au don #}
-        <div id='btn-zone'>
-
-        </div>
-
-        <button class="btn btn-secondary float-right publish-don" type="submit">Publier le don</button>
-
-        <template id="form-template">
-            <h5>Adresse de récupération du don</h5>
-            <div class="col-12">
-                {% for row in formDon.products %}
-                    {{ form_row(row.name, { "id": "productName" }) }}
-                    {{ form_row(row.quantity, { "id": "productQuantity"}) }}
-                    {{ form_row(row.category, { "id": "productCategory" }) }}
-                    <div class="d-flex flex-direction-row">
-                        {{ form_row(row.expiry_date.day, {"id": "productDateDay"}) }}
-                        {{ form_row(row.expiry_date.month, {"id": "productDateMonth"}) }}
-                        {{ form_row(row.expiry_date.year, {"id": "productDateYear"}) }}
-                    </div>
-                    {{ form_row(row.description, {"id": "productDescription"} ) }}
-                    <button class="btn btn-secondary" id="btn-add-product">Enregistrer un produit</button>
-                {% endfor %}
-            </div>
-        </template>
-    {{ form_end(formDon) }}
+    </div>
+{{ form_end(form) }}
 
 {% endblock %}
