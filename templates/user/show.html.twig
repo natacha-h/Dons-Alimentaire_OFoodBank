@@ -52,8 +52,12 @@
         </div>
     </div>
 
-    {# Modifier son profil #}
-    <h3 id ="modif-profil" class="text-center font-italic">Modifier mon profil</h3>
     {# Form pour modifier le profil #}
+    <h3 id ="modif-profil" class="text-center font-italic">Modifier mon profil</h3>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+        <button class="btn-success border rounded">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+
     <a href="#">Haut de la page</a>
 {% endblock %}
