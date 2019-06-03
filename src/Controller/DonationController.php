@@ -40,7 +40,7 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/select", name="select")
+     * @Route("/{id}/select", name="select", requirements={"id"="\d+"}, methods={"POST"})
      */
     public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
     {
@@ -49,6 +49,8 @@ class DonationController extends AbstractController
         // dd($newStatus);
         // on change le status de la donnation
         $donation->setStatus($newStatus);
+        // on ajoute l'id du demandeur à la donnation
+        // $donation->addUser($user);
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
@@ -68,11 +70,31 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/deselect", name="deselect")
+     * @Route("/{id}/deselect", name="deselect", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function deselect()
+    public function deselect(Donation $donation, EntityManagerInterface $em, StatusRepository $statusRepository)
     {
-        // POST 
+        // on crée un nouvel objet Status
+        $newStatus = $statusRepository->findOneByName('Dispo');
+        // on attribue le status au don
+        $donation->setStatus($newStatus);
+        // on retire l'id du user 
+        // $donation->removeUser($user);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un Flash Message
+        $this->addFlash(
+            'success',
+            'Vous avez bien annulé la réservaton de ce don'
+        );
+
+        return $this->redirectToRoute('donation_show', [
+            'donation' => $donation,
+            'id' => $donation->getId(),
+            'user' => $donation->getUsers()[0]
+        ]);
     }
 
     /**
