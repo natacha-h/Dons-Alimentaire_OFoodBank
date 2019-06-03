@@ -101,7 +101,9 @@ $(document).ready(function(){
     });  
 
     // Je gere le click sur l'ajout d'un nouveau produit
-    $addNewProduct.on('click', handleClickAddNewProduct)
+    $addNewProduct.on('click', handleClickAddNewProduct);
+
+    $('input').on('focusout', checkIfEmptyInput);
 });
 
 function addRemoveBtn ($panel) {
@@ -165,4 +167,15 @@ function handleClickAddNewProduct (event) {
     // J'ajoute le panel dans le DOM
     // J'ajoute avant le btn car je souhaite qu'il soit toujours en bas de mon site
     $addNewProduct.before($panel);
+}
+
+function checkIfEmptyInput(event) {
+    
+    if(event.target.value.length == 0){
+        $(event.target).removeClass('border border-success');
+        $(event.target).addClass('border border-danger');
+    } else {
+        $(event.target).removeClass('border border-danger');
+        $(event.target).addClass('border border-success');
+    }
 }

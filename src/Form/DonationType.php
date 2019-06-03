@@ -33,7 +33,7 @@ class DonationType extends AbstractType
                 'label' => 'Image illustrant le don'
             ])
             ->add('address', AddressType::class, [
-                
+                'label' => false
             ])
             ->add('products', CollectionType::class, [
                 'label' => 'Ajouter un produit au don',
