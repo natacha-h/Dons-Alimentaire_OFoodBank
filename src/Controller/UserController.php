@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,17 +17,37 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/register", name="inscription")
+     * @Route("/register", name="inscription", methods={"GET","POST"})
      */
-    public function register()
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request); //ATTENTION cette methode met à jour la variable $form + $user
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //cette methode issue de la classe UserPasswordEncoderInterface permet d'encoder le mot de passe par rapport au configuration appliquée sur l'objet fournit
+            $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
+
+            $user->setPassword($hash);
+
+            $em->persist($user);
+            $em->flush();
+            
+            $this->addFlash('success', 'Votre profil a bien été créé.');
+
+            return $this->redirectToRoute('main_index');
+        }
+
         return $this->render('user/register.html.twig', [
-            'controller_name' => 'UserController',
+            'user' => $user,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="show", requirements={"id"="\d+"})
+     * @Route("/{id}", name="show", requirements={"id"="\d+"}, methods={"GET"})
      */
     public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {   

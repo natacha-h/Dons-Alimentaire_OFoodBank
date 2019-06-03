@@ -3,14 +3,17 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\AddressType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 
 class UserType extends AbstractType
 {
@@ -51,13 +54,14 @@ class UserType extends AbstractType
                 ],
                 'empty_data' => array(),
             ]);
+            
 
-        } else { //sinon je suis en création
+        } else { // sinon je suis en création
 
             $currentForm->add('password', RepeatedType::class, [
 
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Les champs Password doivent être identiques.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'empty_data' => '',
                 'required' => true,
@@ -74,17 +78,48 @@ class UserType extends AbstractType
                 ],
                 'empty_data' => array(),
             ]);
+
+            $currentForm->add('role');
+            $currentForm->add('address', AddressType::class);
         }
     };
 
         $builder
-            ->add('firstname')
-            ->add('lastname')
-            //je rajoute un ecouteur d'evenement sur PRE_SET_DATA qui se declenche a la construction du formulaire 
-            ->addEventListener(FormEvents::PRE_SET_DATA, $listener)
-            ->add('email')
-            ->add('company')
-            ->add('phone_number')
+        ->add('firstname', TextType::class, [
+            'label' => 'Prénom',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Veuillez renseigner un prénom'
+                ])
+            ]
+        ])
+        ->add('lastname', TextType::class, [
+            'label' => 'Nom',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Veuillez renseigner un nom'
+                ])
+            ]
+        ])
+        //je rajoute un ecouteur d'evenement sur PRE_SET_DATA qui se declenche a la construction du formulaire 
+        ->addEventListener(FormEvents::PRE_SET_DATA, $listener)
+        ->add('email')
+        ->add('company', TextType::class, [
+            'label' => 'Entreprise',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Veuillez renseigner un nom d\'entreprise'
+                ])
+            ]
+        ])
+        ->add('phone_number', TelType::class, [
+            'label' => 'Numéro de téléphone',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Veuillez renseigner un numéro de téléphone'
+                ])
+            ]
+        ])
         ;
     }
 
