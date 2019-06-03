@@ -126,7 +126,7 @@ class User implements UserInterface
     {
         // $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = $this->getRole()->getReference();
+        $roles[] = $this->getRole()->getCode();
 
         return array_unique($roles);
 
@@ -148,7 +148,7 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
