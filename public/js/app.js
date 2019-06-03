@@ -1,88 +1,9 @@
-// var app = {
-//     init: function(){
-//         console.log('app : init');
-        
-//         // Je récupere le bouton d'ajout de produit
-//         var $button = $('#add-new-product'); 
-
-//         // // Je lui affecte un ecouteur d'événement
-//         // $button.one('click', app.handleClickNewProduct);
-//         app.displayButtonAddProduct();
-
-//         $('.publish-don').on('click', app.handlePublishDon);
-
-//     },
-//     productArray: [],
-//     handleClickNewProduct: function(evt) {
-//         evt.preventDefault();
-//         evt.stopPropagation();
-//         console.log('click button')
-
-//         // Je dois afficher le formulaire au click
-//         var $formElement = $('#form-template').contents().clone();
-//         $('#new-product-form').append($formElement);
-
-//         console.log(evt.currentTarget);
-
-//         // Je retire le bouton
-//         evt.currentTarget.remove();
-//         $('#new-product-form').removeClass('hide-my-form');
-//         // Au click sur le bouton d'ajout de produit
-//         // J'ajoute le produit dans un tableau
-//         $validProduct = $('#btn-add-product');
-//         // Je lui attache un evenement
-//         $validProduct.on('click', app.handleValidProduct);
-//     },
-//     handleValidProduct: function(evt){
-//         evt.preventDefault();
-//         console.log(app.productArray);
-
-//         var expiryDate = [];
-//         expiryDate.push({
-//             day: $('#productDateDay').val(),
-//             month: $('#productDateMonth').val(),
-//             year: $('#productDateYear').val()
-//         })
-
-//         // Tableau d'infos d'un produit
-//         app.productArray.push(
-//             {
-//                 productName: $("#productName").val(),
-//                 productQuantity: $("#productQuantity").val(),
-//                 productCategory: $("#productCategory").val(),
-//                 productDate: expiryDate,
-//                 productDescription: $("#productDescription").val(),
-//             }
-//         );
-        
-//         app.displayListProduct();
-//         app.displayButtonAddProduct();
-//         $('#new-product-form').addClass('hide-my-form');
-
-//         console.log('Le produit est validé');
-//     },
-//     displayListProduct: function(){
-//         // Affiche la liste des produits dynamiquement
-//         var $productData = app.productArray[app.productArray.length-1].productName + ' - Quantité : ' + app.productArray[app.productArray.length-1].productQuantity + ' - ' +app.productArray[app.productArray.length-1].productCategory + ' - ' + app.productArray[app.productArray.length-1].productDescription;
-//         var $liElement = $('<li>').addClass('list-group-item').text($productData);
-//         $('.list-group').append($liElement);
-//     },
-//     displayButtonAddProduct: function(){
-//         // Réaffiche le bouton pour ajouter un nouveau produit lorsque
-//         // La soumission du produit précédent est validée
-//         var $button = $('<button>').addClass('btn btn-info').attr('type', 'submit').attr('value', 'Ajouter un produit').html('Ajouter un produit');
-//         $button.on('click', app.handleClickNewProduct);
-//         $('#btn-zone').append($button);
-//     },
-// };
-
-// $(app.init);
-
 // Déclare variable de stockage des forms
 var $collectionHolder;
 
 // Prépare un bouton d'ajout
 var $addNewProduct = $('<a href="#" class="btn btn-info my-4 px-3">Ajouter un nouveau produit</a>');
+
 
 // Quand le document est pret
 $(document).ready(function(){
@@ -170,7 +91,7 @@ function handleClickAddNewProduct (event) {
 }
 
 function checkIfEmptyInput(event) {
-    
+
     if(event.target.value.length == 0){
         $(event.target).removeClass('border border-success');
         $(event.target).addClass('border border-danger');
@@ -179,3 +100,4 @@ function checkIfEmptyInput(event) {
         $(event.target).addClass('border border-success');
     }
 }
+
