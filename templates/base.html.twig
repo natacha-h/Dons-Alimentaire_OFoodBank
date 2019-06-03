@@ -40,6 +40,15 @@
         </header>
         {# Contenu principal #}
         <main>
+        {# ajout des flash Messages #}
+        {% for label, messages in app.flashes %} {# pour toutes les keys "label" et "messages" du tableau de flasMessage #}
+            {% for message in messages %} {# pour chaque message de la clé "messages" courante #}
+                <div class="alert alert-{{labe}}"> {# j'utilise la key "label" pour compléter la class du message#}
+                    {{ message }} {# j'affiche le message #}
+                </div>                
+            {% endfor %}
+        {% endfor %}
+
         {% block body %}
 
         {% endblock %}
