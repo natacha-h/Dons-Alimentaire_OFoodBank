@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
 
@@ -13,7 +13,7 @@
             </div>
         {% endfor %}
     {% endfor %}
-
+    
     {# Tableau listant les utilisateurs #}
     <table class="table col-10 offset-1">
         <thead>
@@ -45,6 +45,6 @@
                 </tr>
             {% endfor %}
         </tbody>
-
+    </table>
 
 {% endblock %}
