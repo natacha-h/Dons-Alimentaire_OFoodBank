@@ -8,19 +8,28 @@
 
     <section id="donation-detail-head" class="row">
         <img id="pic-donation" src="{{donation.picture}} " class="img-fluid" style="max-width: 50%;" alt="Responsive image">
+        {# {{dump(app.user.id)}} #}
 
         <div class="col-6">
             <div id="select-donation">
                 {% if "Réservé" == donation.status.name %}
                     <i class="fas fa-check-circle"></i> Ce don est réservé
-                    {# {% if app.user.id == donation.user.id %} #}
-                    <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
-                        Annuler la réservation de ce don 
-                        <button>
-                            <i class="far fa-times-circle"></i>
-                        </button>
-                    </form>
-                    {# {% endif %} #}
+                        {{dump(app.user.id)}}
+                    {% if collector %}
+                        {% if app.user.id == collector.id %}
+                            {{dump(collector.id)}}
+                            <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
+                                Annuler la réservation de ce don 
+                                <button>
+                                    <i class="far fa-times-circle"></i>
+                                </button>
+                            </form>
+                        
+                        {% endif %}
+                        
+                                           
+                    {% endif %}
+                    
                     
                 {% else %}
                     <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
@@ -36,15 +45,15 @@
             
             </div>
             <h3> Informations sur le donateur</h3>
-            {# {{ dump(user)}} #}
+            {# {{ dump(giver)}} #}
             <p>
-                {{ user.company}}
+                {{ giver.company}}
             </p>
             <p>
-                Contact : {{ user.firstname}} {{ user.lastname}} <br>
-                Téléphone : {{ user.phoneNumber}}
-                e-mail : {{ user.email}}
-                Note : {{ user.rating}} 
+                Contact : {{ giver.firstname}} {{ giver.lastname}} <br>
+                Téléphone : {{ giver.phoneNumber}}
+                e-mail : {{ giver.email}}
+                Note : {{ giver.rating}} 
             </p>
         </div>
     </section>
@@ -76,7 +85,7 @@
         </div>
     </section>
     <section id ="localisation">
-        {{ dump(donation.address.number)}}
+        {# {{ dump(donation.address.number)}} #}
         <div class="card mb-3">
             <img src="..." class="card-img-top" alt="...">
             <div class="card-body">

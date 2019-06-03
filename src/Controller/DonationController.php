@@ -31,11 +31,37 @@ class DonationController extends AbstractController
      */
     public function show(Donation $donation)
     {
-        $user = $donation->getUsers();
-        // dd($user[0]);
+        // on récupère la collection de user afin d'identifier le donateur
+        $users = $donation->getUsers();
+        // pour chaque utilisateur
+        foreach ($users as $user){
+            // dump($user->getRoles());
+            // on récupère le tableau de rôle et on boucle dessus
+            foreach ($user->getRoles() as $role){
+                // dump($role);
+                // si le rôle est 'ROLE_ASSOC', on identifie l'utilisateur
+                if ('ROLE_ASSOC' == $role){
+                    $collector = $user;
+                } else { //
+                    $collector = null;
+                }
+                // si le rôle est 'ROLE_GIVER', on identifie l'utilisateur comme étant le donateur
+                if ('ROLE_GIVER' == $role){
+                    $giver = $user;
+                }
+            }
+        }
+        // dump($collector);
+        // dump($giver);
+        // die;
+        // dd(giver);
+
+        // dump($donation->getUsers());
+
         return $this->render('donation/show.html.twig', [
             'donation' => $donation,
-            'user' => $user[0]
+            'giver' => $giver,
+            'collector' => $collector,
         ]);
     }
 
@@ -50,10 +76,15 @@ class DonationController extends AbstractController
         // on change le status de la donnation
         $donation->setStatus($newStatus);
         // on ajoute l'id du demandeur à la donnation
-        // $donation->addUser($user);
+        $donation->addUser($this->getUser());
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
+
+        // on crée la variable "collector" à qui on attribue l'utilisateur courant
+        $collector = $this->getUser();
+
+        dump($donation->getUsers());
 
         // ajout d'un flash message
         $this->addFlash(
@@ -64,7 +95,8 @@ class DonationController extends AbstractController
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
-            'user' => $donation->getUsers()[0]
+            // 'giver' => $donation->getUsers()[0],
+            // 'collector'=> $collector,
         ]);
 
     }
@@ -79,7 +111,7 @@ class DonationController extends AbstractController
         // on attribue le status au don
         $donation->setStatus($newStatus);
         // on retire l'id du user 
-        // $donation->removeUser($user);
+        $donation->removeUser($this->getUser());
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
@@ -90,10 +122,12 @@ class DonationController extends AbstractController
             'Vous avez bien annulé la réservaton de ce don'
         );
 
+        dump($donation->getUsers());
+
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
-            'user' => $donation->getUsers()[0]
+            // 'giver' => $donation->getUsers()[0]
         ]);
     }
 
