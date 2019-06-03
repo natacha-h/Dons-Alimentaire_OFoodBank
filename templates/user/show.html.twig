@@ -1,7 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Page de profil{% endblock %}
 
 {% block body %}
+    <h2 class="text-center mb-4">Mon Profil</h2>
+    {# Informations du User #}
+    <div class="container mb-4">
+        <div class="border border-dark rounded col-10 m-auto bg-dark text-white p-2 text-center">
+            <h4 class="">{{ user.firstname }} {{ user.lastname }}</h4>
+            <h4 class="">Entreprise : {{ user.company }} - Téléphone : {{ user.phoneNumber }}</h4>
+            <h4 class="">{{ user.email }}</h4>
+            <h4 class="">Note des membres : {{ user.rating }} / 5</h4>
+            <h4 class="">Points C02 : {{ user.points }}</h4>
+            
+            <h5 class=""><a href="#modif-profil" class="text-info stretched-link">Modifer mon profil</a></h5>
+        </div>
+    </div>
 
+    {# Ancres vers Dons ou Modifs profil en fonction du rôle du user #}
+    {% if is_granted('ROLE_GIVER') %}
+    <a href="#dons">Dons Effectués</a>
+    {% elseif is_granted('ROLE_ASSOC') %} 
+    <a href="#dons">Dons Reçus</a>
+    {% endif %}
+    
+
+    {# If else en fonction du rôle pour afficher les dons effectués ou reçus
+    {% if is_granted('ROLE_GIVER') %}
+    <h4 class="">Dons effectués</h4>
+    {% for donation in user.donations %}
+    <p>{{ donation.title }}</p>
+    {% endfor %}
+    {% elseif is_granted('ROLE_ASSOC') %}
+    <h4 class="">Dons reçus</h4>
+    {% for donation in user.donations %}
+    <p>{{ donation.title }}</p>
+    {% endfor %}
+    {% endif %} #}
+
+    {# Dons reçus ou effectués en fonction du rôle du user connecté ! POUR TEST ! #}
+    <div class="text-center container ">
+        <h3 id="#dons" class="font-italic text-center">Dons Effectués/Reçus</h3>
+        <button type="button" class="btn-success rounded border p-3 mt-2">Nouveau don</button>
+        <div class="d-flex flex-wrap mt-4">
+            {% for donation in user.donations %}
+            <div class="col-5 m-4 p-5 mx-auto border rounded">
+            <h4 class="font-italic">{{ donation.title }}</h4>
+            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Form pour modifier le profil #}
+    <h3 id ="modif-profil" class="text-center font-italic">Modifier mon profil</h3>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+        <button class="btn-success border rounded">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+
+    <a href="#">Haut de la page</a>
 {% endblock %}

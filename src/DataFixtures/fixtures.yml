@@ -26,7 +26,8 @@ App\Entity\User:
         rating: '<numberBetween(1, 5)>'
         points: '<numberBetween(1, 1000)>'   
         address: '@address_*'
-        reward: '@reward_*'    
+        reward: '@reward_*' 
+
 
 App\Entity\Status:
     status_{Donné, Dispo, Réservé}:
@@ -36,25 +37,24 @@ App\Entity\Category:
     category_{1..15}:
         name: '<word()>'
 
-App\Entity\Product:
-    product_{1..50}:
-        name: '<word()>'
-        quantity: '<randomDigitNotNull(1, 10)>'
-        expiry_date: '<dateTime()>'
-        category: '@category_*'
-
-        
 App\Entity\Donation:
     donation_{1..50}:
         title: '<word(40)>'
         picture: '<imageUrl()>'
         created_at: '<dateTime()>' 
         updated_at: '<dateTime()>' 
-        giver: '@user_*'
-        collector: '@user_*'
+        users: '@user_*'
         status: '@status_*'
         address: '@address_*'
-        products: '<randomDigitNotNull(1, 10)>x @product_*'
+
+App\Entity\Product:
+    product_{1..50}:
+        name: '<word()>'
+        quantity: '<randomDigitNotNull(1, 10)>'
+        expiry_date: '<dateTime()>'
+        category: '@category_*'
+        donation: '@donation_*'
+        
 
 
 # ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
