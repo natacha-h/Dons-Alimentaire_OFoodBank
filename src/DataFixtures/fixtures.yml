@@ -43,7 +43,7 @@ App\Entity\Donation:
         picture: '<imageUrl()>'
         created_at: '<dateTime()>' 
         updated_at: '<dateTime()>' 
-        users: '@user_*'
+        users: '2x @user_*'
         status: '@status_*'
         address: '@address_*'
 
@@ -55,6 +55,5 @@ App\Entity\Product:
         category: '@category_*'
         donation: '@donation_*'
         
-
 
 # ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
