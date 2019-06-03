@@ -44,13 +44,13 @@ class Product
     private $category;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Donation", mappedBy="products")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Donation", inversedBy="products")
      */
-    private $donations;
+    private $donation;
+    
 
     public function __construct()
     {
-        $this->donations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,31 +118,16 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection|Donation[]
-     */
-    public function getDonations(): Collection
+    public function getDonation(): ?Donation
     {
-        return $this->donations;
+        return $this->donation;
     }
 
-    public function addDonation(Donation $donation): self
+    public function setDonation(?Donation $donation): self
     {
-        if (!$this->donations->contains($donation)) {
-            $this->donations[] = $donation;
-            $donation->addProduct($this);
-        }
+        $this->donation = $donation;
 
         return $this;
     }
 
-    public function removeDonation(Donation $donation): self
-    {
-        if ($this->donations->contains($donation)) {
-            $this->donations->removeElement($donation);
-            $donation->removeProduct($this);
-        }
-
-        return $this;
-    }
 }
