@@ -7,6 +7,7 @@ use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -25,6 +26,9 @@ class ProductType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
+                        'message' => 'Veuillez renseigner un nom de produit'
+                    ]),
+                    new NotNull([
                         'message' => 'Veuillez renseigner un nom de produit'
                     ])
                 ]
@@ -51,6 +55,9 @@ class ProductType extends AbstractType
                 'widget' => 'single_text',
                 'constraints' => [
                     new NotBlank([
+                        'message' => 'Veuillez renseigner une date d\'expiration'
+                    ]),
+                    new NotNull([
                         'message' => 'Veuillez renseigner une date d\'expiration'
                     ])
                 ]
