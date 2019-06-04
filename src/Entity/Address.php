@@ -29,7 +29,7 @@ class Address
     private $street;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer")
      */
     private $zip_code;
 
@@ -47,6 +47,7 @@ class Address
      * @ORM\OneToMany(targetEntity="App\Entity\Donation", mappedBy="address")
      */
     private $donations;
+
 
     public function __construct()
     {
@@ -168,4 +169,5 @@ class Address
 
         return $this;
     }
+
 }
