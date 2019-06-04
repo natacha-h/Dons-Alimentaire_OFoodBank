@@ -1,0 +1,13 @@
+body, html{
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#footer-gradient, #nav-bg-color{
+    background-color : #E9F2DF;
+}
