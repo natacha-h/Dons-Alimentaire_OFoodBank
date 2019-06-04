@@ -91,7 +91,13 @@ class DonationController extends AbstractController
             }
 
             // Pour setter le giver je récupere le currentUser
-            // $donation->addUser($this->getUser());
+            // $user = $this->getUser();
+
+            // $donation->addUser($user);
+
+            // $currentPoints = $user->getPoints();
+            // $newPoints = $currentPoints + 5;
+            // $user->setPoints($newPoints);
             
 
             // Je vérifie qu'il y ait au moins un produit dans le don.
