@@ -36,14 +36,14 @@ class UserType extends AbstractType
                 'empty_data' => '',
                 'required' => true,
                 'first_options'  => [
-                    'label' => 'Password',
+                    'label' => 'Mot de passe',
                     'empty_data' => '',
                     'attr' => [
                         'placeholder' => 'Laisser vide si inchangé'
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password', 
+                    'label' => 'Répéter le mot de passe', 
                     'empty_data' => '',
                     'attr' => [
                         'placeholder' => 'Laisser vide si inchangé'
