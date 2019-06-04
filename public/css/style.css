@@ -8,12 +8,6 @@ body, html{
     padding-right: 0;
 }
 
-header{
-    /* background-image: url('../pictures/bg-header.png');
-    background-repeat: no-repeat;
-    background-position: center; */
-}
-
 #footer-gradient, #nav-bg-color{
     background-color : #E9F2DF;
 }
