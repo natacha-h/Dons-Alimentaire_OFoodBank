@@ -13,6 +13,10 @@ body, html{
     padding-right: 0;
 }
 
+h2{
+    margin: 1.5em 0;
+}
+
 #footer-gradient, #nav-bg-color{
     background-color : #E9F2DF;
 }
@@ -63,6 +67,20 @@ li.nav-item.col-6.col-md-5 {
     transform: rotate(-20deg);
 }
 
+/* page détail d'un don */
+.fas{
+    color: #888;
+}
+
+#select{
+    background-color: rgb(64, 166, 41);
+    color: white;
+}
+#select:hover{
+    text-decoration: none; 
+}
+
+
 @media (min-height: 300px) {
     .navbar, .navbar-collapse ul {
       position: sticky;
@@ -75,6 +93,19 @@ li.nav-item.col-6.col-md-5 {
 
     body{
         width: 100%
+    }
+
+    h2{
+        margin: .7em 0;
+    }
+
+    h3{
+        font-size: 1em;
+    }
+
+    /* masque la colonne "description" du tableau qui liste les produits sur la page "détail d'un don" */
+    .hide{
+        display: none;
     }
 
 }
