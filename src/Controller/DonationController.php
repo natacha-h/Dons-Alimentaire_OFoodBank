@@ -68,7 +68,7 @@ class DonationController extends AbstractController
 
         $form = $this->createForm(DonationType::class, $donation);
         $form->handleRequest($request);
-        dump($form->getData());
+        // dump($form->getData());
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Je lui fournis un status disponible directement
