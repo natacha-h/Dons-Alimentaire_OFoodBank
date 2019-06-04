@@ -8,12 +8,28 @@ body, html{
     padding-right: 0;
 }
 
+header{
+    /* background-image: url('../pictures/bg-header.png');
+    background-repeat: no-repeat;
+    background-position: center; */
+}
+
 #footer-gradient, #nav-bg-color{
     background-color : #E9F2DF;
 }
 
 li.nav-item.text-lg-left.text-sm-center{
     text-align: center;
+}
+
+li.nav-item.col-12.col-md-2{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+li.nav-item.col-6.col-md-5 {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .circle-text {
@@ -40,6 +56,7 @@ li.nav-item.text-lg-left.text-sm-center{
     text-align:center;
     color:white;
     text-transform: uppercase;
+    font-size: 0.8em;
 }
 
 .circle-text:hover{
