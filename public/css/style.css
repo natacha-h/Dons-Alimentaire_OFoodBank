@@ -13,6 +13,12 @@ body, html{
     padding-right: 0;
 }
 
+/* Background Infos profil */
+
+.profil-bg {
+    background: #E9F2DF;
+}
+
 #footer-gradient, #nav-bg-color{
     background-color : #E9F2DF;
 }
