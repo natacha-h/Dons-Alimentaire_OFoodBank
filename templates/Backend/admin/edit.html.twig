@@ -3,12 +3,11 @@
 {% block title %}Modification du profil de {{user.firstname}} {{user.lastname}}{% endblock %}
 
 {% block body %}
-        {# Form pour modifier le profil #}
-    <div class="text-center col-md-8 offset-md-2">
-        <h3 id ="modif-profil" class="font-italic">Modifier le profil de {{user.firstname}} {{user.lastname}} </h3>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-            <button class="btn-success border rounded">{{ button_label|default('Save') }}</button>
-        {{ form_end(form) }}
-    </div>
+
+    {# Form pour modifier le profil #}
+    {{ include('Backend/admin/_form.html.twig') }}
+    
+    {# Bouton de retour a la liste des utilisateurs #}
+    <a href="{{path('admin_manage')}}" class="btn btn-info float-right">Retour à la liste des utilisateurs</a>
+
 {% endblock %}

@@ -65,8 +65,8 @@ class AdminController extends AbstractController
                 'Les modifications ont bien été effectuées'
             );
 
-            return $this->redirectToRoute('admin_edit', [
-                'id' => $user->getId(),
+            return $this->redirectToRoute('admin_manage', [
+                
             ]);
         }
         return $this->render('Backend/admin/edit.html.twig', [

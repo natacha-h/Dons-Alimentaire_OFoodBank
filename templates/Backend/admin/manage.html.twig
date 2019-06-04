@@ -6,16 +6,8 @@
 
     <h2 class="text-center m-4">Gestion des utilisateurs</h2>
 
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
-    
     {# Tableau listant les utilisateurs #}
-    <table class="table col-10 offset-1">
+    <table class="table col-12">
         <thead>
             <tr>
             <th scope="col">#</th>
