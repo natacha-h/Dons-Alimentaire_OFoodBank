@@ -5,10 +5,24 @@
 {% block body %}
 <h2 class="bg-secondary p-3 text-center text-white rounded-bottom mb-5">Faire un don</h2>
 
+ {# ajout des flash Messages #}
+        {% for label, messages in app.flashes %} {# pour toutes les keys "label" et "messages" du tableau de flasMessage #}
+            {% for message in messages %} {# pour chaque message de la clé "messages" courante #}
+                <div class="alert alert-{{label}}"> {# j'utilise la key "label" pour compléter la class du message#}
+                    {{ message }} {# j'affiche le message #}
+                </div>                
+            {% endfor %}
+        {% endfor %}
+
 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-    {{ form_row(form.title, { 'id': 'title-donation' }) }}
+    {{ form_row(form.title, { 'id': 'title-donation'  }) }}
     {{ form_row(form.picture, { 'id': 'donation-pic' }) }}
+<h2>Mon dump</h2>
+    {% if inputValues is defined %}
+
+    {{dump(inputValues)}}
+{% endif %}
 
     {# Affichage formulaire d'ajout d'adresse #}
     <div class="card bg-light mb-4">
@@ -28,7 +42,7 @@
                     <h5>Description du produit</h5>
                 </div>
                 <div class="card-body">
-                    {{ form_row(row.name, { "id": "productName" }) }}
+                    {{ form_row(row.name, { "id": "productName"}) }}
                     {{ form_row(row.quantity, { "id": "productQuantity"}) }}
                     {{ form_row(row.category, { "id": "productCategory" }) }}
                     {{ form_row(row.expiry_date, {"id": "productDate"}) }}

@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ProductType extends AbstractType
@@ -28,12 +29,12 @@ class ProductType extends AbstractType
                     new NotBlank([
                         'message' => 'Veuillez renseigner un nom de produit'
                     ]),
-                    new NotNull([
-                        'message' => 'Veuillez renseigner un nom de produit'
-                    ])
+                    // new NotNull([
+                    //     'message' => 'Veuillez renseigner un nom de produit'
+                    // ])
                 ]
             ])
-            ->add('quantity', TextType::class, [
+            ->add('quantity',IntegerType::class, [
                 'label' => 'Nombre de produits',
                 'attr' => [
                     'placeholder' => 'Saisir ici le nombre de produit'
@@ -53,6 +54,8 @@ class ProductType extends AbstractType
             ->add('expiry_date', DateType::class, [
                 'label' => 'Date d\'expiration du produit',
                 'widget' => 'single_text',
+                'data' => new \Datetime(),
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner une date d\'expiration'

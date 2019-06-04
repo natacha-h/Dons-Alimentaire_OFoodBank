@@ -68,6 +68,7 @@ class DonationController extends AbstractController
 
         $form = $this->createForm(DonationType::class, $donation);
         $form->handleRequest($request);
+        dump($form->getData());
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Je lui fournis un status disponible directement
@@ -79,11 +80,44 @@ class DonationController extends AbstractController
 
             // Je persist tous les produits
             foreach($donation->getProducts() as $product){
+
+                if($product->getExpiryDate() == null){
+                    $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
+
+                    return $this->redirectToRoute('donation_new');
+                }
+
                 $em->persist($product);
             }
 
             // Pour setter le giver je récupere le currentUser
             // $donation->addUser($this->getUser());
+            
+
+            // Je vérifie qu'il y ait au moins un produit dans le don.
+            $data = $form->getData();
+
+            // dd($data);
+
+            if(count($data->getProducts()) == 0){
+
+                // Je récupere les valeurs saisies
+                // Je stocke ces valeurs dans un tableau d'input
+                $inputValues = [
+                    'title' => $data->getTitle(),
+                    'picture' =>  $data->getPicture(),
+                    'addressNumber' => $data->getAddress()->getNumber(),
+                    'addressStreet' => $data->getAddress()->getStreet(),
+                    'addressZipCode' => $data->getAddress()->getZipCode(),
+                    'addressCity' => $data->getAddress()->getCity(),
+                ];
+
+                $this->addFlash('danger', 'Veuillez ajouter au moins un produit');
+
+                return $this->render('donation/new.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
 
             // Je persist la donation
             $em->persist($donation);
