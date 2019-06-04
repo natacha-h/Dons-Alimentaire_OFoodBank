@@ -23,10 +23,10 @@ class Rewarder
          elseif ($points <800 && $points >= 600) {
             $reward = 4;
         } 
-        elseif ($points < 600 && $points >= 600) {
+        elseif ($points < 600 && $points >= 400) {
             $reward = 3;
         } 
-        elseif ($points < 200 && $points >= 400) {
+        elseif ($points < 400 && $points >= 200) {
             $reward = 2;
         } else {
             $reward = 1;
