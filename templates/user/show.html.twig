@@ -5,6 +5,14 @@
 {% block body %}
     <h2 class="text-center m-4">Mon Profil</h2>
 
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     {# Informations du User #}
     <div class="container mb-4">
         <div class="border border-dark rounded col-10 m-auto bg-dark text-white p-2 text-center">
@@ -18,14 +26,24 @@
         </div>
     </div>
     
-    {# Dons reçus ou effectués en fonction du rôle du user connecté ! POUR TEST ! #}
+    {# Dons reçus ou effectués en fonction du rôle du user connecté !#}
     <div class="text-center container ">
+
         {% if is_granted('ROLE_GIVER') %}
         <h3 id="#dons" class="font-italic text-center">Dons Effectués</h3>
         <button type="button" class="btn-success rounded border p-3 mt-2">Nouveau don</button>
+        <div class="d-flex flex-wrap mt-4">
+
+            {% for donation in user.donations %}
+            <div class="col-5 m-4 p-5 mx-auto border rounded">
+            <h4 class="font-italic">{{ donation.title }}</h4>
+            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
+            </div>
+            {% endfor %}
+        </div>
+
         {% elseif is_granted('ROLE_ASSOC') %}
         <h3 id="#dons" class="font-italic text-center">Dons Reçus</h3>
-        {% endif %}
         <div class="d-flex flex-wrap mt-4">
             {% for donation in user.donations %}
             <div class="col-5 m-4 p-5 mx-auto border rounded">
@@ -34,9 +52,11 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
 
     {# Formulaire pour modifier ses données de profil #}
+    <h2 class="text-center m-4">Modifier mon profil</h2>
     {{ include('user/_form.html.twig') }}
 
     <a href="#">Haut de la page</a>
