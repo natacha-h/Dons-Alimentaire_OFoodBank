@@ -19,14 +19,19 @@ class Address
     private $id;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $number;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      */
-    private $street;
+    private $street_1;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $street_2;
 
     /**
      * @ORM\Column(type="integer")
@@ -48,7 +53,6 @@ class Address
      */
     private $donations;
 
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -65,21 +69,33 @@ class Address
         return $this->number;
     }
 
-    public function setNumber(int $number): self
+    public function setNumber(?int $number): self
     {
         $this->number = $number;
 
         return $this;
     }
 
-    public function getStreet(): ?string
+    public function getStreet1(): ?string
     {
-        return $this->street;
+        return $this->street_1;
     }
 
-    public function setStreet(string $street): self
+    public function setStreet1(string $street_1): self
     {
-        $this->street = $street;
+        $this->street_1 = $street_1;
+
+        return $this;
+    }
+
+    public function getStreet2(): ?string
+    {
+        return $this->street_2;
+    }
+
+    public function setStreet2(?string $street_2): self
+    {
+        $this->street_2 = $street_2;
 
         return $this;
     }
