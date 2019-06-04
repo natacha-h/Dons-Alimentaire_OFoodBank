@@ -32,6 +32,8 @@ class UserController extends AbstractController
 
             $user->setPassword($hash);
 
+            $em->persist($user->getAddress());
+
             $em->persist($user);
             $em->flush();
             

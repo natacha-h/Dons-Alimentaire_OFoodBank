@@ -90,6 +90,7 @@ class User implements UserInterface
     {
         $this->is_active = true;
         $this->donations = new ArrayCollection();
+        $this->points = 0;
     }
 
     public function getId(): ?int
