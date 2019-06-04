@@ -1,7 +1,103 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DonationController!{% endblock %}
+{% block title %}Détail du don{% endblock %}
 
 {% block body %}
+    {# {{dump(donation)}} #}
+    <h2 class="text-center">{{donation.title}} </h2>
 
+    <section id="donation-detail-head" class="row">
+        <img id="pic-donation" src="{{donation.picture}} " class="img-fluid" style="max-width: 50%;" alt="Responsive image">
+        {# {{dump(app.user.id)}} #}
+
+        <div class="col-6">
+            <div id="select-donation">
+                {% if "Réservé" == donation.status.name %}
+                    <i class="fas fa-check-circle"></i> Ce don est réservé
+                        {{dump(app.user.id)}}
+                    {% if collector %}
+                        {% if app.user.id == collector.id %}
+                            {{dump(collector.id)}}
+                            <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
+                                Annuler la réservation de ce don 
+                                <button>
+                                    <i class="far fa-times-circle"></i>
+                                </button>
+                            </form>
+                        
+                        {% endif %}
+                        
+                                           
+                    {% endif %}
+                    
+                    
+                {% else %}
+                    <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                        <label for="select">
+                            Réserver ce don :
+                        </label>
+                        <button id="select">
+                            <i class="far fa-check-circle"></i>
+                        </button>
+                    </form>                     
+                {% endif %}
+                
+            
+            </div>
+            <h3> Informations sur le donateur</h3>
+            {# {{ dump(giver)}} #}
+            <p>
+                {{ giver.company}}
+            </p>
+            <p>
+                Contact : {{ giver.firstname}} {{ giver.lastname}} <br>
+                Téléphone : {{ giver.phoneNumber}}
+                e-mail : {{ giver.email}}
+                Note : {{ giver.rating}} 
+            </p>
+        </div>
+    </section>
+
+    <section id="donation-produits">
+        <h3> Liste des produits :</h3>
+
+        <div class="table-responsive-sm">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Quantité</th>
+                    <th scope="col">Date de péremption</th>
+                    </tr>
+                </thead>
+                {% for product in donation.products %}
+                {# {{dump(product)}} #}
+                    <tr>
+                        <td scope="row">{{product.name}} </td>
+                        <td>{{product.description}}</td>
+                        <td>{{product.quantity}}</td>
+                        <td>{{product.expiryDate|date("d/m/Y")}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </section>
+    <section id ="localisation">
+        {# {{ dump(donation.address.number)}} #}
+        <div class="card mb-3">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Localisation du don </h5>
+                <p class="card-text">  
+                    {{ donation.address.number}} {{donation.address.street}}
+                </p>
+                <p class="card-text">  
+                    {{ donation.address.zipCode}} {{donation.address.city}}
+                </p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+    </section>
 {% endblock %}
