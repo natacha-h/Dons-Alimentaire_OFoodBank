@@ -4,6 +4,7 @@ namespace App\Tests\Utils;
 
 use App\Utils\Rewarder;
 use PHPUnit\Framework\TestCase;
+use App\Repository\RewardRepository;
 
 class RewarderTest extends TestCase
 {
@@ -23,5 +24,6 @@ class RewarderTest extends TestCase
         $this->assertEquals(3, $result1);
         $this->assertEquals(1, $result2);
         $this->assertEquals(1, $result3);
+
     }
 }

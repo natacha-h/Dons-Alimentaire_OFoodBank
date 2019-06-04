@@ -2,8 +2,16 @@
 
 namespace App\Utils;
 
+use App\Repository\RewardRepository;
+
 class Rewarder
 {
+    private $rewardRepository;
+
+    public function __construct(RewardRepository $rewardRepository)
+    {
+        $this->rewardRepository = $rewardRepository;
+    }
 
     public function rewarder($points) // la fonction prend en paramètre le nombre de point de l'utilisateur
     {
@@ -13,26 +21,29 @@ class Rewarder
             - il y a 6 palliers
                 
          */
-        // si le nombre de points est > 1000, on est à reward = 5
+        // si le nombre de points est > 1000, on est à reward = 6
         if ($points >= 1000){
-            $reward = 6;
+            $rewardId = 6;
         } 
         elseif ($points <1000 && $points >= 800) {
-            $reward = 5;
+            $rewardId = 5;
         }
          elseif ($points <800 && $points >= 600) {
-            $reward = 4;
+            $rewardId = 4;
         } 
         elseif ($points < 600 && $points >= 400) {
-            $reward = 3;
+            $rewardId = 3;
         } 
         elseif ($points < 400 && $points >= 200) {
-            $reward = 2;
+            $rewardId = 2;
         } else {
-            $reward = 1;
+            $rewardId = 1;
         }
 
-        // on renvoit le reward à insérer
+        // on crée un objet Reward
+        $reward = $this->rewardRepository->findOneBy($rewardId);
+
+        // on renvoit l'objet reward à insérer
         return $reward;
 
     }
