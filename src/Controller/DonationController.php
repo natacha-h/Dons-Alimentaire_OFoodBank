@@ -101,17 +101,6 @@ class DonationController extends AbstractController
 
             if(count($data->getProducts()) == 0){
 
-                // Je récupere les valeurs saisies
-                // Je stocke ces valeurs dans un tableau d'input
-                $inputValues = [
-                    'title' => $data->getTitle(),
-                    'picture' =>  $data->getPicture(),
-                    'addressNumber' => $data->getAddress()->getNumber(),
-                    'addressStreet' => $data->getAddress()->getStreet(),
-                    'addressZipCode' => $data->getAddress()->getZipCode(),
-                    'addressCity' => $data->getAddress()->getCity(),
-                ];
-
                 $this->addFlash('danger', 'Veuillez ajouter au moins un produit');
 
                 return $this->render('donation/new.html.twig', [
