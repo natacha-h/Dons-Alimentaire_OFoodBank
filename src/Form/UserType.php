@@ -43,14 +43,14 @@ class UserType extends AbstractType
                 'empty_data' => '',
                 'required' => true,
                 'first_options'  => [
-                    'label' => 'Password',
+                    'label' => 'Mot de passe',
                     'empty_data' => '',
                     'attr' => [
                         'placeholder' => 'Laisser vide si inchangé'
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password', 
+                    'label' => 'Répéter le mot de passe', 
                     'empty_data' => '',
                     'attr' => [
                         'placeholder' => 'Laisser vide si inchangé'
@@ -75,11 +75,11 @@ class UserType extends AbstractType
                     ])
                 ],
                 'first_options'  => [
-                    'label' => 'Password',
+                    'label' => 'Mot de passe',
                     'empty_data' => '',
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password', 
+                    'label' => 'Répéter le mot de passe', 
                     'empty_data' => '',
                 ],
                 'empty_data' => array(),
@@ -87,6 +87,7 @@ class UserType extends AbstractType
 
             $currentForm->add('role', EntityType::class, [
                 'class' => Role::class,
+                'label' => 'Rôle (Donateur/Association)',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->where("r.code = 'ROLE_GIVER'")
@@ -96,7 +97,7 @@ class UserType extends AbstractType
             ]);
             
             $currentForm->add('address', AddressType::class, [
-                'label' => 'Adresse',
+                'label' => 'Informations Adresse'
             ]);
         }
     };
