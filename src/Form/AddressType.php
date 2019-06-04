@@ -15,20 +15,18 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('number', TextType::class, [
-                'label' => 'Numéro de la rue',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez renseigner un numéro de rue'
-                    ])
-                ]
+                'label' => 'Numéro de la rue'
             ])
-            ->add('street', TextType::class, [
+            ->add('street1', TextType::class, [
                 'label' => 'Nom de la rue',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner un nom de rue'
                     ])
                 ]
+            ])
+            ->add('street2', TextType::class, [
+                'label' => 'Détails de l\'adresse',
             ])
             ->add('zip_code', TextType::class, [
                 'label' => 'Code postal',

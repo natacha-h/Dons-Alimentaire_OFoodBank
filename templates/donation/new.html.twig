@@ -18,11 +18,6 @@
 
     {{ form_row(form.title, { 'id': 'title-donation'  }) }}
     {{ form_row(form.picture, { 'id': 'donation-pic' }) }}
-<h2>Mon dump</h2>
-    {% if inputValues is defined %}
-
-    {{dump(inputValues)}}
-{% endif %}
 
     {# Affichage formulaire d'ajout d'adresse #}
     <div class="card bg-light mb-4">
