@@ -26,14 +26,24 @@
         </div>
     </div>
     
-    {# Dons reçus ou effectués en fonction du rôle du user connecté ! POUR TEST ! #}
+    {# Dons reçus ou effectués en fonction du rôle du user connecté !#}
     <div class="text-center container ">
+
         {% if is_granted('ROLE_GIVER') %}
         <h3 id="#dons" class="font-italic text-center">Dons Effectués</h3>
         <button type="button" class="btn-success rounded border p-3 mt-2">Nouveau don</button>
+        <div class="d-flex flex-wrap mt-4">
+
+            {% for donation in user.donations %}
+            <div class="col-5 m-4 p-5 mx-auto border rounded">
+            <h4 class="font-italic">{{ donation.title }}</h4>
+            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
+            </div>
+            {% endfor %}
+        </div>
+
         {% elseif is_granted('ROLE_ASSOC') %}
         <h3 id="#dons" class="font-italic text-center">Dons Reçus</h3>
-        {% endif %}
         <div class="d-flex flex-wrap mt-4">
             {% for donation in user.donations %}
             <div class="col-5 m-4 p-5 mx-auto border rounded">
@@ -42,6 +52,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
 
     {# Formulaire pour modifier ses données de profil #}

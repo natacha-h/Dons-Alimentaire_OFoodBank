@@ -61,9 +61,7 @@ class UserType extends AbstractType
             
 
         } else { // sinon je suis en création
-
             $currentForm->add('password', RepeatedType::class, [
-
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les champs Password doivent être identiques.',
                 'options' => ['attr' => ['class' => 'password-field']],
@@ -84,7 +82,6 @@ class UserType extends AbstractType
                 ],
                 'empty_data' => array(),
             ]);
-
             $currentForm->add('role', EntityType::class, [
                 'class' => Role::class,
                 'label' => 'Rôle (Donateur/Association)',
@@ -96,12 +93,8 @@ class UserType extends AbstractType
                 'choice_label' => 'name',
             ]);
             
-            $currentForm->add('address', AddressType::class, [
-                'label' => 'Informations Adresse'
-            ]);
         }
-    };
-
+        };
         $builder
         ->add('firstname', TextType::class, [
             'label' => 'Prénom',
@@ -146,9 +139,12 @@ class UserType extends AbstractType
                 ])
             ]
         ])
+
+        ->add('address', AddressType::class, [
+            'label' => 'Informations Adresse'
+        ]);
         ;
     }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
