@@ -5,14 +5,6 @@
 {% block body %}
     <h2 class="text-center m-4">Mon Profil</h2>
 
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
-
     {# Informations du User #}
     <div class="container mb-4">
         <div class="border border-dark rounded col-10 m-auto bg-dark text-white p-2 text-center">
