@@ -14,7 +14,7 @@
         <header>
             <div> {# ici le bloc avec le logo , la mini-nav Association/Commerçant et barre de recherche #}
                 <div id="logo">
-                    <img src="{{asset('pictures/logo-ofoodbank.png')}} " alt="Logo O'FoodBank">
+                    <img src="{{asset('pictures/logo-ofoodbank.png')}} " alt="Logo O'FoodBank" href="{{path('main_index')}}">
                 </div>
                 <nav>
                     <ul class="nav">
@@ -43,7 +43,7 @@
         {# ajout des flash Messages #}
         {% for label, messages in app.flashes %} {# pour toutes les keys "label" et "messages" du tableau de flasMessage #}
             {% for message in messages %} {# pour chaque message de la clé "messages" courante #}
-                <div class="alert alert-{{labe}}"> {# j'utilise la key "label" pour compléter la class du message#}
+                <div class="alert alert-{{label}}"> {# j'utilise la key "label" pour compléter la class du message#}
                     {{ message }} {# j'affiche le message #}
                 </div>                
             {% endfor %}
@@ -83,7 +83,7 @@
                         <a class="nav-link" href="#">Contact</a>
                     </li>                        
                     <li class="nav-item">
-                        <img src="" alt=""> {# logo #}
+                        <img src="{{asset('pictures/logo-ofoodbank.png')}}" alt="Logo O'FoodBank" href="{{path('main_index')}} "> {# logo #}
                     </li>                        
                     <li class="nav-item">
                         <a class="nav-link" href="#">Mentions légales</a>
