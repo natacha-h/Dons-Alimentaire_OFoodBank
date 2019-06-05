@@ -42,7 +42,7 @@ App\Entity\Category:
 App\Entity\Donation:
     donation_{1..50}:
         title: '<word(40)>'
-        picture: '<imageUrl()>'
+        picture: '<imageUrl(400, 200, food)>' 
         created_at: '<dateTime()>' 
         updated_at: '<dateTime()>' 
         users: '2x @user_*'
