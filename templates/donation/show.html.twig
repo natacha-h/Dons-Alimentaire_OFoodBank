@@ -2,6 +2,11 @@
 
 {% block title %}Détail du don{% endblock %}
 
+{% block stylesheets %}
+    {# CSS POUR LA MAP #}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+{% endblock %}
+
 {% block body %}
     {# {{dump(donation)}} #}
     <h2 class="text-center">{{donation.title}} </h2>
@@ -91,7 +96,7 @@
             <div class="card-body">
                 <h5 class="card-title">Localisation du don </h5>
                 <p class="card-text">  
-                    {{ donation.address.number}} {{donation.address.street}}
+                    {{ donation.address.number}} {{donation.address.street1}}
                 </p>
                 <p class="card-text">  
                     {{ donation.address.zipCode}} {{donation.address.city}}
@@ -99,5 +104,18 @@
                 <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
         </div>
+        <div id="map" style='width:600px; height:400px;'></div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    {# JS MAP #}
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script>
+        var myMap = L.map('map');
+        myMap.setView([48.7965913, 2.3210938], 3);
+        myMap.attributionControl.addAttribution('<a href="https://www.jawg.io" target="_blank">&copy; Jawg</a> - <a href="https://www.openstreetmap.org" target="_blank">&copy; OpenStreetMap</a>&nbsp;contributors')
+        L.tileLayer('https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=4o3u18qKw699mgtNH6Q47G9L8c3nMJfrSAZhqQIm2Q7PaNA5QpNpeyitPgS1GZx8', {}).addTo(myMap);
+        L.marker([48.7965913, 2.3210938]).addTo(myMap);
+    </script>
 {% endblock %}
