@@ -14,8 +14,6 @@
 
 {% for donation in donations %}
 
-{{ dump($donation)}}
-
 <div class="row">
     <div class="col-sm-6">
         <div class="card">
@@ -23,7 +21,7 @@
                 <img src="{{donation.picture}}" class="card-img" alt="aleatoire">
                 <h3 class="card-title">{{donation.title}}</h3>
                 <p class="card-text">{{donation.createdAt|date("d/m/Y")}}</small></p>
-                <p class="card-text">{#{{products.expiryDate|date("d/m/Y")}}#}</small></p>
+                <p class="card-text">{{ expiryDateArray[donation.id]|date("d/m/Y") }}</small></p>
                 <a href="#" class="btn btn-primary">Plus d'infos</a>
             </div>
         </div>

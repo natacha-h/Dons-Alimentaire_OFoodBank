@@ -6,7 +6,6 @@ use App\Entity\Donation;
 use App\Repository\DonationRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Donation;
 use Proxies\__CG__\App\Entity\Status;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,36 +27,44 @@ class DonationController extends AbstractController
         
         $expiryDateArray = [];
         foreach($donations as $donation){
-            $currentExpiry = null;
-            dd($donation);
+            $currentExpiry = false;
+            // dd($donation);
             foreach($donation->getProducts() as $product){
                 $expiryDate = $product->getExpiryDate();
         
                 // Premier tour de boucle on récupere le current
-                if($currentExpiry == null){
+                if($currentExpiry == false){
                     $currentExpiry = $expiryDate;
                 }
                 
+                dump('test' + $currentExpiry);
+                dump($expiryDate);
+
                 // On transforme les dates en secondes UNIX
                 // Secondes écoulées depuis 1 janvier 1970
                 $currentExpiry = time($currentExpiry);
                 $expiryDate = time($expiryDate);
-        
+
+                dump($currentExpiry);
+                dump($expiryDate);
                 // Nombre de secondes écoulées plus faible <=> date plus proche
                 if($currentExpiry >= $expiryDate){
                     $currentExpiry = $expiryDate;
                 }
+                $currentExpiry = date($currentExpiry);
             }
         
             // On retransforme la date en date lisible
-            $expiryDate = date('d/m/Y', $currentExpiry);
-            $donation[] = $expiryDate;
+            $expiryDate = date($currentExpiry);
+            dump('MA DATE DEXPIRATION' + $expiryDate);
+            $expiryDateArray[$donation->getId()] = $expiryDate;
         }
 
         
 
         return $this->render('donation/list.html.twig', [
             'donations' => $donations,
+            'expiryDateArray' => $expiryDateArray
         ]);
     }
 
@@ -176,4 +183,3 @@ class DonationController extends AbstractController
         ]);
     }
 }
-
