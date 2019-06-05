@@ -18,7 +18,7 @@ class AddressType extends AbstractType
                 'label' => 'Numéro de la rue'
             ])
             ->add('street1', TextType::class, [
-                'label' => 'Nom de la rue',
+                'label' => 'Nom de la rue*',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner un nom de rue'
@@ -29,7 +29,7 @@ class AddressType extends AbstractType
                 'label' => 'Détails de l\'adresse',
             ])
             ->add('zip_code', TextType::class, [
-                'label' => 'Code postal',
+                'label' => 'Code postal*',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner un code postal'
@@ -37,7 +37,7 @@ class AddressType extends AbstractType
                 ]
             ])
             ->add('city', TextType::class, [
-                'label' => 'Ville',
+                'label' => 'Ville*',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner une ville'

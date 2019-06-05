@@ -176,6 +176,11 @@ class DonationController extends AbstractController
                 }
                 $donation->setPicture($fileName);
             }
+            // Je gere le fait de donner une image standard au don
+            else {
+                $fileName = 'default-image.jpg';
+                $donation->setPicture($fileName);
+            }
 
             // Je lui fournis un status disponible directement
             $status = $StatusRepo->findOneByName('Dispo');

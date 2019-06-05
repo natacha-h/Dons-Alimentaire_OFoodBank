@@ -21,7 +21,7 @@ class DonationType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'Titre du don',
+                'label' => 'Titre du don*',
                 'attr' => [
                     'placeholder' => 'Saisir ici un nom pour le don (exemple: "Don de produits frais")'
                 ],

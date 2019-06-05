@@ -21,21 +21,18 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom du produit',
+                'label' => 'Nom du produit*',
                 'attr' => [
                     'placeholder' => 'Saisir ici le nom du produit'
                 ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner un nom de produit'
-                    ]),
-                    // new NotNull([
-                    //     'message' => 'Veuillez renseigner un nom de produit'
-                    // ])
+                    ])
                 ]
             ])
             ->add('quantity',IntegerType::class, [
-                'label' => 'Nombre de produits',
+                'label' => 'Nombre de produits*',
                 'attr' => [
                     'placeholder' => 'Saisir ici le nombre de produit'
                 ],
@@ -52,7 +49,7 @@ class ProductType extends AbstractType
                 ]
             ])
             ->add('expiry_date', DateType::class, [
-                'label' => 'Date d\'expiration du produit',
+                'label' => 'Date d\'expiration du produit*',
                 'widget' => 'single_text',
                 'data' => new \Datetime(),
                 'required' => true,
