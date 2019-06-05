@@ -47,13 +47,26 @@ App\Entity\Donation:
         status: '@status_*'
         address: '@address_*'
 
-App\Entity\Product:
-    product_{1..50}:
-        name: '<word()>'
-        quantity: '<randomDigitNotNull(1, 10)>'
-        expiry_date: '<dateTime()>'
-        category: '@category_*'
-        donation: '@donation_*'
+        
+
+
+# ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
+        
+
+
+# ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
+        
+
+
+# ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
+        
+
+
+# ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
+        
+
+
+# ATTENTION : Il faudra changer le nom des catégories à la main dans PMA et rajouter les roles, puis faire la liaison avec la table user.
         
 
 

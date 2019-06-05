@@ -1,10 +1,15 @@
-.hide-my-form{
-    display: none;
+body{
+    width: 80%;
+    margin: 0 auto;
 }
 
 body, html{
     margin: 0;
     padding: 0;
+}
+
+.hide-my-form{
+    display: none;
 }
 
 .container-fluid{
@@ -62,10 +67,10 @@ li.nav-item.col-6.col-md-5 {
     transform: rotate(-20deg);
 }
 
-
-
 @media screen and (max-width: 768px) { 
     body{
         width: 100%
     }
-}
+  }
+
+
