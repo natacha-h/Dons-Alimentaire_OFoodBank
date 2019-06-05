@@ -8,23 +8,52 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/", name="donation_")
+ * @Route("/dons", name="donation_")
  */
 
 class DonationController extends AbstractController
 {
     /**
-     * @Route("/dons", name="list", methods={"GET"})
+     * @Route("/", name="list", methods={"GET"})
      */
     public function list(DonationRepository $donationRepository)
     {
         // $repo = $this->getDoctrine()->getRepository(Donation::class);
 
         $donations = $donationRepository->findAll();
+        
+        $expiryDateArray = [];
+        foreach($donations as $donation){
+            $currentExpiry = null;
+            dd($donation);
+            foreach($donation->getProducts() as $product){
+                $expiryDate = $product->getExpiryDate();
+        
+                // Premier tour de boucle on récupere le current
+                if($currentExpiry == null){
+                    $currentExpiry = $expiryDate;
+                }
+                
+                // On transforme les dates en secondes UNIX
+                // Secondes écoulées depuis 1 janvier 1970
+                $currentExpiry = time($currentExpiry);
+                $expiryDate = time($expiryDate);
+        
+                // Nombre de secondes écoulées plus faible <=> date plus proche
+                if($currentExpiry >= $expiryDate){
+                    $currentExpiry = $expiryDate;
+                }
+            }
+        
+            // On retransforme la date en date lisible
+            $expiryDate = date('d/m/Y', $currentExpiry);
+            $donation[] = $expiryDate;
+        }
+
+        
 
         return $this->render('donation/list.html.twig', [
             'donations' => $donations,
-    
         ]);
     }
 
@@ -64,3 +93,4 @@ class DonationController extends AbstractController
         ]);
     }
 }
+

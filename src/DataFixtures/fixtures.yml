@@ -40,7 +40,7 @@ App\Entity\Category:
 App\Entity\Donation:
     donation_{1..50}:
         title: '<word(40)>'
-        picture: '<imageUrl()>'
+        picture: '<imageUrl($width = 640, $height = 480)>'
         created_at: '<dateTime()>' 
         updated_at: '<dateTime()>' 
         users: '@user_*'
