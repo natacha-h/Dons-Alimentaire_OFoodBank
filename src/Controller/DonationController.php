@@ -21,14 +21,13 @@ class DonationController extends AbstractController
      */
     public function list(DonationRepository $donationRepository)
     {
-        // $repo = $this->getDoctrine()->getRepository(Donation::class);
+        //repo = $this->getDoctrine()->getRepository(Donation::class);
 
         $donations = $donationRepository->findAll();
         
         $expiryDateArray = [];
         foreach($donations as $donation){
             $currentExpiry = false;
-            // dd($donation);
             foreach($donation->getProducts() as $product){
                 $expiryDate = $product->getExpiryDate();
         
@@ -36,28 +35,13 @@ class DonationController extends AbstractController
                 if($currentExpiry == false){
                     $currentExpiry = $expiryDate;
                 }
-                
-                dump('test' + $currentExpiry);
-                dump($expiryDate);
 
-                // On transforme les dates en secondes UNIX
-                // Secondes écoulées depuis 1 janvier 1970
-                $currentExpiry = time($currentExpiry);
-                $expiryDate = time($expiryDate);
-
-                dump($currentExpiry);
-                dump($expiryDate);
                 // Nombre de secondes écoulées plus faible <=> date plus proche
                 if($currentExpiry >= $expiryDate){
                     $currentExpiry = $expiryDate;
                 }
-                $currentExpiry = date($currentExpiry);
             }
-        
-            // On retransforme la date en date lisible
-            $expiryDate = date($currentExpiry);
-            dump('MA DATE DEXPIRATION' + $expiryDate);
-            $expiryDateArray[$donation->getId()] = $expiryDate;
+            $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
 
         
