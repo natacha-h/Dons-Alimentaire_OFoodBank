@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<form id="contact-form" method="post" role="form">
+<form id="contact-form" method="post" role="form" class="mb-5">
 
     <div class="messages"></div>
 
@@ -43,10 +43,10 @@
                     <label for="form_need">Spécifiez votre besoin</label>
                     <select id="form_need" name="need" class="form-control">
                         <option value="Demande de renseignement">Demande de renseignement</option>
+                        <option value="">Demande de prise de contact</option>
+                        <option value="">Demande suppression de don</option>
+                        <option value="">Déclarer un probleme sur le site</option>
                         <option value="">Autres</option>
-                        <option value=""></option>
-                        <option value=""></option>
-                        <option value=""></option>
                     </select>
                 </div>
             </div>
@@ -67,5 +67,7 @@
     </div>
 
 </form>
+
+<a href="{{path('main_about')}}">Qui sommes-nous ?</a>
 
 {% endblock %}
