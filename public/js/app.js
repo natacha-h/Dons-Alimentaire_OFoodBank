@@ -2,7 +2,9 @@
 var $collectionHolder;
 
 // Prépare un bouton d'ajout
-var $addNewProduct = $('<a href="#" class="btn btn-info my-4 px-3">Ajouter un nouveau produit</a>');
+var $addNewProduct = $('<a href="#" class="btn my-4 px-3">Ajouter un nouveau produit</a>');
+$addNewProduct.css('background-color', "#7ad166");
+$addNewProduct.css('color', 'white');
 
 
 // Quand le document est pret
