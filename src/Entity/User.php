@@ -46,7 +46,7 @@ class User implements UserInterface
     private $company;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=10)
      */
     private $phone_number;
 
@@ -84,7 +84,6 @@ class User implements UserInterface
      * @ORM\ManyToMany(targetEntity="App\Entity\Donation", mappedBy="users")
      */
     private $donations;
-
 
     public function __construct()
     {
@@ -126,7 +125,7 @@ class User implements UserInterface
     {
         // $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = $this->getRole()->getReference();
+        $roles[] = $this->getRole()->getCode();
 
         return array_unique($roles);
 
@@ -148,7 +147,7 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -208,12 +207,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phone_number;
     }
 
-    public function setPhoneNumber(int $phone_number): self
+    public function setPhoneNumber(string $phone_number): self
     {
         $this->phone_number = $phone_number;
 
@@ -319,6 +318,5 @@ class User implements UserInterface
 
         return $this;
     }
-
 
 }
