@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Form\ContactType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\DonationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/", name="main_")
@@ -16,10 +17,13 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index()
+    public function index(DonationRepository $donationRepo)
     {
+    
+        $donations = $donationRepo->findBy([], ['created_at' => 'DESC'],3);
+
         return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
+            'donations'=> $donations
         ]);
     }
 
@@ -73,7 +77,7 @@ class MainController extends AbstractController
     public function about()
     {
         return $this->render('main/about.html.twig', [
-            'controller_name' => 'MainController',
+            
         ]);
     }
 }
