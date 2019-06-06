@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Entity\Product;
+use App\Utils\Rewarder;
 use App\Entity\Donation;
 use App\Form\ProductType;
 use App\Form\DonationType;
@@ -169,7 +170,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo)
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
     {
         $donation = new Donation();
 
@@ -243,6 +244,9 @@ class DonationController extends AbstractController
             $newPoints = $currentPoints + 5;
             $user->setPoints($newPoints);
             
+            // on utilise rewarder pour metre à jour (si besoin) le reward
+            $reward = $rewarder->rewarder($newPoints);
+            $user->setReward($reward);
 
             // Je vérifie qu'il y ait au moins un produit dans le don.
             $data = $form->getData();
