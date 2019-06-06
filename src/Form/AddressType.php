@@ -15,7 +15,8 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('number', TextType::class, [
-                'label' => 'Numéro de la rue'
+                'label' => 'Numéro de la rue',
+                'required' => false
             ])
             ->add('street1', TextType::class, [
                 'label' => 'Nom de la rue*',
@@ -27,6 +28,7 @@ class AddressType extends AbstractType
             ])
             ->add('street2', TextType::class, [
                 'label' => 'Détails de l\'adresse',
+                'required' => false
             ])
             ->add('zip_code', TextType::class, [
                 'label' => 'Code postal*',
