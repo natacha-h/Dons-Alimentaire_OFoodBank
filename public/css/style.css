@@ -33,7 +33,15 @@ h3{
 }
 
 /* Gestion de la couleurs pour la nav et le footer */
-#footer-gradient, #nav-bg-color{
+#nav-bg-color{
+    background-color: #c6dc12;
+}
+
+#nav-bg-color a{
+    color: black;
+} 
+
+#footer-gradient {
     background-color : #E9F2DF;
 }
 
@@ -94,16 +102,16 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 /* page détail d'un don */
-.fas{
+#reserved .fas{
     color: #f49f0a;
     margin-bottom: 0;
 }
 
-#select{
-    background-color: rgb(64, 166, 41);
+#select, .return{
+    background-color: #40a629;
     color: white;
 }
-#select:hover{
+#select:hover, {
     text-decoration: none; 
 }
 
@@ -112,8 +120,36 @@ li.nav-item.col-6.col-md-5 {
     padding: .2em;
 }
 
+.return-to-list a{
+    float: right;
+    text-decoration: none;
+    font-weight: bold;
+    color: #40a629;
+}
+
+.return-to-list a:hover{
+    text-decoration: none;
+    color: #40a629;
+}
+
 #reward p{
     margin-bottom: 0;
+}
+
+#btn-return{
+    margin: 1em 0 2em;
+    text-align: center;
+    padding-top: .5em;
+}
+
+.return{
+    padding: .7em;
+    border-radius: 3px;
+}
+
+.return:hover{
+    text-decoration: none;
+    color: white;
 }
 
 @media screen and (max-width: 768px) { 
