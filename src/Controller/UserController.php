@@ -21,6 +21,7 @@ class UserController extends AbstractController
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request); //ATTENTION cette methode met à jour la variable $form + $user
+
         if ($form->isSubmitted() && $form->isValid()) {
             //cette methode issue de la classe UserPasswordEncoderInterface permet d'encoder le mot de passe par rapport au configuration appliquée sur l'objet fournit
             $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
@@ -30,8 +31,10 @@ class UserController extends AbstractController
             $em->flush();
             
             $this->addFlash('success', 'Votre profil a bien été créé.');
+
             return $this->redirectToRoute('main_index');
         }
+
         return $this->render('user/register.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
