@@ -174,18 +174,25 @@ class DonationController extends AbstractController
     {
         $donation = new Donation();
 
+        $product = new Product();
+        $product->setName('');
+        $product->setQuantity(1);
+        $product->setDescription('');
+        $product->setExpiryDate(new \DateTime());
+        $product->setCategory($cateRepo->findOneById(64));
+        $donation->addProduct($product);
+
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
 
         $form = $this->createForm(DonationType::class, $donation);
         $form->handleRequest($request);
         // dump($form->getData());
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
             //avant l'enregistrement d'un film je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
             $file = $donation->getPicture();
-            
+            // dd($donation);
             if(!is_null($file)){
 
                 //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
