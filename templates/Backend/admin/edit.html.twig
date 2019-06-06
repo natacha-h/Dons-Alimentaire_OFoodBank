@@ -1,7 +1,13 @@
-% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Modification du profil de {{user.firstname}} {{user.lastname}}{% endblock %}
 
 {% block body %}
 
-{% endblock %}{
+    {# Form pour modifier le profil #}
+    {{ include('Backend/admin/_form.html.twig') }}
+    
+    {# Bouton de retour a la liste des utilisateurs #}
+    <a href="{{path('admin_manage')}}" class="btn btn-info float-right">Retour à la liste des utilisateurs</a>
+
+{% endblock %}
