@@ -43,14 +43,14 @@ class UserType extends AbstractType
                 'empty_data' => '',
                 'required' => true,
                 'first_options'  => [
-                    'label' => 'Mot de passe',
+                    'label' => 'Mot de passe*',
                     'empty_data' => '',
                     'attr' => [
                         'placeholder' => 'Laisser vide si inchangé'
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Répéter le mot de passe', 
+                    'label' => 'Répéter le mot de passe*', 
                     'empty_data' => '',
                     'attr' => [
                         'placeholder' => 'Laisser vide si inchangé'
@@ -73,18 +73,18 @@ class UserType extends AbstractType
                     ])
                 ],
                 'first_options'  => [
-                    'label' => 'Mot de passe',
+                    'label' => 'Mot de passe*',
                     'empty_data' => '',
                 ],
                 'second_options' => [
-                    'label' => 'Répéter le mot de passe', 
+                    'label' => 'Répéter le mot de passe*', 
                     'empty_data' => '',
                 ],
                 'empty_data' => array(),
             ]);
             $currentForm->add('role', EntityType::class, [
                 'class' => Role::class,
-                'label' => 'Rôle (Donateur/Association)',
+                'label' => 'Vous êtes un(e):*',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->where("r.code = 'ROLE_GIVER'")
@@ -97,7 +97,7 @@ class UserType extends AbstractType
         };
         $builder
         ->add('firstname', TextType::class, [
-            'label' => 'Prénom',
+            'label' => 'Prénom*',
             'constraints' => [
                 new NotBlank([
                     'message' => 'Veuillez renseigner un prénom'
@@ -105,7 +105,7 @@ class UserType extends AbstractType
             ]
         ])
         ->add('lastname', TextType::class, [
-            'label' => 'Nom',
+            'label' => 'Nom*',
             'constraints' => [
                 new NotBlank([
                     'message' => 'Veuillez renseigner un nom'
@@ -116,7 +116,7 @@ class UserType extends AbstractType
         ->addEventListener(FormEvents::PRE_SET_DATA, $listener)
         
         ->add('email', EmailType::class, [
-            'label' => "Email",
+            'label' => "Email*",
             'constraints' => [
                 new NotBlank([
                     'message' => 'Veuillez renseigner un email'
@@ -124,7 +124,7 @@ class UserType extends AbstractType
             ]
         ])
         ->add('company', TextType::class, [
-            'label' => 'Entreprise',
+            'label' => 'Entreprise*',
             'constraints' => [
                 new NotBlank([
                     'message' => 'Veuillez renseigner un nom d\'entreprise'
@@ -132,7 +132,7 @@ class UserType extends AbstractType
             ]
         ])
         ->add('phone_number', TelType::class, [
-            'label' => 'Numéro de téléphone',
+            'label' => 'Numéro de téléphone*',
             'constraints' => [
                 new NotBlank([
                     'message' => 'Veuillez renseigner un numéro de téléphone'
@@ -141,7 +141,7 @@ class UserType extends AbstractType
         ])
 
         ->add('address', AddressType::class, [
-            'label' => 'Informations Adresse'
+            'label' => false
         ]);
         ;
     }
