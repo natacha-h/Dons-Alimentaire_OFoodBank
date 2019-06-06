@@ -8,6 +8,7 @@ body, html{
     padding: 0;
 }
 
+/* Suppression padding sur container fluid */
 .container-fluid{
     padding-left: 0;
     padding-right: 0;
@@ -21,24 +22,30 @@ h3{
     margin-bottom: .7em;
 }
 
+/* Gestion de la couleurs pour la nav et le footer */
 #footer-gradient, #nav-bg-color{
     background-color : #E9F2DF;
 }
 
+/* Gestion de l'image dans le footer */
 li.nav-item.text-lg-left.text-sm-center{
     text-align: center;
 }
 
+/* Padding et structure du texte "je suis ..." */
 li.nav-item.col-12.col-md-2{
     padding-right: 0px;
     padding-left: 0px;
+    white-space: nowrap;
 }
 
+/* Padding des ronds */
 li.nav-item.col-6.col-md-5 {
     padding-left: 0;
     padding-right: 0;
 }
 
+/* Permet de gerer les ronds du header */
 .circle-text {
     transition: 1s;
     width:103%;
@@ -93,15 +100,6 @@ li.nav-item.col-6.col-md-5 {
 #reward p{
     margin-bottom: 0;
 }
-
-
-@media (min-height: 300px) {
-    .navbar, .navbar-collapse ul {
-      position: sticky;
-      top: 0;
-    }
-  }
-
 
 @media screen and (max-width: 768px) { 
 
