@@ -3,6 +3,9 @@
 {% block title %}Détail du don{% endblock %}
 
 {% block body %}
+    <div class="return-to-list">
+        <a href="{{path('donation_list')}} "> <i class="fas fa-angle-double-left"></i> Retour à la liste </a>
+    </div>
     {# {{dump(donation)}} #}
     <h2 class="text-center">{{donation.title}} </h2>
 
@@ -20,13 +23,14 @@
                     <p id="reserved" class="mb-3">
                         <i class="fas fa-clock"></i> Ce don est réservé
                     </p>
+
                         {# {{dump(app.user.id)}} #}
                     
                     {% if collector %} {# Si un collector existe #}
                         {% if app.user %} {# et si un utilisateur est connecté #}
                             {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
                             {% if app.user.id == collector.id %}
-                                {{dump(collector.id)}}
+                                {# {{dump(collector.id)}} #}
                                 <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
                                     Annuler la réservation de ce don 
                                     <button>
@@ -113,4 +117,9 @@
             </div>
         </div>
     </section>
+    <div id="btn-return">
+        <a href="{{path('donation_list')}}" class="return" > 
+            Retour à la liste 
+        </a>
+    </div>
 {% endblock %}
