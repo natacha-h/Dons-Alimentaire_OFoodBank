@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Créer votre compte{% endblock %}
 
 {% block body %}
+    <h2 class="text-center m-4">Créer votre compte</h2>
+
+    {{ include('user/_form.html.twig') }}
 
 {% endblock %}
