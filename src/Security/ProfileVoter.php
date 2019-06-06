@@ -24,15 +24,12 @@ class ProfileVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $user = $token->getUser();
+        $authenticatedUser = $token->getUser();
 
-        if (!$user instanceof User) {
-            // Le user doit être loggé sinon, accès refusé
-            return false;
-        }
         /** @var User $user */
         $user = $subject;
 
+        if($authenticatedUser === $user){ return true;}
         throw new \LogicException('No Way !');
     }
 }
