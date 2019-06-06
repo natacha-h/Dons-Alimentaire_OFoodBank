@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/", name="main_")
@@ -11,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("", name="index")
+     * @Route("/", name="index")
      */
     public function index()
     {
@@ -25,33 +28,47 @@ class MainController extends AbstractController
      */
     public function informations()
     {
+
         return $this->render('main/informations.html.twig', [
             'controller_name' => 'MainController',
         ]);
     }
 
     /**
-     * @Route("contact", name="contact")
+     * @Route("/contact", name="contact", methods={"post", "get"})
      */
-    public function contact()
+    public function contact(Request $request)
+
     {
-        return $this->render('main/contact.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
+        $firstname = $request->request->get('firstname');
+        $lastname = $request->request->get('lastname');
+        $email = $request->request->get('email');
+        $need = $request->request->get('need');
+        $message = $request->request->get('message');
+        //dump($firstname);
+        //dump($lastname);
+        //dump($email);
+        //dump($message);
+ 
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)){
+        }
+        return $this->render('main/contact.html.twig');
+        
     }
 
+
     /**
-     * @Route("legal-mentions", name="legalMentions")
+     * @Route("/legal-mentions", name="legalMentions")
      */
     public function legalMentions()
     {
         return $this->render('main/legal-mentions.html.twig', [
-            'controller_name' => 'MainController',
+            
         ]);
     }
 
     /**
-     * @Route("about", name="about")
+     * @Route("/about", name="about")
      */
     public function about()
     {
