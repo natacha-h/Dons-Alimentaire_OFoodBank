@@ -14,7 +14,7 @@
                 <a class="nav-link" href="{{path('donation_list')}}">Les dons</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Comment ça marche ?</a>
+                <a class="nav-link" href="{{ path('main_informations') }}">Comment ça marche ?</a>
             </li>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <li class="nav-item">
