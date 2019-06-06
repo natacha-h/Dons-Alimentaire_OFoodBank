@@ -32,7 +32,8 @@ class DonationType extends AbstractType
                 ]
             ])
             ->add('picture', FileType::class, [
-                'label' => 'Image illustrant le don (jpg, png, gif)'
+                'label' => 'Image illustrant le don (jpg, png, gif)',
+                'required' => false
             ])
             ->add('address', AddressType::class, [
                 'label' => false
