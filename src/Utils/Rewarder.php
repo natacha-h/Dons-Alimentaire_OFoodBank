@@ -41,7 +41,7 @@ class Rewarder
         }
 
         // on crée un objet Reward
-        $reward = $this->rewardRepository->findOneBy($rewardId);
+        $reward = $this->rewardRepository->findRewardById($rewardId);
 
         // on renvoit l'objet reward à insérer
         return $reward;
