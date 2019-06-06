@@ -7,17 +7,18 @@ use App\Entity\Product;
 use App\Entity\Donation;
 use App\Form\ProductType;
 use App\Form\DonationType;
-use App\Repository\CategoryRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\StatusRepository;
 use Proxies\__CG__\App\Entity\Status;
+use App\Repository\CategoryRepository;
+use App\Repository\DonationRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @Route("/dons", name="donation_")
@@ -25,13 +26,38 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class DonationController extends AbstractController
 {
     /**
-     * @Route("", name="list")
+     * @Route("/", name="list", methods={"GET"})
      */
-    public function list()
+    public function list(DonationRepository $donationRepository)
     {
+        //repo = $this->getDoctrine()->getRepository(Donation::class);
+
+        $donations = $donationRepository->findAll();
+        
+        $expiryDateArray = [];
+        foreach($donations as $donation){
+            $currentExpiry = false;
+            foreach($donation->getProducts() as $product){
+                $expiryDate = $product->getExpiryDate();
+        
+                // Premier tour de boucle on récupere le current
+                if($currentExpiry == false){
+                    $currentExpiry = $expiryDate;
+                }
+
+                // Nombre de secondes écoulées plus faible <=> date plus proche
+                if($currentExpiry >= $expiryDate){
+                    $currentExpiry = $expiryDate;
+                }
+            }
+            $expiryDateArray[$donation->getId()] = $currentExpiry;
+        }
+
+        
 
         return $this->render('donation/list.html.twig', [
-            'controller_name' => 'DonationController',
+            'donations' => $donations,
+            'expiryDateArray' => $expiryDateArray
         ]);
     }
 
@@ -202,13 +228,13 @@ class DonationController extends AbstractController
             }
 
             // Pour setter le giver je récupere le currentUser
-            // $user = $this->getUser();
+            $user = $this->getUser();
 
-            // $donation->addUser($user);
+            $donation->addUser($user);
 
-            // $currentPoints = $user->getPoints();
-            // $newPoints = $currentPoints + 5;
-            // $user->setPoints($newPoints);
+            $currentPoints = $user->getPoints();
+            $newPoints = $currentPoints + 5;
+            $user->setPoints($newPoints);
             
 
             // Je vérifie qu'il y ait au moins un produit dans le don.

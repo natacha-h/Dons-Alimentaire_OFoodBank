@@ -1,7 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
+
+    <h2 class="text-center m-4">Gestion des utilisateurs</h2>
+
+    {# Tableau listant les utilisateurs #}
+    <table class="table col-12">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Email</th>
+            <th scope="col">Société</th>
+            <th scope="col">Role</th>
+            <th scope="col">Edition</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                {# {{dump(user)}} #}
+                <tr>
+                    <th scope="row">{{user.id}}</th>
+                    <td>{{user.lastname}}</td>
+                    <td>{{user.firstname}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.company}}</td>
+                    {% if user.role is not null %}
+                        <td>{{user.role.name}}</td>
+                    {% else %}
+                        <td> Sans rôle </td>
+                    {% endif %}
+                    <td><a href="{{path('admin_edit', {'id': user.id})}}"><i class="fas fa-edit"></i></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
