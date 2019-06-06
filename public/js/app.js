@@ -94,12 +94,14 @@ function handleClickAddNewProduct (event) {
 
 function checkIfEmptyInput(event) {
 
-    if(event.target.value.length == 0){
-        $(event.target).removeClass('border border-success');
-        $(event.target).addClass('border border-danger');
-    } else {
-        $(event.target).removeClass('border border-danger');
-        $(event.target).addClass('border border-success');
+    if(event.target.required){
+        if(event.target.value.length == 0){
+            $(event.target).removeClass('border border-success');
+            $(event.target).addClass('border border-danger');
+        } else {
+            $(event.target).removeClass('border border-danger');
+            $(event.target).addClass('border border-success');
+        }
     }
 }
 
