@@ -2,18 +2,27 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
+use App\Entity\Product;
 use App\Entity\Donation;
-use App\Repository\DonationRepository;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Proxies\__CG__\App\Entity\Status;
+use App\Form\ProductType;
+use App\Form\DonationType;
 use App\Repository\StatusRepository;
+use Proxies\__CG__\App\Entity\Status;
+use App\Repository\CategoryRepository;
+use App\Repository\DonationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @Route("/dons", name="donation_")
  */
-
 class DonationController extends AbstractController
 {
     /**
@@ -158,12 +167,118 @@ class DonationController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="new")
+     * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new()
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo)
     {
+        $donation = new Donation();
+
+        $donation->setCreatedAt(new \Datetime());
+        $donation->setUpdatedAt(new \Datetime());
+
+        $form = $this->createForm(DonationType::class, $donation);
+        $form->handleRequest($request);
+        // dump($form->getData());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //avant l'enregistrement d'un film je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
+            $file = $donation->getPicture();
+            
+            if(!is_null($file)){
+
+                //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
+                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+
+                try {
+                    //je deplace mon fichier dans le dossier souhaité
+                    $file->move(
+                        $this->getParameter('picture_directory'),
+                        $fileName
+                    );
+                    
+                } catch (FileException $e) {
+                    dump($e);
+                }
+                $donation->setPicture($fileName);
+            }
+            // Je gere le fait de donner une image standard au don
+            else {
+                $fileName = 'default-image.jpg';
+                $donation->setPicture($fileName);
+            }
+
+            // Je lui fournis un status disponible directement
+            $status = $StatusRepo->findOneByName('Dispo');
+            $donation->setStatus($status);
+
+            // Je persist l'adresse
+            $em->persist($donation->getAddress());
+
+            // Je persist tous les produits
+            foreach($donation->getProducts() as $product){
+
+                if($product->getExpiryDate() == null){
+                    $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
+
+                    return $this->redirectToRoute('donation_new');
+                }
+
+                $em->persist($product);
+            }
+
+            // Pour setter le giver je récupere le currentUser
+            $user = $this->getUser();
+
+            $donation->addUser($user);
+
+            $currentPoints = $user->getPoints();
+            $newPoints = $currentPoints + 5;
+            $user->setPoints($newPoints);
+            
+
+            // Je vérifie qu'il y ait au moins un produit dans le don.
+            $data = $form->getData();
+
+            if(count($data->getProducts()) == 0){
+
+                $this->addFlash('danger', 'Veuillez ajouter au moins un produit');
+
+                return $this->render('donation/new.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
+
+            // Je persist la donation
+            $em->persist($donation);
+
+            // J'effectue toutes les insertions en bdd
+            $em->flush();
+
+            // J'ajoute un flashMessage pour indiquer que tout s'est bien passé
+            $this->addFlash('success', 'Le don a bien été publié !');
+            // Je retourne a la liste des tags
+            return $this->redirectToRoute('donation_list');
+
+        }
         return $this->render('donation/new.html.twig', [
-            'controller_name' => 'DonationController',
-        ]);
+            'form' => $form->createView()
+        ]); 
     }
+
+
+    /**
+     * @return string
+     */
+    private function generateUniqueFileName()
+    {
+        // md5() reduces the similarity of the file names generated by
+        // uniqid(), which is based on timestamps
+        return md5(uniqid());
+    }
+
 }
+
+// Ajouter au fur et a mesure dans la base de données
+// A la fin de l'ajout des produits
+// Je récupere les id des produits

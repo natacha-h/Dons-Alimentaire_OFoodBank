@@ -8,6 +8,10 @@ body, html{
     padding: 0;
 }
 
+.hide-my-form{
+    display: none;
+}
+
 /* Suppression padding sur container fluid */
 .container-fluid{
     padding-left: 0;
@@ -84,6 +88,11 @@ li.nav-item.col-6.col-md-5 {
     transform: rotate(-20deg);
 }
 
+/* Couleur bouton de validation */
+.dark-green{
+    background-color: #40a629;
+    color: white;
+}
 /* page détail d'un don */
 .fas{
     color: #f49f0a;
@@ -108,7 +117,6 @@ li.nav-item.col-6.col-md-5 {
 }
 
 @media screen and (max-width: 768px) { 
-
     body{
         width: 100%
     }
