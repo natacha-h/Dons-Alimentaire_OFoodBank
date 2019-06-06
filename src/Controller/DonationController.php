@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Donation;
+use App\Repository\DonationRepository;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Proxies\__CG__\App\Entity\Status;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,13 +17,38 @@ use Doctrine\ORM\EntityManagerInterface;
 class DonationController extends AbstractController
 {
     /**
-     * @Route("", name="list")
+     * @Route("/", name="list", methods={"GET"})
      */
-    public function list()
+    public function list(DonationRepository $donationRepository)
     {
+        //repo = $this->getDoctrine()->getRepository(Donation::class);
+
+        $donations = $donationRepository->findAll();
+        
+        $expiryDateArray = [];
+        foreach($donations as $donation){
+            $currentExpiry = false;
+            foreach($donation->getProducts() as $product){
+                $expiryDate = $product->getExpiryDate();
+        
+                // Premier tour de boucle on récupere le current
+                if($currentExpiry == false){
+                    $currentExpiry = $expiryDate;
+                }
+
+                // Nombre de secondes écoulées plus faible <=> date plus proche
+                if($currentExpiry >= $expiryDate){
+                    $currentExpiry = $expiryDate;
+                }
+            }
+            $expiryDateArray[$donation->getId()] = $currentExpiry;
+        }
+
+        
 
         return $this->render('donation/list.html.twig', [
-            'controller_name' => 'DonationController',
+            'donations' => $donations,
+            'expiryDateArray' => $expiryDateArray
         ]);
     }
 

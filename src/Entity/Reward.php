@@ -29,6 +29,11 @@ class Reward
     private $code;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $picture;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="reward")
      */
     private $users;
@@ -67,6 +72,18 @@ class Reward
         return $this;
     }
 
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
     /**
      * @return Collection|User[]
      */
@@ -97,4 +114,6 @@ class Reward
 
         return $this;
     }
+
+    
 }
