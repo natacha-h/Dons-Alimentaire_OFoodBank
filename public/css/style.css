@@ -8,29 +8,62 @@ body, html{
     padding: 0;
 }
 
+.hide-my-form{
+    display: none;
+}
+
+/* Suppression padding sur container fluid */
 .container-fluid{
     padding-left: 0;
     padding-right: 0;
 }
 
-#footer-gradient, #nav-bg-color{
+/* Background Infos profil */
+
+.profil-bg {
+    background: #E9F2DF;
+}
+
+h2{
+    margin: 1.5em 0;
+}
+
+h3{
+    margin-bottom: .7em;
+}
+
+/* Gestion de la couleurs pour la nav et le footer */
+#nav-bg-color{
+    background-color: #c6dc12;
+}
+
+#nav-bg-color a{
+    color: black;
+} 
+
+#footer-gradient {
     background-color : #E9F2DF;
 }
 
+/* Gestion de l'image dans le footer */
 li.nav-item.text-lg-left.text-sm-center{
     text-align: center;
 }
 
+/* Padding et structure du texte "je suis ..." */
 li.nav-item.col-12.col-md-2{
     padding-right: 0px;
     padding-left: 0px;
+    white-space: nowrap;
 }
 
+/* Padding des ronds */
 li.nav-item.col-6.col-md-5 {
     padding-left: 0;
     padding-right: 0;
 }
 
+/* Permet de gerer les ronds du header */
 .circle-text {
     transition: 1s;
     width:103%;
@@ -63,18 +96,82 @@ li.nav-item.col-6.col-md-5 {
     transform: rotate(-20deg);
 }
 
-@media (min-height: 300px) {
-    .navbar, .navbar-collapse ul {
-      position: sticky;
-      top: 0;
-    }
-  }
+/* Couleur bouton de validation */
+.dark-green{
+    background-color: #40a629;
+    color: white;
+}
+/* page détail d'un don */
+#reserved .fas{
+    color: #f49f0a;
+    margin-bottom: 0;
+}
 
+#select, .return{
+    background-color: #40a629;
+    color: white;
+}
+#select:hover, {
+    text-decoration: none; 
+}
+
+#reserved{
+    background-color: rgba(244, 159, 10, .4);
+    padding: .2em;
+}
+
+.return-to-list a{
+    float: right;
+    text-decoration: none;
+    font-weight: bold;
+    color: #40a629;
+}
+
+.return-to-list a:hover{
+    text-decoration: none;
+    color: #40a629;
+}
+
+#reward p{
+    margin-bottom: 0;
+}
+
+#btn-return{
+    margin: 1em 0 2em;
+    text-align: center;
+    padding-top: .5em;
+}
+
+.return{
+    padding: .7em;
+    border-radius: 3px;
+}
+
+.return:hover{
+    text-decoration: none;
+    color: white;
+}
 
 @media screen and (max-width: 768px) { 
-
     body{
         width: 100%
+    }
+
+    h2{
+        margin: .7em 0;
+    }
+
+    h3{
+        font-size: 1.2em;
+    }
+    
+    /* masque la colonne "description" du tableau qui liste les produits sur la page "détail d'un don" */
+    .hide{
+        display: none;
+    }
+
+    #donation-detail-head{
+        margin-bottom: .5em;
     }
 
 }

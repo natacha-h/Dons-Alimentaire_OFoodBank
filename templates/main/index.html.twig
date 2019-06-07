@@ -1,7 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
+
+
+
+<h2 class="display-4">
+    <center>Notre mission</center>
+</h2>
+
+
+{# <div class="card">
+    <div class="card-body"> #}
+<div>
+    <p>Nous avons crée cette plateforme afin de lutter contre la précarité et le gaspillage alimentaire.
+    Ce site est basé sur les dons.
+    Notre mission première est de mettre en relation des donateurs et les associations pour leurs échanges.
+    </p>
+
+    <div class="card col-12 col-md-6 float-right p-0 m-2 border-0 ">
+        <img src="https://occitanie.ademe.fr/sites/default/files/schema-chiffres-gaspillage-alimentaire.jpg"
+            class="card-img-top py-1" alt='Source : ADEME/ C4D'>
+        <div class="blockquote-footer p-1 m-0 text-right">
+            <small>Source : ADEME/ C4D</small>
+        </div>
+    </div>
+
+
+    <p>Chaque année en France:
+        Une personne jette en moyenne 7 kilos d’aliments non déballés.
+        Le gaspillage représente 10 millions de tonnes, répartis à hauteur de 32% au niveau de l'étape de la
+        production; 21% sur la transformation; 14% sur la distribution et 33% au niveau de la consommation c'est
+        à dire moi, vous, nous tous. Le schéma ci-dessous représente la répartition du gaspillage alimentaire
+        sur les étapes de la chaîne de mise à disposition des produits et les impacts associé.
+    </p>
+
+
+    <p>Les commerces de proximité, les supermarchés, les hypermarchés optimisent leurs stocks mais doivent
+        faire face à des dates de péremption et à des invendus qui se transforment souvent en kilos voire tonnes
+        de déchets tous les ans.(source ADEME)
+    </p>
+
+</div>
+
+{# </div>
+</div> #}
+
+
+<h2 class="display-4">
+    <center>Les derniers dons</center>
+</h2>
+
+<div class="row mt-3">
+    {% for donation in donations %}
+
+    <div class="col-md-4 col-12 my-2">
+        <div class="card">
+            <div class="card-body">
+                {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
+                <img src="{{donation.picture}}" class="card-img" alt="aleatoire">
+                <h3 class="card-title">{{donation.title}}</h3>
+                <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
 
 {% endblock %}

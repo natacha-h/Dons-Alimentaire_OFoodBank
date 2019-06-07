@@ -8,20 +8,29 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto container">
             <li class="nav-item ">
-                <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{path('main_index')}}">Accueil <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Les dons</a>
+                <a class="nav-link" href="{{path('donation_list')}}">Les dons</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Comment ça marche ?</a>
+                <a class="nav-link" href="{{ path('main_informations') }}">Comment ça marche ?</a>
             </li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('user_show', {'id': app.user.id })}}">Mon profil</a>
+            </li>  
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+            </li>           
+            {% else %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_login')}}">Se connecter</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">S'inscrire</a>
+                <a class="nav-link" href="{{ path('user_inscription')}}">S'inscrire</a>
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>  

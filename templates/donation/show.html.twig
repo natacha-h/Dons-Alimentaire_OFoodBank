@@ -8,82 +8,103 @@
 {% endblock %}
 
 {% block body %}
+    <div class="return-to-list">
+        <a href="{{path('donation_list')}} "> <i class="fas fa-angle-double-left"></i> Retour à la liste </a>
+    </div>
     {# {{dump(donation)}} #}
     <h2 class="text-center">{{donation.title}} </h2>
 
-    <section id="donation-detail-head" class="row">
-        <img id="pic-donation" src="{{donation.picture}} " class="img-fluid" style="max-width: 50%;" alt="Responsive image">
+    <section id="donation-detail-head" class="row mb-2">
+        <div class="col-12 col-md-6">
+            <img id="pic-donation" src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="img-fluid mb-1"  alt="Responsive image">
+        </div>
         {# {{dump(app.user.id)}} #}
 
-        <div class="col-6">
-            <div id="select-donation">
+        <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+            {# Formulaire de sélection/déselection du don #}
+            <div id="select-donation" class="mb-2">
+                {# si le don est déja réservé #}
                 {% if "Réservé" == donation.status.name %}
-                    <i class="fas fa-check-circle"></i> Ce don est réservé
-                        {{dump(app.user.id)}}
-                    {% if collector %}
-                        {% if app.user.id == collector.id %}
-                            {{dump(collector.id)}}
-                            <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
-                                Annuler la réservation de ce don 
-                                <button>
-                                    <i class="far fa-times-circle"></i>
-                                </button>
-                            </form>
-                        
-                        {% endif %}
-                        
-                                           
+                    <p id="reserved" class="mb-3">
+                        <i class="fas fa-clock"></i> Ce don est réservé
+                    </p>
+
+                        {# {{dump(app.user.id)}} #}
+                    
+                    {% if collector %} {# Si un collector existe #}
+                        {% if app.user %} {# et si un utilisateur est connecté #}
+                            {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
+                            {% if app.user.id == collector.id %}
+                                {# {{dump(collector.id)}} #}
+                                <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
+                                    Annuler la réservation de ce don 
+                                    <button>
+                                        <i class="far fa-times-circle"></i>
+                                    </button>
+                                </form>
+                            
+                            {% endif %}
+                        {% endif %}                                           
                     {% endif %}
-                    
-                    
-                {% else %}
-                    <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
-                        <label for="select">
-                            Réserver ce don :
-                        </label>
-                        <button id="select">
-                            <i class="far fa-check-circle"></i>
-                        </button>
-                    </form>                     
-                {% endif %}
                 
-            
+                {# si le don est disponible  #}
+                {% elseif is_granted('ROLE_ASSOC') %}
+                    
+                        <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                                
+                            <button class="btn btn-link" id="select">
+                            Réserver ce don <i class="far fa-check-circle"></i>
+                            </button>
+                        </form>   
+                    {% else %}
+                        Vous ne pouvez pas réserver ce don
+                {% endif %}            
             </div>
-            <h3> Informations sur le donateur</h3>
-            {# {{ dump(giver)}} #}
-            <p>
-                {{ giver.company}}
-            </p>
-            <p>
-                Contact : {{ giver.firstname}} {{ giver.lastname}} <br>
-                Téléphone : {{ giver.phoneNumber}}
-                e-mail : {{ giver.email}}
-                Note : {{ giver.rating}}
-            </p>
+            
+            {# Informations sur le donateur #}
+            <div>
+                <h3> Informations sur le donateur</h3>
+                {# {{ dump(giver)}} #}
+                <p class="font-weight-bold">
+                    {{ giver.company}}
+                </p>
+                <p>
+                    Contact : {{ giver.firstname}} {{ giver.lastname}} <br>
+                    Téléphone : {{ giver.phoneNumber}} <br>
+                    e-mail : {{ giver.email}} <br>
+                    Note : {{ giver.rating}} 
+                </p>
+                <div id="reward">
+                    <img src="{{ asset('pictures/' ~ (giver.reward.picture))}} " alt="reward niveau {{giver.reward.code}}" class="img-fluid mb-2" > 
+                    <p>
+                       Niveau {{giver.reward.title}}
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 
     <section id="donation-produits">
         <h3> Liste des produits :</h3>
 
-        <div class="table-responsive-sm">
+        <div class="table-responsive-md">
 
             <table class="table">
                 <thead>
                     <tr>
                     <th scope="col">Nom</th>
-                    <th scope="col">Description</th>
                     <th scope="col">Quantité</th>
                     <th scope="col">Date de péremption</th>
+                    <th scope="col" class="hide">Description</th>
                     </tr>
                 </thead>
                 {% for product in donation.products %}
                 {# {{dump(product)}} #}
                     <tr>
                         <td scope="row">{{product.name}} </td>
-                        <td>{{product.description}}</td>
                         <td>{{product.quantity}}</td>
                         <td>{{product.expiryDate|date("d/m/Y")}}</td>
+                        <td class="hide">{{product.description}}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -101,11 +122,15 @@
                 <p class="card-text">  
                     {{ donation.address.zipCode}} {{donation.address.city}}
                 </p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
         </div>
         <div id="map" style='width:600px; height:400px;'></div>
     </section>
+    <div id="btn-return">
+        <a href="{{path('donation_list')}}" class="return" > 
+            Retour à la liste 
+        </a>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

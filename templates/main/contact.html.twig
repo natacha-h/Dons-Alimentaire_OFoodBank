@@ -1,7 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}Contact{% endblock %}
 
 {% block body %}
+
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4"><center>Votre formulaire de contact</center></h1>
+  </div>
+</div>
+
+<form id="contact-form" method="post" role="form" class="mb-5">
+
+    <div class="messages"></div>
+
+    <div class="controls">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="form_firstname">Nom</label>
+                    <input id="form_firstname" type="text" name="firstname" class="form-control" placeholder="Veuillez rentrer votre nom" >
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="form_lastname">Prénom</label>
+                    <input id="form_lastname" type="text" name="lastname" class="form-control" placeholder="Veuillez rentrer votre prénom">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="form_email">Email</label>
+                    <input id="form_email" type="email" name="email" class="form-control" placeholder="Veuillez rentrer votre email">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="form_need">Spécifiez votre besoin</label>
+                    <select id="form_need" name="need" class="form-control">
+                        <option value="Demande de renseignement">Demande de renseignement</option>
+                        <option value="">Demande de prise de contact</option>
+                        <option value="">Demande suppression de don</option>
+                        <option value="">Déclarer un probleme sur le site</option>
+                        <option value="">Autres</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="form_message">Message </label>
+                    <textarea id="form_message" name="message" class="form-control" placeholder="Taper votre message" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-success btn-send" value="Envoyer">
+            </div>
+    
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<a href="{{path('main_about')}}">Qui sommes-nous ?</a>
 
 {% endblock %}
