@@ -47,4 +47,14 @@ class RewardRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findRewardById($value): ?Reward
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    
 }

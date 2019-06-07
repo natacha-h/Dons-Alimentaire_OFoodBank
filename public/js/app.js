@@ -1,6 +1,8 @@
 // Déclare variable de stockage des forms
 var $collectionHolder;
 
+var currentIndex = 0;
+
 // Prépare un bouton d'ajout
 var $addNewProduct = $('<a href="#" class="btn my-4 px-3">Ajouter un nouveau produit</a>');
 $addNewProduct.css('background-color', "#7ad166");
@@ -66,14 +68,17 @@ function handleClickAddNewProduct (event) {
 
     // Je crée le formulaire 
     var newForm = prototype;
+    
+    // J'implémente l'index pour le nouveau form
+    $collectionHolder.data('index', index+1);
+
+    currentIndex = currentIndex + 1;
 
     // On va remplace le __name__ par l'index du formulaire
     // Il prend un regex (g => globally a chaque fois qu'il va rencontrer __name__
     // il va le changer par l'index)
-    newForm = newForm.replace(/__name__/g, index);
+    newForm = newForm.replace(/__name__/g, currentIndex);
 
-    // J'implémente l'index pour le nouveau form
-    $collectionHolder.data('index', index++);
 
     // Je peux maintenant crée le panel
     var $panel = $('<div class="card bg-light mt-2"><div class="card-header"><h5>Description du produit</h5></div></div>');

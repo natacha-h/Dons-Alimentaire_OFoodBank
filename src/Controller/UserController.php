@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Utils\Rewarder;
+
 /**
  * @Route("/user", name="user_")
  */
@@ -16,7 +18,7 @@ class UserController extends AbstractController
     /**
      * @Route("/register", name="inscription", methods={"GET","POST"})
      */
-    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, Rewarder $rewarder): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -26,6 +28,15 @@ class UserController extends AbstractController
             //cette methode issue de la classe UserPasswordEncoderInterface permet d'encoder le mot de passe par rapport au configuration appliquée sur l'objet fournit
             $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
+
+            // récupération du reward :
+            // 1 on récupère le nombre de points du user
+            $points = $user->getPoints();
+            // 2. on utilise rewarder() pour générer le reward associé
+            $reward = $rewarder->rewarder($points);
+            // dd($reward);
+            // 3.  on ajoute le reward au user 
+            $user->setReward($reward);
             $em->persist($user->getAddress());
             $em->persist($user);
             $em->flush();

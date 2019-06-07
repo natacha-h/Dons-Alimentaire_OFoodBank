@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Entity\Product;
+use App\Utils\Rewarder;
 use App\Entity\Donation;
 use App\Form\ProductType;
 use App\Form\DonationType;
@@ -169,9 +170,17 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo)
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
     {
         $donation = new Donation();
+
+        $product = new Product();
+        $product->setName('');
+        $product->setQuantity(1);
+        $product->setDescription('');
+        $product->setExpiryDate(new \DateTime());
+        $product->setCategory($cateRepo->findOneById(64));
+        $donation->addProduct($product);
 
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
@@ -179,12 +188,11 @@ class DonationController extends AbstractController
         $form = $this->createForm(DonationType::class, $donation);
         $form->handleRequest($request);
         // dump($form->getData());
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
             //avant l'enregistrement d'un film je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
             $file = $donation->getPicture();
-            
+            // dd($donation);
             if(!is_null($file)){
 
                 //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
@@ -236,6 +244,9 @@ class DonationController extends AbstractController
             $newPoints = $currentPoints + 5;
             $user->setPoints($newPoints);
             
+            // on utilise rewarder pour metre à jour (si besoin) le reward
+            $reward = $rewarder->rewarder($newPoints);
+            $user->setReward($reward);
 
             // Je vérifie qu'il y ait au moins un produit dans le don.
             $data = $form->getData();
