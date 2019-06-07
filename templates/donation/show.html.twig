@@ -9,7 +9,9 @@
 
 {% block body %}
     <div class="return-to-list">
-        <a href="{{path('donation_list')}} "> <i class="fas fa-angle-double-left"></i> Retour à la liste </a>
+        <p>
+            <a href="{{path('donation_list')}} "> <i class="fas fa-angle-double-left"></i> Retour à la liste </a>
+        </p> 
     </div>
     {# {{dump(donation)}} #}
     <h2 class="text-center">{{donation.title}} </h2>
