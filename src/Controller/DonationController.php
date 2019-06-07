@@ -6,6 +6,7 @@ use App\Entity\Address;
 use App\Entity\Product;
 use App\Utils\Rewarder;
 use App\Entity\Donation;
+use App\Utils\Addresser;
 use App\Form\ProductType;
 use App\Form\DonationType;
 use App\Repository\StatusRepository;
@@ -165,6 +166,49 @@ class DonationController extends AbstractController
             'id' => $donation->getId(),
             // 'giver' => $donation->getUsers()[0]
         ]);
+    }
+
+    /**
+     * @Route("/api/address/{id}/coordonates", name="coordonates", methods={"POST"})
+     */
+    public function getCoordonates(Donation $donation, Addresser $addresser){
+        // On récupere l'adresse du don concerné
+        $address = $donation->getAddress();
+
+        // On récupere les infos de son adresse pour construire l'url
+        $number = $address->getNumber();
+        $zipCode = $address->getZipCode();
+        $city = $address->getCity();
+        $plussedCity = $addresser->addresser($city); 
+        // On remplace les espaces du nom de la rue par des + grâce au service
+        $street1 = $address->getStreet1();
+        $plussedStreet = $addresser->addresser($street1);
+
+        // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
+        if($number != null){
+            // On construit l'url avec les valeurs de la donation concernée avec chiffre
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q='.$number.'+'. $plussedStreet .',+'. $plussedCity .'&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+        } else{
+            // On construit l'url avec les valeurs de la donation concernée sans chiffre
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q=' . $plussedStreet . ',+' . $plussedCity . '&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+        }
+
+        // On décode la réponse sous forme de tableau
+        $response = json_decode($response, true);
+
+        // Si le tableau est vide on retourne un code 0
+        if(empty($response)){
+            return $this->json([
+                    'code' => 0
+            ]);
+        }
+        // Sinon on retourne un code 1 et la réponse
+        else {
+            return $this->json([
+                'coordonates' => $response,
+                'code' => 1
+                ]);
+        }
     }
 
     /**
