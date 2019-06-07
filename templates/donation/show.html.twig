@@ -41,15 +41,18 @@
                             {% endif %}
                         {% endif %}                                           
                     {% endif %}
-
+                
                 {# si le don est disponible  #}
-                {% else %}
-                    <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
-                            
-                        <button class="btn btn-link" id="select">
-                           Réserver ce don <i class="far fa-check-circle"></i>
-                        </button>
-                    </form>                     
+                {% elseif is_granted('ROLE_ASSOC') %}
+                    
+                        <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                                
+                            <button class="btn btn-link" id="select">
+                            Réserver ce don <i class="far fa-check-circle"></i>
+                            </button>
+                        </form>   
+                    {% else %}
+                        Vous ne pouvez pas réserver ce don
                 {% endif %}            
             </div>
             
