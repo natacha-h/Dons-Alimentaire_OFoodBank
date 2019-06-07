@@ -11,6 +11,8 @@ $addNewProduct.css('color', 'white');
 
 // Quand le document est pret
 $(document).ready(function(){
+    console.log('app : init');
+
     // Je récupere mes formulaires
     $collectionHolder = $('#product_list');
 
@@ -32,6 +34,7 @@ $(document).ready(function(){
 });
 
 function addRemoveBtn ($panel) {
+    console.log('ajout du bouton remove');
     // Je prépare mon bouton de suppression
     var $removeBtn = $('<a href="#" class="btn btn-danger">Supprimer le produit de la liste</a>');
 
@@ -70,6 +73,7 @@ function handleClickAddNewProduct (event) {
     var newForm = prototype;
     
     // J'implémente l'index pour le nouveau form
+    // Me permet de récuperer toutes les valeurs de tous les form
     $collectionHolder.data('index', index+1);
 
     currentIndex = currentIndex + 1;
