@@ -187,6 +187,8 @@ class DonationController extends AbstractController
             'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
         );
 
+        //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
+
         return $this->redirectToRoute('user_manage_donations', [
             'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
         ]);
@@ -229,6 +231,8 @@ class DonationController extends AbstractController
         );
 
         // dd($donation->getUsers());
+
+        //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
 
         return $this->redirectToRoute('user_manage_donations', [
             'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
