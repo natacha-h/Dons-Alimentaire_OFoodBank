@@ -13,6 +13,7 @@ use Proxies\__CG__\App\Entity\Status;
 use App\Repository\CategoryRepository;
 use App\Repository\DonationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
@@ -29,14 +30,23 @@ class DonationController extends AbstractController
     /**
      * @Route("/", name="list", methods={"GET"})
      */
-    public function list(DonationRepository $donationRepository)
+    public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request)
     {
         //repo = $this->getDoctrine()->getRepository(Donation::class);
 
-        $donations = $donationRepository->findAll();
-        
+        $donations = $donationRepository->findDonationWithProducts();
+
+        $donationsList = $paginator->paginate(
+            $donationRepository->findByStatusQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        // dd($donations);
+
         $expiryDateArray = [];
         foreach($donations as $donation){
+            // dump($donation);
             $currentExpiry = false;
             foreach($donation->getProducts() as $product){
                 $expiryDate = $product->getExpiryDate();
@@ -54,10 +64,10 @@ class DonationController extends AbstractController
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
 
-        
-
+        dump($expiryDateArray);
+        // dump($donationsList);
         return $this->render('donation/list.html.twig', [
-            'donations' => $donations,
+            'donations' => $donationsList,
             'expiryDateArray' => $expiryDateArray
         ]);
     }
