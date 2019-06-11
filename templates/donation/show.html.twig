@@ -114,10 +114,10 @@
     </section>
     <section id ="localisation">
         {# {{ dump(donation.address.number)}} #}
-        <div class="card mb-3 d-flex flex-row">
+        <div class="card mb-3 d-flex flex-row row">
             {# <img src="..." class="card-img-top" alt="..."> #}
-            <div id="map" style='width:600px; height:400px;'></div>
-            <div class="card-body">
+            <div id="map" style='width:600px; height:400px;' class="col-12 col-md-8"></div>
+            <div class="card-body col-12 col-md-4">
                 <h5 class="card-title">Localisation du don </h5>
                 <p class="card-text">  
                     {{ donation.address.number}} {{donation.address.street1}}
