@@ -1,0 +1,18 @@
+
+{% block body %}
+
+    <center><h2>Vous avez reçu une {{ need }} </h2></center>
+
+    <p> Ce mail vous a été envoyé par {{ firstname }} {{ lastname }}  </p>
+
+    <p> Son adresse mail est {{ email }} </p>
+
+    <p> Il souhaite prendre contact pour {{ need }} </p>
+
+    <p> Voici son message : </p>
+    <p> {{ message }} </p>
+
+    <center><small>ofoodbank.com</small></center>
+    
+{% endblock %}
+    

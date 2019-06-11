@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+
+
 use App\Form\ContactType;
 use App\Repository\DonationRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,8 +43,9 @@ class MainController extends AbstractController
     /**
      * @Route("/contact", name="contact", methods={"post", "get"})
      */
-    public function contact(Request $request)
+    public function contact(Request $request, \Swift_Mailer $mailer)
 
+    //Environment pour pourvoir afficher un email au format HTML et $renderer partie TWIG
     {
         $firstname = $request->request->get('firstname');
         $lastname = $request->request->get('lastname');
@@ -53,12 +56,83 @@ class MainController extends AbstractController
         //dump($lastname);
         //dump($email);
         //dump($message);
- 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)){
+
+        // Créer un tableau vide stockant les erreurs
+        $arrayErrors = [];
+
+        // Vérifier si le firstname est vide
+        // Si vide
+        // Alors ajouter un message d'erreur dans le tableau
+        if(empty($firstname)){
+            $arrayErrors['firstname'] = 'Veuillez renseigner votre prénom';
+
         }
-        return $this->render('main/contact.html.twig');
+        if(empty($lastname)){
+            $arrayErrors['lastname'] = 'Veuillez renseigner votre nom';
+
+        }
+        if(empty($email)){
+            $arrayErrors['email'] = 'Veuillez renseigner votre email';
+
+        }
+        if(empty($need)){
+            $arrayErrors['need'] = 'Veuillez renseigner votre besoin';
+
+        }
+        if(empty($message)){
+            $arrayErrors['message'] = 'Veuillez renseigner votre message';
+
+        }
+
+        //dump($arrayErrors);
+        dump($email);
+        // Si tableau d'erreur vide alors envoyer le mail
+
+        if(count($arrayErrors) == 0){
+
+           $mail = (new \Swift_Message($need))
+               ->setFrom($email)
+               ->setTo('ofoodbank@gmail.com')
+               ->setBody(
+                    $this->renderView(
+                        'mailer/mail.html.twig',
+                        [
+                            'message' => $message,
+                            'email' => $email,
+                            'need' => $need,
+                            'firstname' => $firstname,
+                            'lastname' => $lastname
+                        ]
+                    ),
+                    'text/html'
+                );
+                    
+                
+           $mailer->send($mail);
+            
+
+            /*
+             * ->setBody(
+            $this->renderView(
+                // templates/emails/registration.html.twig
+                'emails/registration.html.twig',
+                ['name' => $name]
+            ),
+            'text/html'
+        )
+             */
+            // Ajout flashMessage    
+    
+        }
+
+        return $this->render('main/contact.html.twig', [
+            
+            ]);
+ 
+       
         
-    }
+        
+}
 
 
     /**
