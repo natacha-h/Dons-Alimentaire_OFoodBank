@@ -64,7 +64,7 @@ class DonationController extends AbstractController
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
 
-        dump($expiryDateArray);
+        // dump($expiryDateArray);
         // dump($donationsList);
         return $this->render('donation/list.html.twig', [
             'donations' => $donationsList,
