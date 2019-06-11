@@ -124,23 +124,19 @@ class DonationController extends AbstractController
 
         dump($donation->getUsers());
 
-        // // ajout d'un flash message
-        // $this->addFlash(
-        //     'success',
-        //     'La demande de réservation est bien prise en compte'
-        // );
-
-        // test de notification
-
-        $update = new Update(
-            '127.0.0.1:8001/test',
-            json_encode(['message' => 'Un utilisateur a réservé votre don'])
+        // ajout d'un flash message
+        $this->addFlash(
+            'success',
+            'La demande de réservation est bien prise en compte'
         );
 
-        // The Publisher service is an invokable object
+        // Notification mercure
+        $update = new Update(
+            'http://127.0.0.1:8001/dons/{id}/select', "[]"
+        );
+
         $publisher($update);
 
-        // return new Response('published!');
 
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
@@ -169,7 +165,7 @@ class DonationController extends AbstractController
         // ajout d'un Flash Message
         $this->addFlash(
             'success',
-            'Vous avez bien annulé la réservaton de ce don'
+            'Vous avez bien annulé la réservation de ce don'
         );
 
         dump($donation->getUsers());
