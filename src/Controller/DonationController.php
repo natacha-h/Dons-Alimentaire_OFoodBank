@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\Update;
 
 /**
  * @Route("/dons", name="donation_")
@@ -104,7 +106,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}/select", name="select", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
+    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, Publisher $publisher)
     {
         // on crée un nouvel objet Status 
         $newStatus = $statusRepository->findOneByName('Réservé');
@@ -122,11 +124,23 @@ class DonationController extends AbstractController
 
         dump($donation->getUsers());
 
-        // ajout d'un flash message
-        $this->addFlash(
-            'success',
-            'La demande de réservation est bien prise en compte'
+        // // ajout d'un flash message
+        // $this->addFlash(
+        //     'success',
+        //     'La demande de réservation est bien prise en compte'
+        // );
+
+        // test de notification
+
+        $update = new Update(
+            '127.0.0.1:8001/test',
+            json_encode(['message' => 'Un utilisateur a réservé votre don'])
         );
+
+        // The Publisher service is an invokable object
+        $publisher($update);
+
+        // return new Response('published!');
 
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
