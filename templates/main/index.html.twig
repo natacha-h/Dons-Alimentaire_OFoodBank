@@ -70,17 +70,3 @@
 </div>
 
 {% endblock %}
-
-{% block javascripts %}
-    <script>
-        $(document).ready(function(){
-            var cardImg = $('.regul-size');
-            var defaultImg = $(cardImg).attr('src');
-
-            var splitImage = defaultImg.split('/uploads/pictures/');
-
-            console.log(splitImage[1]);
-            
-        });
-    </script>
-{% endblock %}
