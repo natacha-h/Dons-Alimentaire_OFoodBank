@@ -57,82 +57,96 @@ class MainController extends AbstractController
         //dump($email);
         //dump($message);
 
-        // Créer un tableau vide stockant les erreurs
-        $arrayErrors = [];
+        $btn = $request->request->get('submit-form-contact');
+        
+       if(isset($btn)){
+            // Créer un tableau vide stockant les erreurs
+            $arrayErrors = [];
 
-        // Vérifier si le firstname est vide
-        // Si vide
-        // Alors ajouter un message d'erreur dans le tableau
-        if(empty($firstname)){
-            $arrayErrors['firstname'] = 'Veuillez renseigner votre prénom';
+            // Vérifier si le firstname est vide
+            // Si vide
+            // Alors ajouter un message d'erreur dans le tableau
+            if(empty($firstname)){
+                $arrayErrors['firstname'] = 'Veuillez renseigner votre prénom';
+                $this->addFlash('danger', 'Veuillez renseigner votre prénom');
+            }
+            if(empty($lastname)){
+                $arrayErrors['lastname'] = 'Veuillez renseigner votre nom';
+                $this->addFlash('danger', 'Veuillez renseigner votre nom');
 
+            }
+            if(empty($email)){
+                $arrayErrors['email'] = 'Veuillez renseigner votre email';
+                $this->addFlash('danger', 'Veuillez renseigner votre email');
+
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $arrayErrors['email'] = 'Veuillez renseigner un email valide';
+                $this->addFlash('danger', 'Veuillez renseigner un email valide');
+            }
+
+            if(empty($need)){
+                $arrayErrors['need'] = 'Veuillez renseigner votre besoin';
+                $this->addFlash('danger', 'Veuillez renseigner votre besoin');
+
+            }
+            if(empty($message)){
+                $arrayErrors['message'] = 'Veuillez renseigner votre message';
+                $this->addFlash('danger', 'Veuillez renseigner votre message');
+
+            }
+
+            //dump($arrayErrors);
+            dump($email);
+            // Si tableau d'erreur vide alors envoyer le mail
+
+            if(count($arrayErrors) == 0){
+
+                $mail = (new \Swift_Message($need))
+                    ->setFrom($email)
+                    ->setTo('ofoodbank@gmail.com')
+                    ->setBody(
+                            $this->renderView(
+                                'mailer/mail.html.twig',
+                                [
+                                    'message' => $message,
+                                    'email' => $email,
+                                    'need' => $need,
+                                    'firstname' => $firstname,
+                                    'lastname' => $lastname
+                                ]
+                            ),
+                            'text/html'
+                        );
+                                
+                $mailer->send($mail);
+
+                // Ajout flashMessage    
+                $this->addFlash('success', 'Votre message a bien été envoyé');
+
+                return $this->redirectToRoute('main_index');
+            }
+            else {
+                return $this->render('main/contact.html.twig', [
+                    'inputValues' => [
+                        'firstname' => $firstname,
+                        'lastname' => $lastname,
+                        'email' => $email,
+                        'message' => $message
+                    ]
+                ]);    
+            }
         }
-        if(empty($lastname)){
-            $arrayErrors['lastname'] = 'Veuillez renseigner votre nom';
-
-        }
-        if(empty($email)){
-            $arrayErrors['email'] = 'Veuillez renseigner votre email';
-
-        }
-        if(empty($need)){
-            $arrayErrors['need'] = 'Veuillez renseigner votre besoin';
-
-        }
-        if(empty($message)){
-            $arrayErrors['message'] = 'Veuillez renseigner votre message';
-
-        }
-
-        //dump($arrayErrors);
-        dump($email);
-        // Si tableau d'erreur vide alors envoyer le mail
-
-        if(count($arrayErrors) == 0){
-
-           $mail = (new \Swift_Message($need))
-               ->setFrom($email)
-               ->setTo('ofoodbank@gmail.com')
-               ->setBody(
-                    $this->renderView(
-                        'mailer/mail.html.twig',
-                        [
-                            'message' => $message,
-                            'email' => $email,
-                            'need' => $need,
-                            'firstname' => $firstname,
-                            'lastname' => $lastname
-                        ]
-                    ),
-                    'text/html'
-                );
-                    
-                
-           $mailer->send($mail);
-            
-
-            /*
-             * ->setBody(
-            $this->renderView(
-                // templates/emails/registration.html.twig
-                'emails/registration.html.twig',
-                ['name' => $name]
-            ),
-            'text/html'
-        )
-             */
-            // Ajout flashMessage    
-    
-        }
-
         return $this->render('main/contact.html.twig', [
-            
-            ]);
- 
-       
-        
-        
-}
+            'inputValues' => [
+                'firstname' => '',
+                'lastname' => '',
+                'email' => '',
+                'message' => ''
+            ]
+        ]);    
+    }
 
 
     /**
