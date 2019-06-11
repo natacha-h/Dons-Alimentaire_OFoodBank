@@ -155,6 +155,10 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+a.page-link{
+    padding: 0.5rem 0.5rem;
+}
+
 @media screen and (max-width: 768px) { 
     body{
         width: 100%
