@@ -16,7 +16,38 @@
             <h5>Adresse de récupération du don</h5>
         </div>
         <div class="card-body">
-            {{form_row(form.address)}}
+            <p class="card-text">
+                {{app.user.address.number}} {{app.user.address.street1}} <br>         
+                {{app.user.address.street2}} <br> 
+                {{app.user.address.ZipCode}} {{app.user.address.city}}
+            </p>
+            <button class="btn btn-link" id="showChangeAdress" >Utiliser une autre adresse </button>
+            
+        </div>
+        <div class="card-body hide-my-form" id="changeAdress" name="newAddress">
+            {# {{form_row(form.address)}} #}
+
+            <div class="form-group">
+                <label for="number">Numéro </label>
+                <input type="text" class="form-control" id="number" name="number" placeholder="{{app.user.address.number}}">
+            </div>
+            <div class="form-group">
+                <label for="street1">Nom de la rue*</label>
+                <input type="text" class="form-control" id="street1" name="street1" placeholder="{{app.user.address.street1}} ">
+            </div>
+            <div class="form-group">
+                <label for="street2">Complément d'adresse</label>
+                <input type="text" class="form-control" id="street2" name="street2" placeholder="{{app.user.address.street2}} ">
+            </div>
+            <div class="form-group">
+                <label for="zipCode">Code Postal*</label>
+                <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="{{app.user.address.ZipCode}} ">
+            </div>
+            <div class="form-group">
+                <label for="city">Ville*</label>
+                <input type="text" class="form-control" id="street2" name="city" placeholder="{{app.user.address.city}} ">
+            </div>
+                
         </div>
     </div>
 
