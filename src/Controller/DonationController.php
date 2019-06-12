@@ -106,8 +106,9 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}/select", name="select", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, Publisher $publisher)
+    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
     {
+
         // on crée un nouvel objet Status 
         $newStatus = $statusRepository->findOneByName('Réservé');
         // dd($newStatus);
@@ -119,8 +120,8 @@ class DonationController extends AbstractController
         $em->persist($donation);
         $em->flush();
 
-        // on crée la variable "collector" à qui on attribue l'utilisateur courant
-        $collector = $this->getUser();
+        // // on crée la variable "collector" à qui on attribue l'utilisateur courant
+        // $collector = $this->getUser();
 
         dump($donation->getUsers());
 
@@ -129,6 +130,64 @@ class DonationController extends AbstractController
             'success',
             'La demande de réservation est bien prise en compte'
         );
+        
+        // Envoi d'un mail au donateur lorsqu'on se positionne sur le don
+        // $from = "oFoodBank@gmail.com";
+        // $headers[] = 'MIME-Version: 1.0';
+        // $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+        // $headers[] = "From:" . $from;
+        // dd($headers);
+        $headers = [];
+
+        $donationUsers = $donation->getUsers();
+        foreach ($donationUsers as $user){
+            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+
+            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+    
+            ini_set( 'display_errors', 1 );
+
+            error_reporting( E_ALL );
+
+            $headers = 'Content-type: text/html; charset=utf8';
+
+            $from = "oFoodBank@gmail.com";
+        
+            $to = $mail;
+        
+            $subject = "Don réservé";
+        
+            $message = utf8_decode("Bonjour, votre demande de réservation à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous <3 Optimus Pikachu *_*");
+        
+            $headers = "From:" . $from;
+        
+            mail($to,$subject,$message, $headers);
+            
+            } 
+            
+            if ('ROLE_GIVER' == $user->getRole()->getCode()){
+        
+            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+    
+            ini_set( 'display_errors', 1 );
+
+            error_reporting( E_ALL );
+
+            $headers = 'Content-type: text/html; charset=utf8';
+
+            $from = "oFoodBank@gmail.com";
+        
+            $to = $mail;
+        
+            $subject = utf8_decode("Réservation de votre don");
+        
+            $message = "Bonjour, votre don à été réservé. Merci de faire le nécessaire pour la validation.";
+        
+            $headers = "From:" . $from;
+        
+            mail($to,$subject,$message, $headers);
+        }
+    }
 
 
         return $this->redirectToRoute('donation_show', [
