@@ -130,13 +130,6 @@ class DonationController extends AbstractController
             'La demande de réservation est bien prise en compte'
         );
 
-        // Notification mercure
-        $update = new Update(
-            'http://127.0.0.1:8001/dons/{id}/select', "[]"
-        );
-
-        $publisher($update);
-
 
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,

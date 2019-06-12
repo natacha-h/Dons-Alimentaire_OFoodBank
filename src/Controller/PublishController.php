@@ -10,13 +10,13 @@ class PublishController
 {
     public function __invoke(Publisher $publisher): Response
     {
+        // Notification mercure
         $update = new Update(
-            '127.0.0.1:8001/test',
-            json_encode(['message' => 'OutOfStock'])
+            'http://127.0.0.1:8001/dons/{id}/select', json_encode(['status' => 'Test'])
         );
 
-        // The Publisher service is an invokable object
         $publisher($update);
+
 
         return new Response('published!');
     }
