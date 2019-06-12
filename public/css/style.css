@@ -156,9 +156,9 @@ li.nav-item.col-6.col-md-5 {
 }
 
 /*  
-    * Rating styles
-    */
-    .rating {
+* Rating styles
+*/
+.rating {
     width: 226px;
     margin: 0 auto 1em;
     font-size: 45px;
@@ -185,7 +185,8 @@ li.nav-item.col-6.col-md-5 {
 .rating a:hover,
 .rating a:hover ~ a,
 .rating a:focus,
-.rating a:focus ~ a		{
+.rating a:focus ~ a,
+.rating input:checked		{
     color: orange;
     cursor: pointer;
 }

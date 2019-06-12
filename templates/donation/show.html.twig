@@ -66,23 +66,25 @@
                     {{ giver.company}}
                 </p>
                 <p>
-                    Contact : {{ giver.firstname}}  
-                    {# Systeme de notation uniquement pour l'asso qui a bénéficié du don #} {{ giver.lastname}} <br>
-                    Téléphone : {{ giver.phoneNumber}} <br>
+                    Contact : {{ giver.firstname}} {{ giver.lastname}} <br>
+                    Téléphone: {{ giver.phoneNumber}} <br>
+                    e-mail : {{ giver.email}} <br>
+                    Note : {{giver.rating}}<br>
+                    {# Systeme de notation uniquement pour l'asso qui a bénéficié du don #}
+                    {#{{dump(giver.rating)}}#}
+                </p>
                     
                 <div class="rating rating2">
                     <form method="post" action='{{path('donation_vote', {'id': donation.id})}}'><!--
-                        --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating == 5) ? 'checked' }} ><label for="e5">★</label><!--
-                        --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating == 4) ? 'checked' }}><label for="e4">★</label><!--
-                        --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating == 3) ? 'checked' }}><label for="e3">★</label><!--
-                        --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating == 2) ? 'checked' }}><label for="e2">★</label><!--
-                        --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating == 1) ? 'checked' }}><label for="e1">★</label><!--
+                        --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
+                        --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
+                        --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
+                        --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
+                        --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
                         --><button type="submit" class="btn btn-secondary">Voter</button>
                     </form>
-                 
                 </div>
-                    Note : {{ giver.rating}} 
-                </p>
+                 
                 <div id="reward">
                     <img src="{{ asset('pictures/' ~ (giver.reward.picture))}} " alt="reward niveau {{giver.reward.code}}" class="img-fluid mb-2" > 
                     <p>
