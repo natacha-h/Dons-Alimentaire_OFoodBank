@@ -6,6 +6,7 @@ use App\Entity\Address;
 use App\Entity\Product;
 use App\Utils\Rewarder;
 use App\Entity\Donation;
+use App\Utils\Addresser;
 use App\Form\ProductType;
 use App\Form\DonationType;
 use App\Repository\StatusRepository;
@@ -155,7 +156,7 @@ class DonationController extends AbstractController
         // ajout d'un Flash Message
         $this->addFlash(
             'success',
-            'Vous avez bien annulé la réservaton de ce don'
+            'Vous avez bien annulé la réservation de ce don'
         );
 
         dump($donation->getUsers());
@@ -164,6 +165,120 @@ class DonationController extends AbstractController
             'donation' => $donation,
             'id' => $donation->getId(),
             // 'giver' => $donation->getUsers()[0]
+        ]);
+    }
+
+    /**
+     * @Route("/api/address/{id}/coordonates", name="coordonates", methods={"POST"})
+     */
+    public function getCoordonates(Donation $donation, Addresser $addresser){
+        // On récupere l'adresse du don concerné
+        $address = $donation->getAddress();
+
+        // On récupere les infos de son adresse pour construire l'url
+        $number = $address->getNumber();
+        $zipCode = $address->getZipCode();
+        $city = $address->getCity();
+        $plussedCity = $addresser->addresser($city); 
+        // On remplace les espaces du nom de la rue par des + grâce au service
+        $street1 = $address->getStreet1();
+        $plussedStreet = $addresser->addresser($street1);
+
+        // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
+        if($number != null){
+            // On construit l'url avec les valeurs de la donation concernée avec chiffre
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q='.$number.'+'. $plussedStreet .',+'. $plussedCity .'&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+        } else{
+            // On construit l'url avec les valeurs de la donation concernée sans chiffre
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q=' . $plussedStreet . ',+' . $plussedCity . '&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+        }
+
+        // On décode la réponse sous forme de tableau
+        $response = json_decode($response, true);
+
+        // Si le tableau est vide on retourne un code 0
+        if(empty($response)){
+            return $this->json([
+                    'code' => 0
+            ]);
+        }
+        // Sinon on retourne un code 1 et la réponse
+        else {
+            return $this->json([
+                'coordonates' => $response,
+                'code' => 1
+                ]);
+        }
+    }
+    /**
+     * @Route("/{id}/accept", name="accept", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function acceptDonation(StatusRepository $statusRepository, Donation $donation, EntityManagerInterface $em)
+    {
+        // on crée un nouvel objet Status 
+        $newStatus = $statusRepository->findOneByName('Donné');
+        // dd($newStatus);
+        // on change le status de la donnation
+        $donation->setStatus($newStatus);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un flash message
+        $this->addFlash(
+            'success',
+            'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
+        );
+
+        //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
+
+        return $this->redirectToRoute('user_manage_donations', [
+            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/refuse", name="refuse", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function refuseDonation(Donation $donation, EntityManagerInterface $em, StatusRepository $statusRepository)
+    {
+        // on crée un nouvel objet Status
+        $newStatus = $statusRepository->findOneByName('Dispo');
+        // on attribue le status au don
+        $donation->setStatus($newStatus);
+
+        // il faut supprimer l'association de la liste des users liée au don courant
+            //1- on récupère la liste des utilisateurs liés au don
+        $users = $donation->getUsers();
+            //2- on boucle sur la collection pour récupérer le user_role 'ROLE_ASSOC'
+        $asso = null;
+        foreach ($users as $user){
+            // dump($user->getRole()->getCode());
+
+            //si le role de user est 'ROLE_ASSOC', on le donne en valeur de la variable $asso
+            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                $asso = $user;
+            }
+        }
+        // dd($asso);
+        // on retire l'id de l'association
+        $donation->removeUser($asso);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un Flash Message
+        $this->addFlash(
+            'success',
+            'Vous avez refusé la demande de l\'association'
+        );
+
+        // dd($donation->getUsers());
+
+        //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
+
+        return $this->redirectToRoute('user_manage_donations', [
+            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
         ]);
     }
 
@@ -195,8 +310,18 @@ class DonationController extends AbstractController
             // dd($donation);
             if(!is_null($file)){
 
+                $extension = $file->guessExtension();
+                
+                if($extension != 'jpg' | $extension != 'jpeg' | $extension != 'png' | $extension != 'gif' ){
+                    $this->addFlash('danger', 'Le format de votre image ne correspond pas');
+
+                    return $this->render('donation/new.html.twig', [
+                        'form' => $form->createView()
+                    ]);
+                }
+
                 //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
-                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+                $fileName = $this->generateUniqueFileName().'.'.$extension;
 
                 try {
                     //je deplace mon fichier dans le dossier souhaité
@@ -288,8 +413,10 @@ class DonationController extends AbstractController
         return md5(uniqid());
     }
 
-}
+    
+    // Ajouter au fur et a mesure dans la base de données
+    // A la fin de l'ajout des produits
+    // Je récupere les id des produits
+    
 
-// Ajouter au fur et a mesure dans la base de données
-// A la fin de l'ajout des produits
-// Je récupere les id des produits
+}
