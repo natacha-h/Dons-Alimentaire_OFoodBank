@@ -9,9 +9,9 @@
 <h2 class="text-center my-3 text-uppercase">Liste des dons</h2>
 
 {% if is_granted('ROLE_GIVER') %}
-    <div class="row justify-content-center">
-        <a href="{{path('donation_new')}}" class="btn btn-success">Nouveau Don</a>
-    </div>
+<div class="row justify-content-center">
+    <a href="{{path('donation_new')}}" class="btn btn-success">Nouveau Don</a>
+</div>
 {% endif %}
 
 
@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-body">
                     {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
-                    <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img" alt="image du don">
+                    <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="image du don">
                     <h3 class="card-title">
                         {{donation.title}}
                         {% if "Dispo" == donation.status.name %}
@@ -37,21 +37,21 @@
                 </div>
             </div>
         </div>
+    </div>
 
     {% endfor %}
 </div>
+{% endblock %}
 
 
-
-
-
-
-
-
-
-
-
-
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            var cardImg = $('.regul-size');
+            var defaultImg = ($(cardImg).attr('src') === 'default-image.jpg');
+            console.log(defaultImg);
+        });
+    </script>
 
 
 {% endblock %}

@@ -166,6 +166,11 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+.regul-size{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
 /* 
     Permet d'afficher le nom de l'image dans l'input 
     On récupere le nom de l'attribut grâce au jQuery
