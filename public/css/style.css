@@ -166,6 +166,14 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+#shema{
+    border: 2px solid #f49f0a;
+    max-width: 600px;
+    height: 250px;
+    background-image: url(/../pictures/comment_ca_marche.svg);
+    margin: 0 auto;
+}
+
 @media screen and (max-width: 768px) { 
     body{
         width: 100%
