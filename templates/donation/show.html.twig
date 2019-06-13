@@ -2,9 +2,16 @@
 
 {% block title %}Détail du don{% endblock %}
 
+{% block stylesheets %}
+    {# CSS POUR LA MAP #}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+{% endblock %}
+
 {% block body %}
     <div class="return-to-list">
-        <a href="{{path('donation_list')}} "> <i class="fas fa-angle-double-left"></i> Retour à la liste </a>
+        <p>
+            <a href="{{path('donation_list')}} "> <i class="fas fa-angle-double-left"></i> Retour à la liste </a>
+        </p> 
     </div>
     {# {{dump(donation)}} #}
     <h2 class="text-center">{{donation.title}} </h2>
@@ -107,9 +114,10 @@
     </section>
     <section id ="localisation">
         {# {{ dump(donation.address.number)}} #}
-        <div class="card mb-3">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
+        <div class="card mb-3 d-flex flex-row row">
+            {# <img src="..." class="card-img-top" alt="..."> #}
+            <div id="map" style='width:600px; height:400px;' class="col-12 col-md-8"></div>
+            <div class="card-body col-12 col-md-4">
                 <h5 class="card-title">Localisation du don </h5>
                 <p class="card-text">  
                     {{ donation.address.number}} {{donation.address.street1}}
@@ -119,10 +127,17 @@
                 </p>
             </div>
         </div>
+        {# <div id="map" style='width:600px; height:400px;'></div> #}
     </section>
     <div id="btn-return">
         <a href="{{path('donation_list')}}" class="return" > 
             Retour à la liste 
         </a>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# JS MAP #}
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="{{ asset('js/map.js') }}"></script>
 {% endblock %}

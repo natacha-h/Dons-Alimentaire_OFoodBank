@@ -59,7 +59,7 @@
         <div class="card">
             <div class="card-body">
                 {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
-                <img src="{{donation.picture}}" class="card-img" alt="aleatoire">
+                <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="aleatoire">
                 <h3 class="card-title">{{donation.title}}</h3>
                 <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
             </div>
