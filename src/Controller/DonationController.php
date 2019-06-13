@@ -118,6 +118,7 @@ class DonationController extends AbstractController
      */
     public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
     {
+
         // on crée un nouvel objet Status 
         $newStatus = $statusRepository->findOneByName('Réservé');
         // dd($newStatus);
@@ -129,16 +130,74 @@ class DonationController extends AbstractController
         $em->persist($donation);
         $em->flush();
 
-        // on crée la variable "collector" à qui on attribue l'utilisateur courant
-        $collector = $this->getUser();
-
-        dump($donation->getUsers());
+        // // on crée la variable "collector" à qui on attribue l'utilisateur courant
+        // $collector = $this->getUser();
 
         // ajout d'un flash message
         $this->addFlash(
             'success',
             'La demande de réservation est bien prise en compte'
         );
+
+       
+        $donationTitle = $donation->getTitle();
+        $donationId = $donation->getId();
+        $bisouCoeur = "\xF0\x9F\x98\x98";
+        $coeur = "\xE2\x9D\xA4";
+        $headers = [];
+
+        $donationUsers = $donation->getUsers();
+        foreach ($donationUsers as $user){
+            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
+            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+    
+            ini_set( 'display_errors', 1 );
+
+            error_reporting( E_ALL );
+
+            $headers = 'Content-type: text/html; charset=utf8';
+
+            $from = "oFoodBank@gmail.com";
+        
+            $to = $mail;
+        
+            $subject = "Confirmation réservation d'un don";
+        
+            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous ".$bisouCoeur." Optimus Pikachu ".$coeur." - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
+        
+            $headers = "From:" . $from;
+        
+            mail($to,$subject,$message, $headers);
+            
+            } 
+            
+            if ('ROLE_GIVER' == $user->getRole()->getCode()){
+            $userId = $user->getId();
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
+            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+    
+            ini_set( 'display_errors', 1 );
+
+            error_reporting( E_ALL );
+
+            $headers = 'Content-type: text/html; charset=utf8';
+
+            $from = "oFoodBank@gmail.com";
+        
+            $to = $mail;
+        
+            $subject = utf8_decode("Réservation de votre don");
+        
+            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations ".$coeur."";
+        
+            $headers = "From:" . $from;
+        
+            mail($to,$subject,$message, $headers);
+        }
+    }
 
 
         return $this->redirectToRoute('donation_show', [
@@ -171,7 +230,41 @@ class DonationController extends AbstractController
             'Vous avez bien annulé la réservation de ce don'
         );
 
-        dump($donation->getUsers());
+        $donationTitle = $donation->getTitle();
+        $donationId = $donation->getId();
+        $bisouCoeur = "\xF0\x9F\x98\x98";
+        $coeur = "\xE2\x9D\xA4";
+        $headers = [];
+
+        $donationUsers = $donation->getUsers();
+        foreach ($donationUsers as $user){
+            
+            if ('ROLE_GIVER' == $user->getRole()->getCode()){
+            dump($user);
+            $userId = $user->getId();
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
+            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+    
+            ini_set( 'display_errors', 1 );
+
+            error_reporting( E_ALL );
+
+            $headers = 'Content-type: text/html; charset=utf8';
+
+            $from = "oFoodBank@gmail.com";
+        
+            $to = $mail;
+        
+            $subject = utf8_decode("Annulation réservation de votre don");
+        
+            $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu " .$coeur." ".$bisouCoeur." Ps : Votez pour moi !";
+        
+            $headers = "From:" . $from;
+        
+            mail($to,$subject,$message, $headers);
+        }
+    }
 
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
@@ -333,7 +426,7 @@ class DonationController extends AbstractController
 
                 $extension = $file->guessExtension();
                 
-                if($extension != 'jpg' | $extension != 'jpeg' | $extension != 'png' | $extension != 'gif' ){
+                if($extension != 'jpg' && $extension != 'jpeg' && $extension != 'png' && $extension != 'gif' ){
                     $this->addFlash('danger', 'Le format de votre image ne correspond pas');
 
                     return $this->render('donation/new.html.twig', [
