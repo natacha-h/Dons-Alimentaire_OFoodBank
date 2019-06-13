@@ -14,10 +14,8 @@
 </div>
 {% endif %}
 
-
 <div class="row mt-3">
     {% for donation in donations %}
-
         <div class="col-md-6 col-12 my-2">
             <div class="card">
                 <div class="card-body">
@@ -32,8 +30,10 @@
                         {% endif %}
                     </h3>
                     <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
-                    <p class="card-text">Date de péremption : {{ expiryDateArray[donation.id]|date("d/m/Y") }}</p>
-                    <a href="{{path('donation_show', {'id': donation.id})}}" class="btn  ;">Plus d'infos</a>
+                    {% if expiryDateArray[donation.id] is defined %}
+                        <p class="card-text">Date de péremption : {{ expiryDateArray[donation.id]|date("d/m/Y") }}</p>
+                    {% endif %}
+                    <a href="{{path('donation_show', {'id': donation.id})}}" class="btn btn-primary">Plus d'infos</a>
                 </div>
             </div>
         </div>
@@ -41,7 +41,13 @@
 
     {% endfor %}
 </div>
+
+
+<div class="pagination col-md-5 mx-auto mt-4">
+    {{ knp_pagination_render(donations) }}
+</div>
 {% endblock %}
+
 
 
 {% block javascripts %}
