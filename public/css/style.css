@@ -186,8 +186,10 @@ li.nav-item.col-6.col-md-5 {
 .rating a:hover ~ a,
 .rating a:focus,
 .rating a:focus ~ a,
-.rating input:checked		{
-    color: orange;
+.rating input:checked,
+input[type=radio]:checked + label,
+input[type=radio]:checked + label ~ label{
+    color: gold;
     cursor: pointer;
 }
 

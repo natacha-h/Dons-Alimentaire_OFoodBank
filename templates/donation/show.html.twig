@@ -81,7 +81,15 @@
                         --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
                         --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
                         --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
-                        --><button type="submit" class="btn btn-secondary">Voter</button>
+                        -->
+                        {% if collector %}
+                            {% if app.user %}
+                                {% if app.user.id == collector.id %}
+                                    <button type="submit" class="btn btn-secondary">Voter</button>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        
                     </form>
                 </div>
                  
