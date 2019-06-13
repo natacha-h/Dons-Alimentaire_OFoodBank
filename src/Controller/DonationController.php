@@ -142,6 +142,8 @@ class DonationController extends AbstractController
        
         $donationTitle = $donation->getTitle();
         $donationId = $donation->getId();
+        $bisouCoeur = "\xF0\x9F\x98\x98";
+        $coeur = "\xE2\x9D\xA4";
         $headers = [];
 
         $donationUsers = $donation->getUsers();
@@ -163,7 +165,7 @@ class DonationController extends AbstractController
         
             $subject = "Confirmation réservation d'un don";
         
-            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous <3 Optimus Pikachu *_* - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
+            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous ".$bisouCoeur." Optimus Pikachu ".$coeur." - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
         
             $headers = "From:" . $from;
         
@@ -189,7 +191,7 @@ class DonationController extends AbstractController
         
             $subject = utf8_decode("Réservation de votre don");
         
-            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations";
+            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations ".$coeur."";
         
             $headers = "From:" . $from;
         
@@ -228,7 +230,41 @@ class DonationController extends AbstractController
             'Vous avez bien annulé la réservation de ce don'
         );
 
-        dump($donation->getUsers());
+        $donationTitle = $donation->getTitle();
+        $donationId = $donation->getId();
+        $bisouCoeur = "\xF0\x9F\x98\x98";
+        $coeur = "\xE2\x9D\xA4";
+        $headers = [];
+
+        $donationUsers = $donation->getUsers();
+        foreach ($donationUsers as $user){
+            
+            if ('ROLE_GIVER' == $user->getRole()->getCode()){
+            dump($user);
+            $userId = $user->getId();
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
+            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+    
+            ini_set( 'display_errors', 1 );
+
+            error_reporting( E_ALL );
+
+            $headers = 'Content-type: text/html; charset=utf8';
+
+            $from = "oFoodBank@gmail.com";
+        
+            $to = $mail;
+        
+            $subject = utf8_decode("Annulation réservation de votre don");
+        
+            $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu " .$coeur." ".$bisouCoeur." Ps : Votez pour moi !";
+        
+            $headers = "From:" . $from;
+        
+            mail($to,$subject,$message, $headers);
+        }
+    }
 
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
