@@ -333,7 +333,7 @@ class DonationController extends AbstractController
 
                 $extension = $file->guessExtension();
                 
-                if($extension != 'jpg' | $extension != 'jpeg' | $extension != 'png' | $extension != 'gif' ){
+                if($extension != 'jpg' && $extension != 'jpeg' && $extension != 'png' && $extension != 'gif' ){
                     $this->addFlash('danger', 'Le format de votre image ne correspond pas');
 
                     return $this->render('donation/new.html.twig', [
