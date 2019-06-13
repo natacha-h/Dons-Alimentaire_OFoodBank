@@ -47,4 +47,17 @@ class DonationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /*
+        public function findDonationByStatus($value,)
+            {
+                return $this->createQueryBuilder('d')
+                    ->andWhere('d.status = :val')
+                    ->setParameter('val', $value)
+                    ->getQuery()
+                    ->getResult()
+                ;
+            }
+    */
+
 }

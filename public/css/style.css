@@ -122,7 +122,7 @@ li.nav-item.col-6.col-md-5 {
     background-color: #40a629;
     color: white;
 }
-#select:hover, {
+#select:hover {
     text-decoration: none; 
 }
 
