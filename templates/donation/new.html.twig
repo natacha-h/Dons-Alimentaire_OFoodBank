@@ -9,6 +9,7 @@
 
     {{ form_row(form.title, { 'id': 'title-donation'  }) }}
     {{ form_row(form.picture, { 'id': 'donation-pic' }) }}
+    {# <label class="custom-file-label" for="donation-pic">Choose file...</label> #}
 
     {# Affichage formulaire d'ajout d'adresse #}
     <div class="card bg-light mb-4">
@@ -41,4 +42,20 @@
     
 {{ form_end(form) }}
 
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            // On cible l'input
+            $('input[type="file"]').change(function(e){
+                // On récupere le nom du fichier
+                var fileName = e.target.files[0].name;
+                // On fournit en attribut le nom de l'image
+                // Pour l'utiliser dans le css
+                $('.custom-file-label').attr('imgName', fileName);
+            });
+        });
+    </script>
 {% endblock %}
