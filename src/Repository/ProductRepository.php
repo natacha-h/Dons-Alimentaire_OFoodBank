@@ -47,4 +47,19 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    // méthode pour récupérer les produits d'UNE catégorie
+    public function findByCatName($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.category', 'c')
+            ->addSelect('c')
+            ->where('c.name = :val')
+            ->setParameter('val', $value)
+            // ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }  
+
 }

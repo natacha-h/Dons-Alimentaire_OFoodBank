@@ -20,6 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Entity\Category;
+use App\Form\CategoryType;
+use App\Repository\ProductRepository;
 
 /**
  * @Route("/dons", name="donation_")
@@ -29,7 +32,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/", name="list", methods={"GET"})
      */
-    public function list(DonationRepository $donationRepository)
+    public function list(DonationRepository $donationRepository, Request $request, ProductRepository $productRepository)
     {
         //repo = $this->getDoctrine()->getRepository(Donation::class);
 
@@ -54,11 +57,43 @@ class DonationController extends AbstractController
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
 
+        // création du form "filtrer par catégorie"
+        $category = new Category();
+
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            // on récupère le choix
+            $catName = $category->getName();
+            // dd($catName);
+            // on fait une requête pour récupérer les produits avec CETTE catégorie
+            $allProducts = $productRepository->findByCatName($catName);
+            dump($allProducts);
+            // création du tableau qui contiendra les dons
+            $donationFiltered = [];
+            // pour chaque produit du tableau
+            foreach ($allProducts as $product){
+                // on récupère le don associé
+                $donationFiltered[] = $product->getDonation();
+
+            }
+            dump($donationFiltered);
+            // die;
+
+            // $donationFiltered = $donationRepository->findByCategory();
+
+            return $this->render('donation/list.html.twig', [
+                'donations' => $donationFiltered,
+                'form' => $form->createView()
+            ]);
+        }
         
 
         return $this->render('donation/list.html.twig', [
             'donations' => $donations,
-            'expiryDateArray' => $expiryDateArray
+            'expiryDateArray' => $expiryDateArray,
+            'form' => $form->createView()
         ]);
     }
 
