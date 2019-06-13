@@ -29,10 +29,12 @@
 
             {% for donation in user.donations %}
             <div class="col-5 m-4 p-5 mx-auto border rounded">
+            <a href="{{path('donation_show', {'id': donation.id })}}" class="text-dark">
             <h4 class="font-italic">
                 {{ donation.title }}
                 <img src="{{asset('pictures/status_donne.png')}} " alt="Don donné">
             </h4>
+            </a>
             <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
             </div>
             {% endfor %}
@@ -43,7 +45,9 @@
         <div class="d-flex flex-wrap mt-4">
             {% for donation in user.donations %}
             <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+            <a href="{{path('donation_show', {'id': donation.id })}}" class="text-dark">
             <h4 class="font-italic">{{ donation.title }}</h4>
+            </a>
             <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
             </div>
             {% endfor %}
