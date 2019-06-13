@@ -9,9 +9,9 @@
 <h2 class="text-center my-3 text-uppercase">Liste des dons</h2>
 
 {% if is_granted('ROLE_GIVER') %}
-    <div class="row justify-content-center">
-        <a href="{{path('donation_new')}}" class="btn btn-success">Nouveau Don</a>
-    </div>
+<div class="row justify-content-center">
+    <a href="{{path('donation_new')}}" class="btn btn-success">Nouveau Don</a>
+</div>
 {% endif %}
 
 <div class="row mt-3">
@@ -20,8 +20,15 @@
             <div class="card">
                 <div class="card-body">
                     {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
-                    <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img" alt="aleatoire">
-                    <h3 class="card-title">{{donation.title}}</h3>
+                    <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="image du don">
+                    <h3 class="card-title">
+                        {{donation.title}}
+                        {% if "Dispo" == donation.status.name %}
+                                <img src="{{asset('pictures/status_dispo.png')}} " alt="Don disponible">
+                        {% elseif "Réservé" == donation.status.name %}
+                                <img src="{{asset('pictures/status_reserve.png')}} " alt="Don déjà réservé">                         
+                        {% endif %}
+                    </h3>
                     <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
                     {% if expiryDateArray[donation.id] is defined %}
                         <p class="card-text">Date de péremption : {{ expiryDateArray[donation.id]|date("d/m/Y") }}</p>
@@ -30,25 +37,27 @@
                 </div>
             </div>
         </div>
+    </div>
 
     {% endfor %}
 </div>
 
+
 <div class="pagination col-md-5 mx-auto mt-4">
     {{ knp_pagination_render(donations) }}
 </div>
+{% endblock %}
 
 
 
-
-
-
-
-
-
-
-
-
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            var cardImg = $('.regul-size');
+            var defaultImg = ($(cardImg).attr('src') === 'default-image.jpg');
+            console.log(defaultImg);
+        });
+    </script>
 
 
 {% endblock %}
