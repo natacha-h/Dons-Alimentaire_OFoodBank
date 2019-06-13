@@ -98,6 +98,44 @@ class DonationController extends AbstractController
     }
 
     /**
+     * @Route("/{slug}", name="filter_category")
+     */
+    public function filterDonation($slug, Request $request, ProductRepository $productRepository)
+    {
+        // création du form "filtrer par catégorie"
+        $category = new Category();
+
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            // on récupère le choix
+            $catName = $category->getName();
+            // dd($catName);
+            // on fait une requête pour récupérer les produits avec CETTE catégorie
+            $allProducts = $productRepository->findByCatName($catName);
+            dump($allProducts);
+            // création du tableau qui contiendra les dons
+            $donationFiltered = [];
+            // pour chaque produit du tableau
+            foreach ($allProducts as $product){
+                // on récupère le don associé
+                $donationFiltered[] = $product->getDonation();
+
+            }
+            dump($donationFiltered);
+            // die;
+
+            // $donationFiltered = $donationRepository->findByCategory();
+
+            return $this->render('donation/list.html.twig', [
+                'donations' => $donationFiltered,
+                'form' => $form->createView()
+            ]);
+        }
+    }
+
+    /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
     public function show(Donation $donation)
