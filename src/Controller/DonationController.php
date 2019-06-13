@@ -155,7 +155,7 @@ class DonationController extends AbstractController
         // ajout d'un Flash Message
         $this->addFlash(
             'success',
-            'Vous avez bien annulé la réservaton de ce don'
+            'Vous avez bien annulé la réservation de ce don'
         );
 
         dump($donation->getUsers());
@@ -164,6 +164,78 @@ class DonationController extends AbstractController
             'donation' => $donation,
             'id' => $donation->getId(),
             // 'giver' => $donation->getUsers()[0]
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/accept", name="accept", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function acceptDonation(StatusRepository $statusRepository, Donation $donation, EntityManagerInterface $em)
+    {
+        // on crée un nouvel objet Status 
+        $newStatus = $statusRepository->findOneByName('Donné');
+        // dd($newStatus);
+        // on change le status de la donnation
+        $donation->setStatus($newStatus);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un flash message
+        $this->addFlash(
+            'success',
+            'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
+        );
+
+        //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
+
+        return $this->redirectToRoute('user_manage_donations', [
+            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/refuse", name="refuse", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function refuseDonation(Donation $donation, EntityManagerInterface $em, StatusRepository $statusRepository)
+    {
+        // on crée un nouvel objet Status
+        $newStatus = $statusRepository->findOneByName('Dispo');
+        // on attribue le status au don
+        $donation->setStatus($newStatus);
+
+        // il faut supprimer l'association de la liste des users liée au don courant
+            //1- on récupère la liste des utilisateurs liés au don
+        $users = $donation->getUsers();
+            //2- on boucle sur la collection pour récupérer le user_role 'ROLE_ASSOC'
+        $asso = null;
+        foreach ($users as $user){
+            // dump($user->getRole()->getCode());
+
+            //si le role de user est 'ROLE_ASSOC', on le donne en valeur de la variable $asso
+            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                $asso = $user;
+            }
+        }
+        // dd($asso);
+        // on retire l'id de l'association
+        $donation->removeUser($asso);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un Flash Message
+        $this->addFlash(
+            'success',
+            'Vous avez refusé la demande de l\'association'
+        );
+
+        // dd($donation->getUsers());
+
+        //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
+
+        return $this->redirectToRoute('user_manage_donations', [
+            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
         ]);
     }
 
@@ -298,8 +370,10 @@ class DonationController extends AbstractController
         return md5(uniqid());
     }
 
-}
+    
+    // Ajouter au fur et a mesure dans la base de données
+    // A la fin de l'ajout des produits
+    // Je récupere les id des produits
+    
 
-// Ajouter au fur et a mesure dans la base de données
-// A la fin de l'ajout des produits
-// Je récupere les id des produits
+}
