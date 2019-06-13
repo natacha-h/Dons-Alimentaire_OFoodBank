@@ -9,6 +9,7 @@
 
     {{ form_row(form.title, { 'id': 'title-donation'  }) }}
     {{ form_row(form.picture, { 'id': 'donation-pic' }) }}
+    {# <label class="custom-file-label" for="donation-pic">Choose file...</label> #}
 
     {# Affichage formulaire d'ajout d'adresse #}
     <div class="card bg-light mb-4">
@@ -16,7 +17,38 @@
             <h5>Adresse de récupération du don</h5>
         </div>
         <div class="card-body">
-            {{form_row(form.address)}}
+            <p class="card-text">
+                {{app.user.address.number}} {{app.user.address.street1}} <br>         
+                {{app.user.address.street2}} <br> 
+                {{app.user.address.ZipCode}} {{app.user.address.city}}
+            </p>
+            <button class="btn btn-link" id="showChangeAdress" >Utiliser une autre adresse </button>
+            
+        </div>
+        <div class="card-body hide-my-form" id="changeAdress" name="newAddress">
+            {# {{form_row(form.address)}} #}
+
+            <div class="form-group">
+                <label for="number">Numéro </label>
+                <input type="text" class="form-control" id="number" name="number" placeholder="{{app.user.address.number}}">
+            </div>
+            <div class="form-group">
+                <label for="street1">Nom de la rue*</label>
+                <input type="text" class="form-control" id="street1" name="street1" placeholder="{{app.user.address.street1}} " required>
+            </div>
+            <div class="form-group">
+                <label for="street2">Complément d'adresse</label>
+                <input type="text" class="form-control" id="street2" name="street2" placeholder="{{app.user.address.street2}} ">
+            </div>
+            <div class="form-group">
+                <label for="zipCode">Code Postal*</label>
+                <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="{{app.user.address.ZipCode}} " required>
+            </div>
+            <div class="form-group">
+                <label for="city">Ville*</label>
+                <input type="text" class="form-control" id="street2" name="city" placeholder="{{app.user.address.city}} " required>
+            </div>
+                
         </div>
     </div>
 
@@ -41,4 +73,20 @@
     
 {{ form_end(form) }}
 
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            // On cible l'input
+            $('input[type="file"]').change(function(e){
+                // On récupere le nom du fichier
+                var fileName = e.target.files[0].name;
+                // On fournit en attribut le nom de l'image
+                // Pour l'utiliser dans le css
+                $('.custom-file-label').attr('imgName', fileName);
+            });
+        });
+    </script>
 {% endblock %}
