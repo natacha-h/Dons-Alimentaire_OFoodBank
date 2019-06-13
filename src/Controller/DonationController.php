@@ -116,7 +116,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}/select", name="select", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
+    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, Publisher $publisher)
     {
         // on crée un nouvel objet Status 
         $newStatus = $statusRepository->findOneByName('Réservé');
@@ -139,6 +139,7 @@ class DonationController extends AbstractController
             'success',
             'La demande de réservation est bien prise en compte'
         );
+
 
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,

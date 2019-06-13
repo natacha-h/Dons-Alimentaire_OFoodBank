@@ -166,9 +166,79 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+/* Page 404 */
+.page-404 {
+    background-image: url(../pictures/404-chou.jpg);
+    height: 100vh;
+    margin: 20px 0px;
+    display: flex;
+    align-items: center;
+}
+
+.text-middle-404 {
+    color: #666;
+    text-align: center;
+    background: #c6dc12;
+    padding: 10px;
+    width: 200vh;
+}
+
+.text-middle-404 a{
+    color: #666;
+    font-style: italic;
+    text-decoration: underline;
+}
+/* Page 403 */
+.page-403 {
+    background-image: url(../pictures/Optimus-pikachu.png);
+    height: 100vh;
+    margin: 20px 0px;
+    display: flex;
+    align-items: center;
+}
+
+.text-middle-403 {
+    color: #666;
+    text-align: center;
+    background: #c6dc12;
+    padding: 15px;
+    width: 200vh;
+}
+
+.text-middle-403 a{
+    color: #666;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+/* Pages d'erreurs autres que 404 et 403 */
+.page-all-errors {
+    background-image: url(../pictures/errors.jpg);
+    background-size: cover;
+    height: 100vh;
+    margin: 20px 0px;
+    display: flex;
+    align-items: center;
+}
+
+.text-middle-all-errors {
+    color: #666;
+    text-align: center;
+    background: #c6dc12;
+    padding: 5px;
+    width: 200vh;
+}
+
+.text-middle-all-errors a{
+    color: #666;
+    font-style: italic;
+    text-decoration: underline;
+}
+
 a.page-link{
     padding: 0.5rem 0.5rem;
 }
+
 .break-link{
     word-break: break-all;
 }
