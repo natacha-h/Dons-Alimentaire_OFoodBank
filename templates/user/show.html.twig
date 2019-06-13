@@ -29,7 +29,10 @@
 
             {% for donation in user.donations %}
             <div class="col-5 m-4 p-5 mx-auto border rounded">
-            <h4 class="font-italic">{{ donation.title }}</h4>
+            <h4 class="font-italic">
+                {{ donation.title }}
+                <img src="{{asset('pictures/status_donne.png')}} " alt="Don donné">
+            </h4>
             <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
             </div>
             {% endfor %}

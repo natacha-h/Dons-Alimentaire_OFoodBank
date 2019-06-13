@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les réservations{% endblock %}
+
+{% block body %}
+    <h2> Mes dons réservés </h2>
+
+    <table class="table col-12">
+            <thead>
+                <tr>
+                <th scope="col">Nom du don </th>
+                <th scope="col">Réservé par </th>
+                <th scope="col">Accepter la réservation </th>
+                <th scope="col">Refuser la réservation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in donations %}
+                    {# <pre>
+                        {{ dump(donation) }}
+                    </pre> #}
+                    <td>{{donation.title}}</td>
+                    <td> 
+                        {% for user in donation.users %}
+                        {# <pre>
+                            {{ dump(user.role) }}
+                        </pre> #}
+                            {% if 'ROLE_ASSOC' == user.role.code %}
+                                {{user.company}}
+                            {% endif %}                    
+                        {% endfor %}
+                    
+                    </td>
+                    <td> 
+                        <form action="{{path('donation_accept', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                            <button class="btn btn-link">
+                                <i class="fas fa-check-circle"></i> 
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                    <form action="{{path('donation_refuse', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                            <button class="btn btn-link">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                    </form>
+                    </td>
+                {% endfor %}
+            </tbody>    
+{% endblock %}

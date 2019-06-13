@@ -114,3 +114,16 @@ function checkIfEmptyInput(event) {
     }
 }
 
+// récupération du bouton qui affiche le formulaire d'adresse
+var showChangeAdress = document.getElementById('showChangeAdress');
+
+showChangeAdress.addEventListener('click', handleClickChangeAddress);
+
+function handleClickChangeAddress(event){
+    event.preventDefault();
+    console.log('click on change adress')
+    // je récupère la div qui contient le formulaire d'adresse
+    var $addressForm = $('#changeAdress');
+    // je retire la class CSS qui cache le formulaire
+    $addressForm.removeClass('hide-my-form');
+}

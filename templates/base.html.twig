@@ -25,11 +25,19 @@
                         <li class="nav-item col-12 col-md-2 text-center">
                             <p class="mb-0 mr-0">Je suis...</p>
                         </li>
-                        <li class="nav-item col-6 col-md-5">
-                            <a class="nav-link circle-text" href="{{path('user_inscription')}}"><div>une association</div></a>
+                        <li>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a class="nav-link circle-text" href="{{ path('user_show', {'id': app.user.id })}}"><div>une association</div></a>
+                        {% else %}
+                            <a class="nav-link circle-text" href="{{path('user_inscription', {'role': 'association'})}}"><div>une association</div></a>
+                        {% endif %}
                         </li>
                         <li class="nav-item col-6 col-md-5">
-                            <a class="nav-link circle-text" href="{{path('user_inscription')}}"><div>un commerçant</div></a>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a class="nav-link circle-text" href="{{ path('user_show', {'id': app.user.id })}}"><div>un commerçant</div></a>
+                        {% else %}
+                            <a class="nav-link circle-text" href="{{path('user_inscription', {'role': 'commercant'})}}"><div>un commerçant</div></a>
+                        {% endif %}
                         </li>                        
                     </ul>
                 </nav>
@@ -69,6 +77,9 @@
                     <li class="nav-item text-lg-left text-sm-center ">
                         <a href="{{path('main_index')}}"><img src="{{asset('pictures/logo-ofoodbank.png')}}" class="img-fluid w-50" alt="Logo O'FoodBank"></a> {# logo #}
                     </li>  
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="{{path('main_about')}}">Qui sommes nous ?</a>
+                    </li> 
                     <li class="nav-item d-flex flex-column text-center ">
                         <p class="mb-0">
                             Suivez-nous
@@ -109,6 +120,7 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
         <script src="{{asset('js/app.js')}}"></script>
+    
         {% block javascripts %}{% endblock %}
     </body>
 </html>

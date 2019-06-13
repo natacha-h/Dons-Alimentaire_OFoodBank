@@ -20,14 +20,14 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="form_firstname">Nom</label>
-                    <input id="form_firstname" type="text" name="firstname" class="form-control" placeholder="Veuillez rentrer votre nom" >
+                    <label for="form_firstname">Prénom</label>
+                    <input id="form_firstname" type="text" name="firstname" class="form-control" placeholder="Veuillez rentrer votre prénom" value='{{ inputValues.firstname }}' >
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="form_lastname">Prénom</label>
-                    <input id="form_lastname" type="text" name="lastname" class="form-control" placeholder="Veuillez rentrer votre prénom">
+                    <label for="form_lastname">Nom</label>
+                    <input id="form_lastname" type="text" name="lastname" class="form-control" placeholder="Veuillez rentrer votre nom" value='{{ inputValues.lastname }}' >
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="form_email">Email</label>
-                    <input id="form_email" type="email" name="email" class="form-control" placeholder="Veuillez rentrer votre email">
+                    <input id="form_email" type="email" name="email" class="form-control" placeholder="Veuillez rentrer votre email" value='{{ inputValues.email }}' >
                 </div>
             </div>
             <div class="col-md-6">
@@ -43,10 +43,10 @@
                     <label for="form_need">Spécifiez votre besoin</label>
                     <select id="form_need" name="need" class="form-control">
                         <option value="Demande de renseignement">Demande de renseignement</option>
-                        <option value="">Demande de prise de contact</option>
-                        <option value="">Demande suppression de don</option>
-                        <option value="">Déclarer un probleme sur le site</option>
-                        <option value="">Autres</option>
+                        <option value="Demande de prise de contact">Demande de prise de contact</option>
+                        <option value="Demande suppression de don">Demande suppression de don</option>
+                        <option value="Déclaration de probleme sur le site">Déclaration de probleme sur le site</option>
+                        <option value="Autres">Autres</option>
                     </select>
                 </div>
             </div>
@@ -55,11 +55,11 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="form_message">Message </label>
-                    <textarea id="form_message" name="message" class="form-control" placeholder="Taper votre message" rows="4"></textarea>
+                    <textarea id="form_message" name="message" class="form-control" placeholder="Taper votre message" rows="4" >{{ inputValues.message }}</textarea>
                 </div>
             </div>
             <div class="col-md-12">
-                <input type="submit" class="btn btn-success btn-send" value="Envoyer">
+                <input type="submit" name="submit-form-contact" class="btn btn-success btn-send" value="Envoyer">
             </div>
     
             </div>
@@ -67,7 +67,5 @@
     </div>
 
 </form>
-
-<a href="{{path('main_about')}}">Qui sommes-nous ?</a>
 
 {% endblock %}
