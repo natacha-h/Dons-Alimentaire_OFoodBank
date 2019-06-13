@@ -301,29 +301,35 @@ class DonationController extends AbstractController
         $userVote = $request->request->get('stars');
         dump($userVote);
 
-        // On récupere l'utilisateur
-        $user = $userRepo->findUserDonationByRole($id);
-
-        $donationUser = $user[0];
-
-        /*Si cette note vaut null alors cela signifie que le donateur n'a pas encore eu de notes
-        Donc la note BDD Donateur vaudra celle saisie par l'utilisateur*/
-
-         if($donationUser->getRating() == null){
-            $donationUser->setRating($userVote); 
-        }
-
-        // Si elle ne vaut pas null alors le donateur a déjà été noté
-        //On va donc faire une moyenne
-        //Note en BDD = ( Note en BDD + vote du jour ) / 2
-
-        else {
-            $donationUser->setRating(($donationUser->getRating()+$userVote)/2);
-        }
-
-        //On push ensuite cette valeur en base de donnée pour pouvoir la réutiliser
         
-        $em->flush();
+        if($donation->getIsVoted() == null){
+            // On récupere l'utilisateur
+            $user = $userRepo->findUserDonationByRole($id);
+
+            $donationUser = $user[0];
+
+            /*Si cette note vaut null alors cela signifie que le donateur n'a pas encore eu de notes
+            Donc la note BDD Donateur vaudra celle saisie par l'utilisateur*/
+
+            if($donationUser->getRating() == null){
+                $donationUser->setRating($userVote); 
+                $donation->setIsVoted(1);
+            }
+
+            // Si elle ne vaut pas null alors le donateur a déjà été noté
+            //On va donc faire une moyenne
+            //Note en BDD = ( Note en BDD + vote du jour ) / 2
+
+            else {
+                $donationUser->setRating(($donationUser->getRating()+$userVote)/2);
+                $donation->setIsVoted(1);
+            }
+            
+            
+            //On push ensuite cette valeur en base de donnée pour pouvoir la réutiliser
+            
+            $em->flush();
+        }
 
         return $this->redirectToRoute('donation_show', [
             'id' => $id

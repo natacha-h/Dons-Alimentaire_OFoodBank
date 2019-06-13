@@ -85,10 +85,29 @@
                         {% if collector %}
                             {% if app.user %}
                                 {% if app.user.id == collector.id %}
-                                    <button type="submit" class="btn btn-secondary">Voter</button>
+                                    {% if donation.isVoted == null  %}
+                                        <button type="submit" class="btn btn-secondary">Voter</button>
+                                    {% else %}
+                                        <p>Vous avez déjà voté !</p>    
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% endif %}
+
+                        {# 
+                        Si on veut qu'une association vote une fois un donateur
+                            Ajout d'un champ isVoted dans la table Donation
+                            Champ qui vaut null de base
+
+                            Lorsque le collecteur va voter
+                            On récupere son vote et on passe le champ isVoted à 1
+                            
+                            On peut désormais afficher dans la vue le bouton voter pour le collectur
+                            uniquement si celui-ci n'a pas encore voté
+
+                            Sinon on lui affiche qu'il a déjà voté sur ce don.
+
+                         #}
                         
                     </form>
                 </div>
