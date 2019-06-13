@@ -166,6 +166,10 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+.break-link{
+    word-break: break-all;
+}
+
 .regul-size{
     width: 100%;
     height: 250px;
