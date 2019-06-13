@@ -123,26 +123,22 @@ class DonationController extends AbstractController
         // // on crée la variable "collector" à qui on attribue l'utilisateur courant
         // $collector = $this->getUser();
 
-        dump($donation->getUsers());
-
         // ajout d'un flash message
         $this->addFlash(
             'success',
             'La demande de réservation est bien prise en compte'
         );
-        
-        // Envoi d'un mail au donateur lorsqu'on se positionne sur le don
-        // $from = "oFoodBank@gmail.com";
-        // $headers[] = 'MIME-Version: 1.0';
-        // $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-        // $headers[] = "From:" . $from;
-        // dd($headers);
+
+       
+        $donationTitle = $donation->getTitle();
+        $donationId = $donation->getId();
         $headers = [];
 
         $donationUsers = $donation->getUsers();
         foreach ($donationUsers as $user){
             if ('ROLE_ASSOC' == $user->getRole()->getCode()){
-
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
             $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
     
             ini_set( 'display_errors', 1 );
@@ -155,9 +151,9 @@ class DonationController extends AbstractController
         
             $to = $mail;
         
-            $subject = "Don réservé";
+            $subject = "Confirmation réservation d'un don";
         
-            $message = utf8_decode("Bonjour, votre demande de réservation à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous <3 Optimus Pikachu *_*");
+            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous <3 Optimus Pikachu *_* - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
         
             $headers = "From:" . $from;
         
@@ -166,7 +162,9 @@ class DonationController extends AbstractController
             } 
             
             if ('ROLE_GIVER' == $user->getRole()->getCode()){
-        
+            $userId = $user->getId();
+            $firstName = $user->getFirstName();
+            $lastName = $user->getLastName();
             $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
     
             ini_set( 'display_errors', 1 );
@@ -181,7 +179,7 @@ class DonationController extends AbstractController
         
             $subject = utf8_decode("Réservation de votre don");
         
-            $message = "Bonjour, votre don à été réservé. Merci de faire le nécessaire pour la validation.";
+            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations";
         
             $headers = "From:" . $from;
         
