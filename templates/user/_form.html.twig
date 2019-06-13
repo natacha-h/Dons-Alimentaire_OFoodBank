@@ -10,9 +10,9 @@
             {{ form_row(form.address)}}
             {{ form_row(form.password)}}
             {% if app.request.get('role') == 'association' %}
-                {{ form_row(form.role, {'value': '17'})}}
+                {{ form_row(form.role, {'value': '2'})}}
             {% else %}
-                {{ form_row(form.role, {'value': '16'})}}
+                {{ form_row(form.role, {'value': '1'})}}
             {% endif %}
             {{ form_row(form._token)}}
             {# {{ form_row(lastname)}} #}
