@@ -19,22 +19,47 @@ class DonationRepository extends ServiceEntityRepository
         parent::__construct($registry, Donation::class);
     }
 
-    // /**
-    //  * @return Donation[] Returns an array of Donation objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Donation[] Returns an array of Donation objects
+     */
+    
+    public function findByStatusQuery()
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $query = $this->createQueryBuilder('d')
+            ->join('d.status', 's')
+            ->addSelect('s')
+            ->where('s.name = :status')
+            ->orWhere('s.name = :status2')
+            ->setParameters([
+                'status' => 'Dispo',
+                'status2' => 'Réservé'
+            ])
+            ->orderBy('d.created_at', 'DESC');
+
+        return $query->getQuery();
     }
-    */
+
+    /**
+     * @return Donation[] Returns an array of Donation objects
+     */
+    
+    public function findDonationWithProducts()
+    {
+        $query = $this->createQueryBuilder('d')
+            ->join('d.status', 's')
+            ->addSelect('s')
+            ->where('s.name = :status')
+            ->orWhere('s.name = :status2')
+            ->setParameters([
+                'status' => 'Dispo',
+                'status2' => 'Réservé'
+            ])
+            ->join('d.products', 'p')
+            ->addSelect('p')
+            ->orderBy('d.created_at', 'DESC');
+
+        return $query->getQuery()->getResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?Donation
@@ -47,4 +72,17 @@ class DonationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /*
+        public function findDonationByStatus($value,)
+            {
+                return $this->createQueryBuilder('d')
+                    ->andWhere('d.status = :val')
+                    ->setParameter('val', $value)
+                    ->getQuery()
+                    ->getResult()
+                ;
+            }
+    */
+
 }
