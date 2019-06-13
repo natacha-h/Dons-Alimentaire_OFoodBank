@@ -301,7 +301,7 @@ class DonationController extends AbstractController
         $userVote = $request->request->get('stars');
         dump($userVote);
 
-        
+
         if($donation->getIsVoted() == null){
             // On récupere l'utilisateur
             $user = $userRepo->findUserDonationByRole($id);
