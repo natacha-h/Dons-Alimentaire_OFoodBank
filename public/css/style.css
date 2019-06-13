@@ -166,6 +166,14 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+/* 
+    Permet d'afficher le nom de l'image dans l'input 
+    On récupere le nom de l'attribut grâce au jQuery
+    voir fichier new don ligne 150
+*/
+.custom-file-label:before{
+    content: attr(imgName);
+}
 #shema{
     border: 2px solid #f49f0a;
     max-width: 600px;

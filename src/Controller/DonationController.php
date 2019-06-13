@@ -267,8 +267,18 @@ class DonationController extends AbstractController
             // dd($donation);
             if(!is_null($file)){
 
+                $extension = $file->guessExtension();
+                
+                if($extension != 'jpg' | $extension != 'jpeg' | $extension != 'png' | $extension != 'gif' ){
+                    $this->addFlash('danger', 'Le format de votre image ne correspond pas');
+
+                    return $this->render('donation/new.html.twig', [
+                        'form' => $form->createView()
+                    ]);
+                }
+
                 //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
-                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+                $fileName = $this->generateUniqueFileName().'.'.$extension;
 
                 try {
                     //je deplace mon fichier dans le dossier souhaité
