@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Repository\AddressRepository;
 
 /**
  * @Route("/dons", name="donation_")
@@ -311,11 +312,20 @@ class DonationController extends AbstractController
         $donation->setUpdatedAt(new \Datetime());
 
         $form = $this->createForm(DonationType::class, $donation);
+
+        $addressFormNumber = $request->request->get('number');
+        $addressFormStreet1 = $request->request->get('street1');
+        $addressFormStreet2 = $request->request->get('street2');
+        $addressFormZipCode = $request->request->get('zipCode');
+        $addressFormCity = $request->request->get('city');
+
+        $addressId = $request->request->get('index');
+
         $form->handleRequest($request);
         // dump($form->getData());
         
         if ($form->isSubmitted() && $form->isValid()) {
-            //avant l'enregistrement d'un film je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
+            //avant l'enregistrement d'un don je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
             $file = $donation->getPicture();
             // dd($donation);
             if(!is_null($file)){
@@ -355,8 +365,27 @@ class DonationController extends AbstractController
             $status = $StatusRepo->findOneByName('Dispo');
             $donation->setStatus($status);
 
-            // Je persist l'adresse
-            $em->persist($donation->getAddress());
+            // // Je persist l'adresse
+            // $em->persist($donation->getAddress());
+            
+            // si les champs du formulaire sont vides, alors l'utilisateur a gardé l'adresse d'origine (= la sienne)
+            if (null == $addressFormNumber && null == $addressFormStreet1 && null == $addressFormStreet2 && null == $addressFormZipCode && null == $addressFormCity) {
+                // on attribue à la donation l'adresse du User/donateur
+                ($donation->setAddress($this->getUser()->getAddress()));
+            } else {// sinon c'est qu'il a choisi une autre adresse
+                // on l'enregistre
+                $donationAddress = new Address();
+                $donationAddress->setNumber($addressFormNumber);
+                $donationAddress->setStreet1($addressFormStreet1);
+                $donationAddress->setStreet2($addressFormStreet2);
+                $donationAddress->setZipCode($addressFormZipCode);
+                $donationAddress->setCity($addressFormCity);
+                //on persist la nouvelle adresse
+                $em->persist($donationAddress);
+                // on attribue la nouvelle addresse au don
+                $donation->setAddress($donationAddress);
+            }
+            // dd($donation->getAddress());
 
             // Je persist tous les produits
             foreach($donation->getProducts() as $product){
@@ -397,7 +426,6 @@ class DonationController extends AbstractController
 
             // Je persist la donation
             $em->persist($donation);
-
             // J'effectue toutes les insertions en bdd
             $em->flush();
 
@@ -407,6 +435,7 @@ class DonationController extends AbstractController
             return $this->redirectToRoute('donation_list');
 
         }
+        
         return $this->render('donation/new.html.twig', [
             'form' => $form->createView()
         ]); 
