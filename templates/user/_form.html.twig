@@ -1,7 +1,21 @@
     {# Form pour modifier le profil #}
+
     <div class="text-center mb-3">
         {{ form_start(form) }}
-        {{ form_widget(form) }}
+            {{ form_row(form.firstname)}}
+            {{ form_row(form.lastname)}}
+            {{ form_row(form.email)}}
+            {{ form_row(form.company)}}
+            {{ form_row(form.phone_number)}}
+            {{ form_row(form.address)}}
+            {{ form_row(form.password)}}
+            {% if app.request.get('role') == 'association' %}
+                {{ form_row(form.role, {'value': '17'})}}
+            {% else %}
+                {{ form_row(form.role, {'value': '16'})}}
+            {% endif %}
+            {{ form_row(form._token)}}
+            {# {{ form_row(lastname)}} #}
             <button class="btn-success border rounded">{{ button_label|default('Envoyer') }}</button>
         {{ form_end(form) }}
     </div>

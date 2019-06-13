@@ -47,4 +47,23 @@ class AddressRepository extends ServiceEntityRepository
         ;
     }
     */
+    // public function findByAllFields($currentNumber, $currentStreet1, $currentStreet2, $currentZipCode, $currentCity): ?Address
+    // {
+    //     return $this->createQueryBuilder('a')
+    //         ->where('a.number = :number')
+    //         ->andWhere('a.street_1 = :street1')
+    //         ->andWhere('a.street_2 = :street2')
+    //         ->andWhere('a.zip_code = :zip_code')
+    //         ->andWhere('a.city = :city')
+    //         ->setParameters([
+    //             'number' => $currentNumber,
+    //             'street1' => $currentStreet1,
+    //             'street2' => $currentStreet2,
+    //             'zip_code' => $currentZipCode,
+    //             'city' => $currentCity,
+    //         ])
+    //         ->getQuery()
+    //         ->getOneOrNullResult()
+    //     ;
+    // }
 }

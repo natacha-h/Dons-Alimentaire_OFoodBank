@@ -96,5 +96,33 @@ class UserController extends AbstractController
     {
         // POST
     }
+
+    /**
+     * @Route("/{id}/manage-donations", name="manage_donations", requirements={"id"="\d+"}, methods={"GET"})
+     * méthode qui affiche la liste des dons en attente de validation
+     */
+    public function manageDonation(){
+        
+        //récupérer les dons de status "RÉSERVÉ" de l'utilisateur courant
+        $usersDonation = $this->getUser()->getDonations();
+        // dd($usersDonation);
+        // on stocke les donations réservées dans un tableau
+            //1 . Création du tableau
+            $reserved = [];
+        // on boucle sur la collection de donations reçues
+        foreach($usersDonation as $donation){
+            // dump($donation->getStatus());
+            // si le nom du status est réservé, on ajoute au tableau
+            if ('Réservé' == $donation->getStatus()->getName()){
+                $reserved[] = $donation;
+            }
+        }
+        // dump($reserved);
+        // die;
+
+        return $this->render('user/manage_donations.html.twig', [
+            'donations' => $reserved
+        ]);
+    }
   
 }
