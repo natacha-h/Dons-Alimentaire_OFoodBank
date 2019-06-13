@@ -1,0 +1,8 @@
+
+    {# Form pour modifier le profil #}
+    <div class="text-center">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+            <button class="btn-success border rounded">{{ button_label|default('Envoyer') }}</button>
+        {{ form_end(form) }}
+    </div>
