@@ -57,6 +57,7 @@ class UserController extends AbstractController
     public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     { 
         $this->denyAccessUnlessGranted('view', $user);
+        dump($user->getRole()->getCode());
         //Je récupère l'ancien mot de passe
         $oldPassword = $user->getPassword();
         //active successivement les evenement PRE_SET_DATA et POST_SET_DATA
