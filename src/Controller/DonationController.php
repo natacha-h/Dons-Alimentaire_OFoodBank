@@ -116,7 +116,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}/select", name="select", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, Publisher $publisher)
+    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
     {
         // on crée un nouvel objet Status 
         $newStatus = $statusRepository->findOneByName('Réservé');
