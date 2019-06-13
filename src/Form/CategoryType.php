@@ -23,12 +23,6 @@ class CategoryType extends AbstractType
                 // le champ de l'entité à utilser dans la liste déroulante
                 'choice_label' => 'name',
             ])
-            ->add('Choisir', SubmitType::class,  [
-                'label' => 'Afficher',
-                'attr' => [
-                    'class' => 'btn dark-green'
-                ]
-            ])
             
         ;
     }

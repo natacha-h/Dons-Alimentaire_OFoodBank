@@ -14,9 +14,21 @@
     </div>
 {% endif %}
 
-<div>
-    Filtrer par catégorie : {{form(form)}}
+{# {{ include('donation/_form.html.twig', { 'categories' : categories  }) }} #}
+<div class="row">
+
+    <p>Filtrer par catégorie : </p>
+    {{form_start(form, {'attr': {'class': 'row ml-2'}}) }}
+  
+        {{form_widget(form)}}
+  
+    <div class="col">
+         <button class="btn-success btn">{{ button_label|default('Afficher') }}</button>
+    </div>
+
+    {{form_end(form)}}
 </div>
+
 <div class="row mt-3">
     {% for donation in donations %}
 

@@ -36,7 +36,32 @@ class DonationController extends AbstractController
     {
         //repo = $this->getDoctrine()->getRepository(Donation::class);
 
-        $donations = $donationRepository->findAll();
+        // création du form "filtrer par catégorie"
+        $category = new Category();
+
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            // on récupère le choix
+            $catName = $category->getName();
+            // dd($catName);
+            // on fait une requête pour récupérer les produits avec CETTE catégorie
+            $allProducts = $productRepository->findByCatName($catName);
+            dump($allProducts);
+            // création du tableau qui contiendra les dons
+            $donationFiltered = [];
+            // pour chaque produit du tableau
+            foreach ($allProducts as $product){
+                // on récupère le don associé
+                $donationFiltered[] = $product->getDonation();
+            }
+            // dd($donationFiltered);
+            $donations = $donationFiltered;
+        } else {
+
+            $donations = $donationRepository->findAll();
+        }
         
         $expiryDateArray = [];
         foreach($donations as $donation){
@@ -57,39 +82,8 @@ class DonationController extends AbstractController
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
 
-        // création du form "filtrer par catégorie"
-        $category = new Category();
 
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            // on récupère le choix
-            $catName = $category->getName();
-            // dd($catName);
-            // on fait une requête pour récupérer les produits avec CETTE catégorie
-            $allProducts = $productRepository->findByCatName($catName);
-            dump($allProducts);
-            // création du tableau qui contiendra les dons
-            $donationFiltered = [];
-            // pour chaque produit du tableau
-            foreach ($allProducts as $product){
-                // on récupère le don associé
-                $donationFiltered[] = $product->getDonation();
-
-            }
-            dump($donationFiltered);
-            // die;
-
-            // $donationFiltered = $donationRepository->findByCategory();
-
-            return $this->render('donation/list.html.twig', [
-                'donations' => $donationFiltered,
-                'form' => $form->createView()
-            ]);
-        }
         
-
         return $this->render('donation/list.html.twig', [
             'donations' => $donations,
             'expiryDateArray' => $expiryDateArray,
@@ -100,8 +94,9 @@ class DonationController extends AbstractController
     /**
      * @Route("/{slug}", name="filter_category")
      */
-    public function filterDonation($slug, Request $request, ProductRepository $productRepository)
+    public function filterDonation($slug, Request $request)
     {
+        dd($request->request->get('categorie'));
         // création du form "filtrer par catégorie"
         $category = new Category();
 

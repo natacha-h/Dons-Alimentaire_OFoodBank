@@ -1,0 +1,20 @@
+
+
+    <div class="form-row">
+        <p>
+            Filtrer par catégorie : 
+        </p>
+        <div class ="col-3">
+            <select class="form-control">
+                <option></option>
+                {% set category  %}
+                {% for category in categories %}
+                    {% set category = category %}
+                    <option value="{{category.name}}" name="categorie">{{category.name}} </option> 
+                {% endfor %}
+            </select>
+            {# {{dump(slug)}} #}
+        </div> 
+        <a href="{{path('donation_filter_category', {'slug' : category.slug })}} " class="btn-success btn">{{ button_label|default('Afficher') }}</a>
+                
+    </div>
