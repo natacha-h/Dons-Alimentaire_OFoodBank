@@ -82,22 +82,20 @@ class DonationController extends AbstractController
         // on récupère la collection de user afin d'identifier le donateur
         $users = $donation->getUsers();
         // pour chaque utilisateur
+        $collector = null;
         foreach ($users as $user){
             // dump($user->getRoles());
-            // on récupère le tableau de rôle et on boucle dessus
-            foreach ($user->getRoles() as $role){
-                // dump($role);
-                // si le rôle est 'ROLE_ASSOC', on identifie l'utilisateur
-                if ('ROLE_ASSOC' == $role){
-                    $collector = $user;
-                } else { //
-                    $collector = null;
-                }
-                // si le rôle est 'ROLE_GIVER', on identifie l'utilisateur comme étant le donateur
-                if ('ROLE_GIVER' == $role){
-                    $giver = $user;
-                }
+            // on récupère le tableau de rôle et on boucle dessus            
+            // dump($role);
+            // si le rôle est 'ROLE_ASSOC', on identifie l'utilisateur
+            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                $collector = $user;
+            } 
+            // si le rôle est 'ROLE_GIVER', on identifie l'utilisateur comme étant le donateur
+            if ('ROLE_GIVER' == $user->getRole()->getCode()){
+                $giver = $user;
             }
+            
         }
         // dump($collector);
         // dump($giver);
