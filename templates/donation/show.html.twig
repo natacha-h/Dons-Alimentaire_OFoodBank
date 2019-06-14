@@ -35,7 +35,7 @@
 
                     
                     {% if collector %} {# Si un collector existe #}
-                                {{dump(collector)}}
+                                {# {{dump(collector)}} #}
                         {% if app.user %} {# et si un utilisateur est connecté #}
                             {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
                             {% if app.user.id == collector.id %}

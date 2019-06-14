@@ -59,8 +59,13 @@
             <div class="card-body">
                 {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
                 <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="aleatoire">
-                <h3 class="card-title">{{donation.title}}</h3>
-                <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
+                <div class="d-flex flex-row align-items-center justify-content-between flex-wrap">
+                    <div>
+                        <h3 class="card-title">{{donation.title}}</h3>
+                        <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
+                    </div>
+                    <a href="{{path('donation_show', {'id': donation.id})}}" class="btn btn-primary">Plus d'infos</a>
+                </div>
             </div>
         </div>
     </div>
