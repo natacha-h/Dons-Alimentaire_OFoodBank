@@ -61,6 +61,21 @@ class DonationRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+        /**
+     * @return Donation[] Returns an array of Donation objects
+     */
+    
+    public function findDonationsByStatus($user)
+    {
+        $query = $this->createQueryBuilder('d')
+            ->join('d.users','u')
+            ->where('u.id = :user')
+            ->setParameter('user', $user)
+            ->orderBy('d.created_at', 'DESC');
+
+        return $query->getQuery()->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Donation
     {

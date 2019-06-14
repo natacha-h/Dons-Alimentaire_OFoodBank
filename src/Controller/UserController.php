@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Utils\Rewarder;
+use App\Repository\DonationRepository;
 
 /**
  * @Route("/user", name="user_")
@@ -54,10 +55,14 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"}, methods={"GET","POST"})
      */
-    public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder, DonationRepository $donationRepository): Response
     { 
         $this->denyAccessUnlessGranted('view', $user);
-        dump($user->getRole()->getCode());
+
+        //Ajout de la requête custom pour les donations Disponibles
+        $donations = $donationRepository->findDonationsByStatus($user->getId());
+        dd($donations);
+
         //Je récupère l'ancien mot de passe
         $oldPassword = $user->getPassword();
         //active successivement les evenement PRE_SET_DATA et POST_SET_DATA
@@ -87,6 +92,7 @@ class UserController extends AbstractController
         return $this->render('user/show.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
+            'donations' => $donations
         ]);
     }
     
