@@ -142,9 +142,10 @@ class DonationController extends AbstractController
        
         $donationTitle = $donation->getTitle();
         $donationId = $donation->getId();
-        $bisouCoeur = "\xF0\x9F\x98\x98";
-        $coeur = "\xE2\x9D\xA4";
         $headers = [];
+        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";;
 
         $donationUsers = $donation->getUsers();
         foreach ($donationUsers as $user){
@@ -165,7 +166,7 @@ class DonationController extends AbstractController
         
             $subject = "Confirmation réservation d'un don";
         
-            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous ".$bisouCoeur." Optimus Pikachu ".$coeur." - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
+            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous, Optimus Pikachu - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
         
             $headers = "From:" . $from;
         
@@ -191,7 +192,7 @@ class DonationController extends AbstractController
         
             $subject = utf8_decode("Réservation de votre don");
         
-            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations ".$coeur."";
+            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations";
         
             $headers = "From:" . $from;
         
@@ -232,16 +233,16 @@ class DonationController extends AbstractController
 
         $donationTitle = $donation->getTitle();
         $donationId = $donation->getId();
-        $bisouCoeur = "\xF0\x9F\x98\x98";
-        $coeur = "\xE2\x9D\xA4";
         $headers = [];
+        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";;
+
 
         $donationUsers = $donation->getUsers();
         foreach ($donationUsers as $user){
             
             if ('ROLE_GIVER' == $user->getRole()->getCode()){
-            dump($user);
-            $userId = $user->getId();
             $firstName = $user->getFirstName();
             $lastName = $user->getLastName();
             $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
@@ -258,7 +259,7 @@ class DonationController extends AbstractController
         
             $subject = utf8_decode("Annulation réservation de votre don");
         
-            $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu " .$coeur." ".$bisouCoeur." Ps : Votez pour moi !";
+            $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu. Ps : Votez pour moi !";
         
             $headers = "From:" . $from;
         
