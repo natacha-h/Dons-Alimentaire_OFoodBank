@@ -244,24 +244,46 @@ class DonationController extends AbstractController
             $firstName = $user->getFirstName();
             $lastName = $user->getLastName();
             $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+
+
+            $to   = $mail;
+            $from = 'oFoodBank@gmail.com';
+
+            $subject = "Annulation réservation de votre don"; 
+
+            $headers = "From: " . $from . "\r\n";
+            $headers .= "Reply-To: ". $from . "\r\n";
+            $headers .= "CC: your_email\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+            
+            $message = '<html><body>';
+            $message .= '<h1>Mail From TalkersCode - Thanks for Subscribing</h1>'; 
+            $message .= '<table width="100%"; style="border:1px solid grey;" cellpadding="15">';
+            $message .= "<tr><td>Home Page</td><td><a href='http://talkerscode.com'></a></td></tr>";
+            $message .= "<tr><td colspan=3>Dear Receiver_Name,</td><td>Thanks For Subscribing TalkersCode.com Now You can Access Much More And Premium Features.</td></tr>";
+            $message .= "</table>";
+            $message .= "</body></html>";
+            
+            mail($to, $subject, $message, $headers);
     
-            ini_set( 'display_errors', 1 );
+            // ini_set( 'display_errors', 1 );
 
-            error_reporting( E_ALL );
+            // error_reporting( E_ALL );
 
-            $headers = 'Content-type: text/html; charset=utf8';
+            // $headers = 'Content-type: text/html; charset=utf8';
 
-            $from = "oFoodBank@gmail.com";
+            // $from = "oFoodBank@gmail.com";
         
-            $to = $mail;
+            // $to = $mail;
         
-            $subject = utf8_decode("Annulation réservation de votre don");
+            // $subject = utf8_decode("Annulation réservation de votre don");
         
-            $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu. Ps : Votez pour moi !";
+            // $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu. Ps : Votez pour moi !";
         
-            $headers = "From:" . $from;
+            // $headers = "From:" . $from;
         
-            mail($to,$subject,$message, $headers);
+            // mail($to,$subject,$message, $headers);
         }
     }
 
