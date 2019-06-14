@@ -52,7 +52,7 @@ class UserController extends AbstractController
         ]);
     }
     /**
-     * @Route("/{id}", name="show", requirements={"id"="\d+"}, methods={"GET"})
+     * @Route("/{id}", name="show", requirements={"id"="\d+"}, methods={"GET","POST"})
      */
     public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     { 
