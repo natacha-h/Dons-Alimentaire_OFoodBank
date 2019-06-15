@@ -3,6 +3,14 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
+
+{# {{ dump(app.request.headers.get('referer'))}} #}
+{% if app.request.headers.get('referer') == "http://127.0.0.1:8001/dons/" %}
+    <div class="alert alert-warning"> 
+        Vous devez être connecté pour accéder au détail des dons
+    </div>  
+{% endif %}
+
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
