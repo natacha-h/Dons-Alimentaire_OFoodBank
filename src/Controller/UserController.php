@@ -61,7 +61,7 @@ class UserController extends AbstractController
 
         //Ajout de la requête custom pour les donations Disponibles
         $donations = $donationRepository->findDonationsByStatus($user->getId());
-        dd($donations);
+        dump($donations);
 
         //Je récupère l'ancien mot de passe
         $oldPassword = $user->getPassword();
