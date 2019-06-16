@@ -394,11 +394,26 @@ class DonationController extends AbstractController
 
         // dd($donation->getUsers());
 
+        $response = 'Don refusé';
+
+        if(empty($response)){
+            return $this->json([
+                    'code' => 0
+            ]);
+        }
+        // Sinon on retourne un code 1 et la réponse
+        else {
+            return $this->json([
+                'coordonates' => $response,
+                'code' => 1
+                ]);
+        }
+
         //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
 
-        return $this->redirectToRoute('user_manage_donations', [
-            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
-        ]);
+        // return $this->redirectToRoute('user_manage_donations', [
+        //     'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
+        // ]);
     }
 
     /**
