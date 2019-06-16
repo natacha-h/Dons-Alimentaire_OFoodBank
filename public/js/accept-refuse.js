@@ -32,6 +32,13 @@ function handleAcceptButton(event){
     }
   ).done(function(response) { // J'attache une fonction anonyme à l'évènement "Appel ajax fini avec succès" et je récupère le code de réponse en paramètre
       console.log(response); // debug
+      if(1 == response.code) {
+
+        // on retire le don du tableau
+        var $lineToDelete = $form.parent().parent();
+        console.log($lineToDelete);
+        $lineToDelete.remove();
+      }
       
       // TODO faire les actions souhaitées après la récupération de la réponse
   }).fail(function() { // J'attache une fonction anonyme à l'évènement "Appel ajax fini avec erreur"

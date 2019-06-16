@@ -334,11 +334,26 @@ class DonationController extends AbstractController
             'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
         );
 
+        $response = 'Don accepté';
+
+        if(empty($response)){
+            return $this->json([
+                    'code' => 0
+            ]);
+        }
+        // Sinon on retourne un code 1 et la réponse
+        else {
+            return $this->json([
+                'coordonates' => $response,
+                'code' => 1
+                ]);
+        }
+
         //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
 
-        return $this->redirectToRoute('user_manage_donations', [
-            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
-        ]);
+        // return $this->redirectToRoute('user_manage_donations', [
+        //     'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
+        // ]);
     }
 
     /**

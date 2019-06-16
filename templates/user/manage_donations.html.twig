@@ -8,14 +8,15 @@
     <table class="table col-12">
             <thead>
                 <tr>
-                <th scope="col">Nom du don </th>
-                <th scope="col">Réservé par </th>
-                <th scope="col">Accepter la réservation </th>
-                <th scope="col">Refuser la réservation</th>
+                    <th scope="col">Nom du don </th>
+                    <th scope="col">Réservé par </th>
+                    <th scope="col">Accepter la réservation </th>
+                    <th scope="col">Refuser la réservation</th>
                 </tr>
             </thead>
             <tbody>
                 {% for donation in donations %}
+                <tr data-id="{{donation.id}}">
                     {# <pre>
                         {{ dump(donation) }}
                     </pre> #}
@@ -45,6 +46,7 @@
                             </button>
                     </form>
                     </td>
+                </tr>
                 {% endfor %}
             </tbody>  
     </table>  
