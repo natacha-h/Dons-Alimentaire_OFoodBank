@@ -32,15 +32,15 @@
                     
                     </td>
                     <td> 
-                        <form action="{{path('donation_accept', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
-                            <button class="btn btn-link" id="accept">
+                        <form action="{{path('donation_accept', {'id': donation.id}, {'method' : 'POST'})}} " method="POST" data-id="{{donation.id}}">
+                            <button class="btn btn-link" id="accept" >
                                 <i class="fas fa-check-circle"></i> 
                             </button>
                         </form>
                     </td>
                     <td>
-                    <form action="{{path('donation_refuse', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
-                            <button class="btn btn-link" id="refuse">
+                    <form action="{{path('donation_refuse', {'id': donation.id}, {'method' : 'POST'})}} " method="POST" data-id="{{donation.id}}">
+                            <button class="btn btn-link" id="refuse" >
                                 <i class="fas fa-times-circle"></i>
                             </button>
                     </form>
