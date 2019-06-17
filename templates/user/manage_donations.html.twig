@@ -8,14 +8,15 @@
     <table class="table col-12">
             <thead>
                 <tr>
-                <th scope="col">Nom du don </th>
-                <th scope="col">Réservé par </th>
-                <th scope="col">Accepter la réservation </th>
-                <th scope="col">Refuser la réservation</th>
+                    <th scope="col">Nom du don </th>
+                    <th scope="col">Réservé par </th>
+                    <th scope="col">Accepter la réservation </th>
+                    <th scope="col">Refuser la réservation</th>
                 </tr>
             </thead>
             <tbody>
                 {% for donation in donations %}
+                <tr data-id="{{donation.id}}">
                     {# <pre>
                         {{ dump(donation) }}
                     </pre> #}
@@ -32,19 +33,25 @@
                     
                     </td>
                     <td> 
-                        <form action="{{path('donation_accept', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
-                            <button class="btn btn-link">
+                        <form action="{{path('donation_accept', {'id': donation.id}, {'method' : 'POST'})}} " method="POST" data-id="{{donation.id}}">
+                            <button class="btn btn-link" id="accept" >
                                 <i class="fas fa-check-circle"></i> 
                             </button>
                         </form>
                     </td>
                     <td>
-                    <form action="{{path('donation_refuse', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
-                            <button class="btn btn-link">
+                    <form action="{{path('donation_refuse', {'id': donation.id}, {'method' : 'POST'})}} " method="POST" data-id="{{donation.id}}">
+                            <button class="btn btn-link" id="refuse" >
                                 <i class="fas fa-times-circle"></i>
                             </button>
                     </form>
                     </td>
+                </tr>
                 {% endfor %}
-            </tbody>    
+            </tbody>  
+    </table>  
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{asset('js/accept-refuse.js')}} "> </script>
 {% endblock %}
