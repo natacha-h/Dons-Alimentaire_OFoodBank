@@ -120,84 +120,96 @@ class DonationController extends AbstractController
      */
     public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, \Swift_Mailer $mailer)
     {
+        //on vérifie le status actuel du don
+        $currentStatus = $donation->getStatus()->getName();
+        dd($currentStatus);
+        // si le don est déjà réservé
+        if ("Réservé" == $currentStatus){
+            // on affiche un flashMessage pour informer l'utilisateur
+            $this->addFlash(
+                'danger',
+                'Le don a été réservé pendant que vous regardiez les détails <i class="far fa-sad-tear"></i>',
+            );
 
-        // on crée un nouvel objet Status 
-        $newStatus = $statusRepository->findOneByName('Réservé');
-        // dd($newStatus);
-        // on change le status de la donnation
-        $donation->setStatus($newStatus);
-        // on ajoute l'id du demandeur à la donnation
-        $donation->addUser($this->getUser());
-        // on persist et on flush
-        $em->persist($donation);
-        $em->flush();
+        } //sinon c'est bon
+        else {
+            // on crée un nouvel objet Status 
+            $newStatus = $statusRepository->findOneByName('Réservé');
+            // dd($newStatus);
+            // on change le status de la donnation
+            $donation->setStatus($newStatus);
+            // on ajoute l'id du demandeur à la donnation
+            $donation->addUser($this->getUser());
+            // on persist et on flush
+            $em->persist($donation);
+            $em->flush();
 
-        // // on crée la variable "collector" à qui on attribue l'utilisateur courant
-        // $collector = $this->getUser();
+            // // on crée la variable "collector" à qui on attribue l'utilisateur courant
+            // $collector = $this->getUser();
 
-        // ajout d'un flash message
-        $this->addFlash(
-            'success',
-            'La demande de réservation est bien prise en compte'
-        );
+            // ajout d'un flash message
+            $this->addFlash(
+                'success',
+                'La demande de réservation est bien prise en compte'
+            );
 
-    // Envoi de mails lors de la réservation
-    $donationUsers = $donation->getUsers();
-    $donationTitle = $donation->getTitle();
-    $donationId = $donation->getId();
+            // Envoi de mails lors de la réservation
+            $donationUsers = $donation->getUsers();
+            $donationTitle = $donation->getTitle();
+            $donationId = $donation->getId();
 
-    foreach ($donationUsers as $user){
-        // Si on est une Association
-            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
-            $email = $user->getEmail(); // Déclaration de l'adresse de destination.
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName();         
-            $mail = (new \Swift_Message('Confirmation de réservation'))
-            ->setFrom('ofoodbank@gmail.com')
-            ->setTo($email)
-            ->setBody(
-                    $this->renderView(
-                        'mailer/mail-reservation-assoc.html.twig',
-                        [
-                            'email' => $email,
-                            'donationTitle' => $donationTitle,
-                            'donationId' => $donationId,
-                            'firstName' => $firstName,
-                            'lastName' => $lastName
-                        ]
-                    ),
-                    'text/html'
-                );
-                        
-        $mailer->send($mail);
+            foreach ($donationUsers as $user){
+                // Si on est une Association
+                    if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                    $email = $user->getEmail(); // Déclaration de l'adresse de destination.
+                    $firstName = $user->getFirstName();
+                    $lastName = $user->getLastName();         
+                    $mail = (new \Swift_Message('Confirmation de réservation'))
+                    ->setFrom('ofoodbank@gmail.com')
+                    ->setTo($email)
+                    ->setBody(
+                            $this->renderView(
+                                'mailer/mail-reservation-assoc.html.twig',
+                                [
+                                    'email' => $email,
+                                    'donationTitle' => $donationTitle,
+                                    'donationId' => $donationId,
+                                    'firstName' => $firstName,
+                                    'lastName' => $lastName
+                                ]
+                            ),
+                            'text/html'
+                        );
+                                
+                $mailer->send($mail);
+                }
+                // Si on est Donateur 
+                    if ('ROLE_GIVER' == $user->getRole()->getCode()){
+                    $email = $user->getEmail(); // Déclaration de l'adresse de destination.
+                    $userId = $user->getId();
+                    $firstName = $user->getFirstName();
+                    $lastName = $user->getLastName(); 
+                    $mail = (new \Swift_Message("Votre don $donationTitle a été réservé"))
+                    ->setFrom('ofoodbank@gmail.com')
+                    ->setTo($email)
+                    ->setBody(
+                            $this->renderView(
+                                'mailer/mail-reservation-giver.html.twig',
+                                [
+                                    'email' => $email,
+                                    'donationTitle' => $donationTitle,
+                                    'donationId' => $donationId,
+                                    'firstName' => $firstName,
+                                    'lastName' => $lastName,
+                                    'userId' => $userId
+                                ]
+                            ),
+                            'text/html'
+                        );
+                $mailer->send($mail);
+                }
+            }
         }
-        // Si on est Donateur 
-            if ('ROLE_GIVER' == $user->getRole()->getCode()){
-            $email = $user->getEmail(); // Déclaration de l'adresse de destination.
-            $userId = $user->getId();
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName(); 
-            $mail = (new \Swift_Message("Votre don $donationTitle a été réservé"))
-            ->setFrom('ofoodbank@gmail.com')
-            ->setTo($email)
-            ->setBody(
-                    $this->renderView(
-                        'mailer/mail-reservation-giver.html.twig',
-                        [
-                            'email' => $email,
-                            'donationTitle' => $donationTitle,
-                            'donationId' => $donationId,
-                            'firstName' => $firstName,
-                            'lastName' => $lastName,
-                            'userId' => $userId
-                        ]
-                    ),
-                    'text/html'
-                );
-        $mailer->send($mail);
-        }
-    }
-
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
