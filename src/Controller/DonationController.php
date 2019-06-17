@@ -128,7 +128,7 @@ class DonationController extends AbstractController
             // on affiche un flashMessage pour informer l'utilisateur
             $this->addFlash(
                 'danger',
-                'Le don a été réservé pendant que vous regardiez les détails <i class="far fa-sad-tear"></i>',
+                'Le don a été réservé pendant que vous regardiez les détails <i class="far fa-sad-tear"></i>'
             );
 
         } //sinon c'est bon
