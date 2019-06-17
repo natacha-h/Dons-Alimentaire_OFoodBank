@@ -18,6 +18,23 @@ body{
     flex: 1 ;
 }
 
+#header-pic{
+    background-image: url(../pictures/banner.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    margin-top: .5em;
+
+}
+
+#header-pic p{
+    position: absolute;
+    bottom: -10px;
+    right: 5px;
+    font-size: .8em;
+    color: white;
+}
+
 .hide-my-form{
     display: none;
 }
@@ -126,7 +143,7 @@ li.nav-item.col-6.col-md-5 {
 }
 /* page détail d'un don */
 #reserved .fas{
-    color: #f49f0a;
+    color: white;
     margin-bottom: 0;
 }
 
@@ -134,13 +151,20 @@ li.nav-item.col-6.col-md-5 {
     background-color: #40a629;
     color: white;
 }
-#select:hover {
+#select:hover, #deselect:hover {
     text-decoration: none; 
 }
 
+#deselect{
+    background-color: #888;
+    color: white;
+}
+
 #reserved{
-    background-color: rgba(244, 159, 10, .4);
+    background-color:#f49f0a;
     padding: .2em;
+    color: white;
+    text-align: center;
 }
 
 .return-to-list{

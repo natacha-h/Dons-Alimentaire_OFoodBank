@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
 {% endblock %}
 
+{% block picture_header %}{% endblock %}
+
 {% block body %}
     <div class="return-to-list">
         <p>
@@ -41,9 +43,9 @@
                             {% if app.user.id == collector.id %}
                                 {# {{dump(collector.id)}} #}
                                 <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
-                                    Annuler la réservation de ce don 
-                                    <button>
-                                        <i class="far fa-times-circle"></i>
+                                    
+                                    <button class="btn btn-link" id="deselect">
+                                        Annuler la réservation de ce don <i class="far fa-times-circle"></i>
                                     </button>
                                 </form>
                             
