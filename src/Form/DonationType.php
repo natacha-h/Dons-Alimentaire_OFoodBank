@@ -35,9 +35,9 @@ class DonationType extends AbstractType
                 'label' => 'Image illustrant le don (jpg, png, gif)',
                 'required' => false
             ])
-            ->add('address', AddressType::class, [
-                'label' => false
-            ])
+            // ->add('address', AddressType::class, [
+            //     'label' => false
+            // ])
             ->add('products', CollectionType::class, [
                 'label' => false,
                 'entry_type' => ProductType::class,

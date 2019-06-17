@@ -6,14 +6,17 @@ use App\Entity\Address;
 use App\Entity\Product;
 use App\Utils\Rewarder;
 use App\Entity\Donation;
+use App\Utils\Addresser;
 use App\Form\ProductType;
 use App\Form\DonationType;
 use App\Repository\UserRepository;
 use App\Repository\StatusRepository;
+use App\Repository\AddressRepository;
 use Proxies\__CG__\App\Entity\Status;
 use App\Repository\CategoryRepository;
 use App\Repository\DonationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
@@ -30,14 +33,23 @@ class DonationController extends AbstractController
     /**
      * @Route("/", name="list", methods={"GET"})
      */
-    public function list(DonationRepository $donationRepository)
+    public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request)
     {
         //repo = $this->getDoctrine()->getRepository(Donation::class);
 
-        $donations = $donationRepository->findAll();
-        
+        $donations = $donationRepository->findDonationWithProducts();
+
+        $donationsList = $paginator->paginate(
+            $donationRepository->findByStatusQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        // dd($donations);
+
         $expiryDateArray = [];
         foreach($donations as $donation){
+            // dump($donation);
             $currentExpiry = false;
             foreach($donation->getProducts() as $product){
                 $expiryDate = $product->getExpiryDate();
@@ -55,10 +67,10 @@ class DonationController extends AbstractController
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
 
-        
-
+        // dump($expiryDateArray);
+        // dump($donationsList);
         return $this->render('donation/list.html.twig', [
-            'donations' => $donations,
+            'donations' => $donationsList,
             'expiryDateArray' => $expiryDateArray
         ]);
     }
@@ -129,6 +141,7 @@ class DonationController extends AbstractController
             'La demande de réservation est bien prise en compte'
         );
 
+
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
@@ -156,7 +169,7 @@ class DonationController extends AbstractController
         // ajout d'un Flash Message
         $this->addFlash(
             'success',
-            'Vous avez bien annulé la réservaton de ce don'
+            'Vous avez bien annulé la réservation de ce don'
         );
 
         dump($donation->getUsers());
@@ -165,6 +178,120 @@ class DonationController extends AbstractController
             'donation' => $donation,
             'id' => $donation->getId(),
             // 'giver' => $donation->getUsers()[0]
+        ]);
+    }
+
+    /**
+     * @Route("/api/address/{id}/coordonates", name="coordonates", methods={"POST"})
+     */
+    public function getCoordonates(Donation $donation, Addresser $addresser){
+        // On récupere l'adresse du don concerné
+        $address = $donation->getAddress();
+
+        // On récupere les infos de son adresse pour construire l'url
+        $number = $address->getNumber();
+        $zipCode = $address->getZipCode();
+        $city = $address->getCity();
+        $plussedCity = $addresser->addresser($city); 
+        // On remplace les espaces du nom de la rue par des + grâce au service
+        $street1 = $address->getStreet1();
+        $plussedStreet = $addresser->addresser($street1);
+
+        // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
+        if($number != null){
+            // On construit l'url avec les valeurs de la donation concernée avec chiffre
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q='.$number.'+'. $plussedStreet .',+'. $plussedCity .'&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+        } else{
+            // On construit l'url avec les valeurs de la donation concernée sans chiffre
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q=' . $plussedStreet . ',+' . $plussedCity . '&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+        }
+
+        // On décode la réponse sous forme de tableau
+        $response = json_decode($response, true);
+
+        // Si le tableau est vide on retourne un code 0
+        if(empty($response)){
+            return $this->json([
+                    'code' => 0
+            ]);
+        }
+        // Sinon on retourne un code 1 et la réponse
+        else {
+            return $this->json([
+                'coordonates' => $response,
+                'code' => 1
+                ]);
+        }
+    }
+    /**
+     * @Route("/{id}/accept", name="accept", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function acceptDonation(StatusRepository $statusRepository, Donation $donation, EntityManagerInterface $em)
+    {
+        // on crée un nouvel objet Status 
+        $newStatus = $statusRepository->findOneByName('Donné');
+        // dd($newStatus);
+        // on change le status de la donnation
+        $donation->setStatus($newStatus);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un flash message
+        $this->addFlash(
+            'success',
+            'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
+        );
+
+        //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
+
+        return $this->redirectToRoute('user_manage_donations', [
+            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/refuse", name="refuse", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function refuseDonation(Donation $donation, EntityManagerInterface $em, StatusRepository $statusRepository)
+    {
+        // on crée un nouvel objet Status
+        $newStatus = $statusRepository->findOneByName('Dispo');
+        // on attribue le status au don
+        $donation->setStatus($newStatus);
+
+        // il faut supprimer l'association de la liste des users liée au don courant
+            //1- on récupère la liste des utilisateurs liés au don
+        $users = $donation->getUsers();
+            //2- on boucle sur la collection pour récupérer le user_role 'ROLE_ASSOC'
+        $asso = null;
+        foreach ($users as $user){
+            // dump($user->getRole()->getCode());
+
+            //si le role de user est 'ROLE_ASSOC', on le donne en valeur de la variable $asso
+            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                $asso = $user;
+            }
+        }
+        // dd($asso);
+        // on retire l'id de l'association
+        $donation->removeUser($asso);
+        // on persist et on flush
+        $em->persist($donation);
+        $em->flush();
+
+        // ajout d'un Flash Message
+        $this->addFlash(
+            'success',
+            'Vous avez refusé la demande de l\'association'
+        );
+
+        // dd($donation->getUsers());
+
+        //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
+
+        return $this->redirectToRoute('user_manage_donations', [
+            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
         ]);
     }
 
@@ -187,17 +314,36 @@ class DonationController extends AbstractController
         $donation->setUpdatedAt(new \Datetime());
 
         $form = $this->createForm(DonationType::class, $donation);
+
+        $addressFormNumber = $request->request->get('number');
+        $addressFormStreet1 = $request->request->get('street1');
+        $addressFormStreet2 = $request->request->get('street2');
+        $addressFormZipCode = $request->request->get('zipCode');
+        $addressFormCity = $request->request->get('city');
+
+        $addressId = $request->request->get('index');
+
         $form->handleRequest($request);
         // dump($form->getData());
         
         if ($form->isSubmitted() && $form->isValid()) {
-            //avant l'enregistrement d'un film je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
+            //avant l'enregistrement d'un don je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
             $file = $donation->getPicture();
             // dd($donation);
             if(!is_null($file)){
 
+                $extension = $file->guessExtension();
+                
+                if($extension != 'jpg' | $extension != 'jpeg' | $extension != 'png' | $extension != 'gif' ){
+                    $this->addFlash('danger', 'Le format de votre image ne correspond pas');
+
+                    return $this->render('donation/new.html.twig', [
+                        'form' => $form->createView()
+                    ]);
+                }
+
                 //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
-                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+                $fileName = $this->generateUniqueFileName().'.'.$extension;
 
                 try {
                     //je deplace mon fichier dans le dossier souhaité
@@ -221,8 +367,27 @@ class DonationController extends AbstractController
             $status = $StatusRepo->findOneByName('Dispo');
             $donation->setStatus($status);
 
-            // Je persist l'adresse
-            $em->persist($donation->getAddress());
+            // // Je persist l'adresse
+            // $em->persist($donation->getAddress());
+            
+            // si les champs du formulaire sont vides, alors l'utilisateur a gardé l'adresse d'origine (= la sienne)
+            if (null == $addressFormNumber && null == $addressFormStreet1 && null == $addressFormStreet2 && null == $addressFormZipCode && null == $addressFormCity) {
+                // on attribue à la donation l'adresse du User/donateur
+                ($donation->setAddress($this->getUser()->getAddress()));
+            } else {// sinon c'est qu'il a choisi une autre adresse
+                // on l'enregistre
+                $donationAddress = new Address();
+                $donationAddress->setNumber($addressFormNumber);
+                $donationAddress->setStreet1($addressFormStreet1);
+                $donationAddress->setStreet2($addressFormStreet2);
+                $donationAddress->setZipCode($addressFormZipCode);
+                $donationAddress->setCity($addressFormCity);
+                //on persist la nouvelle adresse
+                $em->persist($donationAddress);
+                // on attribue la nouvelle addresse au don
+                $donation->setAddress($donationAddress);
+            }
+            // dd($donation->getAddress());
 
             // Je persist tous les produits
             foreach($donation->getProducts() as $product){
@@ -263,7 +428,6 @@ class DonationController extends AbstractController
 
             // Je persist la donation
             $em->persist($donation);
-
             // J'effectue toutes les insertions en bdd
             $em->flush();
 
@@ -273,6 +437,7 @@ class DonationController extends AbstractController
             return $this->redirectToRoute('donation_list');
 
         }
+        
         return $this->render('donation/new.html.twig', [
             'form' => $form->createView()
         ]); 
