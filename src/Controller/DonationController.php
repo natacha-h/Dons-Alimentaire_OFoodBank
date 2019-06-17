@@ -328,32 +328,17 @@ class DonationController extends AbstractController
         $em->persist($donation);
         $em->flush();
 
-        // ajout d'un flash message
-        $this->addFlash(
-            'success',
-            'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
-        );
-
         $response = 'Don accepté';
 
-        if(empty($response)){
-            return $this->json([
-                    'code' => 0
+  
+        return $this->json([
+            'response' => $response,
+            'code' => 1
             ]);
-        }
-        // Sinon on retourne un code 1 et la réponse
-        else {
-            return $this->json([
-                'coordonates' => $response,
-                'code' => 1
-                ]);
-        }
 
         //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
 
-        // return $this->redirectToRoute('user_manage_donations', [
-        //     'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
-        // ]);
+        
     }
 
     /**
@@ -387,33 +372,25 @@ class DonationController extends AbstractController
         $em->flush();
 
         // ajout d'un Flash Message
-        $this->addFlash(
-            'success',
-            'Vous avez refusé la demande de l\'association'
-        );
+        // $this->addFlash(
+        //     'success',
+        //     'Vous avez refusé la demande de l\'association'
+        // );
 
         // dd($donation->getUsers());
 
         $response = 'Don refusé';
 
-        if(empty($response)){
-            return $this->json([
-                    'code' => 0
+
+        return $this->json([
+            'response' => $response,
+            'code' => 1
             ]);
-        }
-        // Sinon on retourne un code 1 et la réponse
-        else {
-            return $this->json([
-                'coordonates' => $response,
-                'code' => 1
-                ]);
-        }
+        
 
         //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
 
-        // return $this->redirectToRoute('user_manage_donations', [
-        //     'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
-        // ]);
+       
     }
 
     /**
