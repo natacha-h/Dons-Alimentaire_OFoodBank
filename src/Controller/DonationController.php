@@ -77,8 +77,12 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
-    public function show(Donation $donation)
+    public function show(/*Donation $donation*/ $id, DonationRepository $donationRepository)
     {
+        // on récupère le don
+        $donation = $donationRepository->findDonationWithAllDetails($id);
+        // dd($donation);
+
         // on récupère la collection de user afin d'identifier le donateur
         $users = $donation->getUsers();
         // pour chaque utilisateur
