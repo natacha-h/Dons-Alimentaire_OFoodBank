@@ -114,7 +114,7 @@ li.nav-item.col-6.col-md-5 {
 }
 /* page détail d'un don */
 #reserved .fas{
-    color: #f49f0a;
+    color: white;
     margin-bottom: 0;
 }
 
@@ -122,13 +122,20 @@ li.nav-item.col-6.col-md-5 {
     background-color: #40a629;
     color: white;
 }
-#select:hover {
+#select:hover, #deselect:hover {
     text-decoration: none; 
 }
 
+#deselect{
+    background-color: #888;
+    color: white;
+}
+
 #reserved{
-    background-color: rgba(244, 159, 10, .4);
+    background-color:#f49f0a;
     padding: .2em;
+    color: white;
+    text-align: center;
 }
 
 .return-to-list{
