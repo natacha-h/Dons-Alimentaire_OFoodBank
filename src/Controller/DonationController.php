@@ -116,86 +116,99 @@ class DonationController extends AbstractController
      */
     public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
     {
+        //on vérifie le status actuel du don
+        $currentStatus = $donation->getStatus()->getName();
+        dd($currentStatus);
+        // si le don est déjà réservé
+        if ("Réservé" == $currentStatus){
+            // on affiche un flashMessage pour informer l'utilisateur
+            $this->addFlash(
+                'danger',
+                'Le don a été réservé pendant que vous regardiez les détails <i class="far fa-sad-tear"></i>',
+            );
 
-        // on crée un nouvel objet Status 
-        $newStatus = $statusRepository->findOneByName('Réservé');
-        // dd($newStatus);
-        // on change le status de la donnation
-        $donation->setStatus($newStatus);
-        // on ajoute l'id du demandeur à la donnation
-        $donation->addUser($this->getUser());
-        // on persist et on flush
-        $em->persist($donation);
-        $em->flush();
+        } //sinon c'est bon
+        else {
 
-        // // on crée la variable "collector" à qui on attribue l'utilisateur courant
-        // $collector = $this->getUser();
-
-        // ajout d'un flash message
-        $this->addFlash(
-            'success',
-            'La demande de réservation est bien prise en compte'
-        );
-
-       
-        $donationTitle = $donation->getTitle();
-        $donationId = $donation->getId();
-        $headers = [];
-        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";;
-
-        $donationUsers = $donation->getUsers();
-        foreach ($donationUsers as $user){
-            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName();
-            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+            // on crée un nouvel objet Status 
+            $newStatus = $statusRepository->findOneByName('Réservé');
+            // dd($newStatus);
+            // on change le status de la donnation
+            $donation->setStatus($newStatus);
+            // on ajoute l'id du demandeur à la donnation
+            $donation->addUser($this->getUser());
+            // on persist et on flush
+            $em->persist($donation);
+            $em->flush();
     
-            ini_set( 'display_errors', 1 );
-
-            error_reporting( E_ALL );
-
-            $headers = 'Content-type: text/html; charset=utf8';
-
-            $from = "oFoodBank@gmail.com";
-        
-            $to = $mail;
-        
-            $subject = "Confirmation réservation d'un don";
-        
-            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous, Optimus Pikachu - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
-        
-            $headers = "From:" . $from;
-        
-            mail($to,$subject,$message, $headers);
-            
-            } 
-            
-            if ('ROLE_GIVER' == $user->getRole()->getCode()){
-            $userId = $user->getId();
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName();
-            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+            // // on crée la variable "collector" à qui on attribue l'utilisateur courant
+            // $collector = $this->getUser();
     
-            ini_set( 'display_errors', 1 );
+            // ajout d'un flash message
+            $this->addFlash(
+                'success',
+                'La demande de réservation est bien prise en compte'
+            );
+            
+            $donationTitle = $donation->getTitle();
+            $donationId = $donation->getId();
+            $headers = [];
+            // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
+            $headers  = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";;
+            $donationUsers = $donation->getUsers();
+            foreach ($donationUsers as $user){
+                if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                $firstName = $user->getFirstName();
+                $lastName = $user->getLastName();
+                $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+        
+                ini_set( 'display_errors', 1 );
+    
+                error_reporting( E_ALL );
+    
+                $headers = 'Content-type: text/html; charset=utf8';
+    
+                $from = "oFoodBank@gmail.com";
+            
+                $to = $mail;
+            
+                $subject = "Confirmation réservation d'un don";
+            
+                $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous, Optimus Pikachu - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
+            
+                $headers = "From:" . $from;
+            
+                mail($to,$subject,$message, $headers);
+                
+                } 
+                
+                if ('ROLE_GIVER' == $user->getRole()->getCode()){
+                $userId = $user->getId();
+                $firstName = $user->getFirstName();
+                $lastName = $user->getLastName();
+                $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
+        
+                ini_set( 'display_errors', 1 );
+    
+                error_reporting( E_ALL );
+    
+                $headers = 'Content-type: text/html; charset=utf8';
+    
+                $from = "oFoodBank@gmail.com";
+            
+                $to = $mail;
+            
+                $subject = utf8_decode("Réservation de votre don");
+            
+                $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations";
+            
+                $headers = "From:" . $from;
+            
+                mail($to,$subject,$message, $headers);
+                }
+            }       
 
-            error_reporting( E_ALL );
-
-            $headers = 'Content-type: text/html; charset=utf8';
-
-            $from = "oFoodBank@gmail.com";
-        
-            $to = $mail;
-        
-            $subject = utf8_decode("Réservation de votre don");
-        
-            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations";
-        
-            $headers = "From:" . $from;
-        
-            mail($to,$subject,$message, $headers);
-        }
     }
 
 
