@@ -2,6 +2,8 @@
 
 {% block title %}Connexion{% endblock %}
 
+{% block picture_header %}{% endblock %}
+
 {% block body %}
 
 {# {{ dump(app.request.headers.get('referer'))}}
@@ -14,7 +16,7 @@
         
 {% endif %}
 
-    <form method="post">
+    <form method="post" class="big-content">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
