@@ -2,14 +2,14 @@ var myMap = L.map('map');
 
 
 $(document).ready(function(){
-    console.log('app.init-map')
+    // console.log('app.init-map')
     // /dons/216
-    console.log(window.location.pathname);
+    // console.log(window.location.pathname);
 
     // Etape 1: récupérer l'id qui nous interesse
     var url = window.location.pathname;
     var id = sliceUrl(url);
-    console.log(id);
+    // console.log(id);
 
     // Etape 2: transmettre ces données a PHP
     ajaxRequestCoordonates(id);
@@ -43,7 +43,7 @@ function ajaxRequestCoordonates(id){
 
         // Si ma réponse code vaut 0 je n'affiche pas d'adresse
         if(response.code == 0){
-            console.log("reponse vide");
+            // console.log("reponse vide");
             $('#map').remove();
         } else {
             // Sinon je récupere la

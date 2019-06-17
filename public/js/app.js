@@ -11,7 +11,7 @@ $addNewProduct.css('color', 'white');
 
 // Quand le document est pret
 $(document).ready(function(){
-    console.log('app : init');
+    // console.log('app : init');
 
     // Je récupere mes formulaires
     $collectionHolder = $('#product_list');
@@ -30,11 +30,13 @@ $(document).ready(function(){
     // Je gere le click sur l'ajout d'un nouveau produit
     $addNewProduct.on('click', handleClickAddNewProduct);
 
+    // Permet de verifier si l'input est vide ou non en fonction 
+    // de son contenu
     $('input').on('focusout', checkIfEmptyInput);
 });
 
 function addRemoveBtn ($panel) {
-    console.log('ajout du bouton remove');
+    // console.log('ajout du bouton remove');
     // Je prépare mon bouton de suppression
     var $removeBtn = $('<a href="#" class="btn btn-danger">Supprimer le produit de la liste</a>');
 
@@ -62,7 +64,7 @@ function handleClickAddNewProduct (event) {
     // Cette méthode me permet de créer un nouveau formulaire
     // Elle me permet aussi d'ajouter le bouton remove
     event.preventDefault();
-    console.log('ajout nouveau form');
+    // console.log('ajout nouveau form');
     // Je récupere le prototype
     var prototype = $collectionHolder.data('prototype');
 
@@ -103,11 +105,15 @@ function handleClickAddNewProduct (event) {
 
 function checkIfEmptyInput(event) {
 
+    // On cherche les inputs qui sont obligatoires
     if(event.target.required){
+        // Si ils sont vide on leur donne un bordure rouge
         if(event.target.value.length == 0){
             $(event.target).removeClass('border border-success');
             $(event.target).addClass('border border-danger');
-        } else {
+        } 
+        // Sinon une bordure verte
+        else {
             $(event.target).removeClass('border border-danger');
             $(event.target).addClass('border border-success');
         }
@@ -116,12 +122,14 @@ function checkIfEmptyInput(event) {
 
 // récupération du bouton qui affiche le formulaire d'adresse
 var showChangeAdress = document.getElementById('showChangeAdress');
-
-showChangeAdress.addEventListener('click', handleClickChangeAddress);
+// console.log(showChangeAdress)
+if(showChangeAdress != null){
+    showChangeAdress.addEventListener('click', handleClickChangeAddress);
+}
 
 function handleClickChangeAddress(event){
     event.preventDefault();
-    console.log('click on change adress')
+    // console.log('click on change adress')
     // je récupère la div qui contient le formulaire d'adresse
     var $addressForm = $('#changeAdress');
     // je retire la class CSS qui cache le formulaire
