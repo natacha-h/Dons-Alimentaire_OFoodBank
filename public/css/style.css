@@ -265,6 +265,15 @@ a.page-link{
     margin-bottom: 1em;
 }
 
+/* dans page about */
+
+/*.card-body-title{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}*/
+
+
 @media screen and (max-width: 768px) { 
     body{
         width: 100%
