@@ -25,7 +25,7 @@
             </li>           
             {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_login')}}">Se connecter</a>
+                <a class="nav-link" href="{{ path('app_login', {'connexion' : 'direct'}) }}">Se connecter</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('user_inscription')}}">S'inscrire</a>

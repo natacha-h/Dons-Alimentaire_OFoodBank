@@ -45,8 +45,8 @@
             </div>
             {% block picture_header %}
             {# Cacher la div en mobile : class="d-none d-md-block" #}
-                <div id="header-pic">
-                    <img src="" alt="">
+                <div id="header-pic" class="d-none d-md-block">
+                    <p>Image : Lisovskaya Natalia - Shutterstock </p>
                 </div>                        
             {% endblock %}               
                 
@@ -60,13 +60,16 @@
         {# Contenu principal #}
         <main class="container">
         {# ajout des flash Messages #}
-        {% for label, messages in app.flashes %} {# pour toutes les keys "label" et "messages" du tableau de flasMessage #}
-            {% for message in messages %} {# pour chaque message de la clé "messages" courante #}
-                <div class="alert alert-{{label}}"> {# j'utilise la key "label" pour compléter la class du message#}
-                    {{ message }} {# j'affiche le message #}
-                </div>                
+        <section id="FlashMessage" class= "mt-3">
+            {% for label, messages in app.flashes %} {# pour toutes les keys "label" et "messages" du tableau de flasMessage #}
+                {% for message in messages %} {# pour chaque message de la clé "messages" courante #}
+                    <div class="alert alert-{{label}}"> {# j'utilise la key "label" pour compléter la class du message#}
+                        {{ message }} {# j'affiche le message #}
+                    </div>                
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        
+        </section>
 
         {% block body %}
 
