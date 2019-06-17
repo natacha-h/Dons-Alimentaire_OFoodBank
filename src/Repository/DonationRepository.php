@@ -85,4 +85,24 @@ class DonationRepository extends ServiceEntityRepository
             }
     */
 
+
+    
+    public function findDonationWithAllDetails($value)
+    {
+         return $this->createQueryBuilder('d')
+            ->where('d.id = :val')
+            ->setParameter('val', $value)
+            ->join('d.address', 'a')
+            ->addSelect('a')
+            ->andwhere('a.id = d.address')
+            ->join('d.products', 'p')
+            ->addSelect('p')
+            ->join('d.status', 's')
+            ->addSelect('s')
+            ->andWhere('s.id = d.status')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+        
+    }
 }
