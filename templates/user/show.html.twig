@@ -12,8 +12,11 @@
             <h5 class="">Entreprise : {{ user.company }}</h5>
             <h5>Téléphone : {{ user.phoneNumber }}</h5>
             <h5 class="">{{ user.email }}</h5>
+            {% if is_granted('ROLE_GIVER') %}
             <h5 class="">Note : {{ user.rating }} / 5</h5>
-            <h5 class="">Points C02 : {{ user.points }}</h5>
+            <h5 class="">Niveau : {{ user.reward.title }}</h5>
+            {% endif %}
+            
             <h5 class=""><a href="#modif-profil" class="text-dark stretched-link">Modifer mon profil</a></h5>
         </div>
     </div>
@@ -27,12 +30,13 @@
         <div class="d-flex flex-wrap mt-4">
 
             {% for donation in user.donations %}
-            <div class="col-5 m-4 p-5 mx-auto border rounded">
+            <div class="col-sm-5 col-10 m-4 p-5 mx-auto border rounded">
+            <a href="{{path('donation_show', {'id': donation.id })}}" class="text-dark">
             <h4 class="font-italic">
                 {{ donation.title }}
-                <img src="{{asset('pictures/status_donne.png')}} " alt="Don donné">
             </h4>
-            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
+            </a>
+            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
             </div>
             {% endfor %}
         </div>
@@ -42,8 +46,10 @@
         <div class="d-flex flex-wrap mt-4">
             {% for donation in user.donations %}
             <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+            <a href="{{path('donation_show', {'id': donation.id })}}" class="text-dark">
             <h4 class="font-italic">{{ donation.title }}</h4>
-            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ donation.picture }}" alt=""></img>
+            </a>
+            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
             </div>
             {% endfor %}
         </div>
@@ -53,7 +59,7 @@
     {# Formulaire pour modifier ses données de profil #}
     <h2 id="modif-profil" class="text-center m-4">Modifier mon profil</h2>
     
-    {{ include('user/_form.html.twig') }}
+    {{ include('user/_form-profil.html.twig') }}
 
     <a href="#">Haut de la page</a>
 {% endblock %}

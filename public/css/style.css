@@ -312,6 +312,7 @@ a.page-link{
     height: 250px;
     background-image: url(/../pictures/comment_ca_marche.svg);
     margin: 0 auto;
+    margin-bottom: 1em;
 }
 
 
@@ -337,6 +338,17 @@ a.page-link{
         margin-bottom: .5em;
     }
 
-   
+    #shema{
+        border: 1px solid #f49f0a;
+        max-width: 80%;
+        height: 120px;
+        background-image: url(/../pictures/comment_ca_marche.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: 0 auto;
+        margin-bottom: 1em;
+    }
+
 }
   
