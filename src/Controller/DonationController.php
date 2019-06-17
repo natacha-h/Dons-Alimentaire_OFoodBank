@@ -77,8 +77,12 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
-    public function show(Donation $donation)
+    public function show(/*Donation $donation*/ $id, DonationRepository $donationRepository)
     {
+        // on récupère le don
+        $donation = $donationRepository->findDonationWithAllDetails($id);
+        // dd($donation);
+
         // on récupère la collection de user afin d'identifier le donateur
         $users = $donation->getUsers();
         // pour chaque utilisateur
@@ -114,91 +118,98 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}/select", name="select", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em)
+    public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, \Swift_Mailer $mailer)
     {
+        //on vérifie le status actuel du don
+        $currentStatus = $donation->getStatus()->getName();
+        dd($currentStatus);
+        // si le don est déjà réservé
+        if ("Réservé" == $currentStatus){
+            // on affiche un flashMessage pour informer l'utilisateur
+            $this->addFlash(
+                'danger',
+                'Le don a été réservé pendant que vous regardiez les détails <i class="far fa-sad-tear"></i>',
+            );
 
-        // on crée un nouvel objet Status 
-        $newStatus = $statusRepository->findOneByName('Réservé');
-        // dd($newStatus);
-        // on change le status de la donnation
-        $donation->setStatus($newStatus);
-        // on ajoute l'id du demandeur à la donnation
-        $donation->addUser($this->getUser());
-        // on persist et on flush
-        $em->persist($donation);
-        $em->flush();
+        } //sinon c'est bon
+        else {
+            // on crée un nouvel objet Status 
+            $newStatus = $statusRepository->findOneByName('Réservé');
+            // dd($newStatus);
+            // on change le status de la donnation
+            $donation->setStatus($newStatus);
+            // on ajoute l'id du demandeur à la donnation
+            $donation->addUser($this->getUser());
+            // on persist et on flush
+            $em->persist($donation);
+            $em->flush();
 
-        // // on crée la variable "collector" à qui on attribue l'utilisateur courant
-        // $collector = $this->getUser();
+            // // on crée la variable "collector" à qui on attribue l'utilisateur courant
+            // $collector = $this->getUser();
 
-        // ajout d'un flash message
-        $this->addFlash(
-            'success',
-            'La demande de réservation est bien prise en compte'
-        );
+            // ajout d'un flash message
+            $this->addFlash(
+                'success',
+                'La demande de réservation est bien prise en compte'
+            );
 
-       
-        $donationTitle = $donation->getTitle();
-        $donationId = $donation->getId();
-        $headers = [];
-        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";;
+            // Envoi de mails lors de la réservation
+            $donationUsers = $donation->getUsers();
+            $donationTitle = $donation->getTitle();
+            $donationId = $donation->getId();
 
-        $donationUsers = $donation->getUsers();
-        foreach ($donationUsers as $user){
-            if ('ROLE_ASSOC' == $user->getRole()->getCode()){
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName();
-            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
-    
-            ini_set( 'display_errors', 1 );
-
-            error_reporting( E_ALL );
-
-            $headers = 'Content-type: text/html; charset=utf8';
-
-            $from = "oFoodBank@gmail.com";
-        
-            $to = $mail;
-        
-            $subject = "Confirmation réservation d'un don";
-        
-            $message = utf8_decode("Bonjour " .$firstName. " " .$lastName. " , votre demande de réservation du don : ". $donationTitle .", à bien été enregistrée. Le donateur va devoir l'accepter sous peu, pour conclure la donation. Gros bisous, Optimus Pikachu - Pour revoir ou annuler votre réservation, suivez ce lien : http://92.243.9.64/dons/".$donationId."");
-        
-            $headers = "From:" . $from;
-        
-            mail($to,$subject,$message, $headers);
-            
-            } 
-            
-            if ('ROLE_GIVER' == $user->getRole()->getCode()){
-            $userId = $user->getId();
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName();
-            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
-    
-            ini_set( 'display_errors', 1 );
-
-            error_reporting( E_ALL );
-
-            $headers = 'Content-type: text/html; charset=utf8';
-
-            $from = "oFoodBank@gmail.com";
-        
-            $to = $mail;
-        
-            $subject = utf8_decode("Réservation de votre don");
-        
-            $message = "Bonjour " .$firstName. " " .$lastName. ". Votre don : ". $donationTitle .", à été réservé (http://92.243.9.64/dons/".$donationId." ). Merci de faire le nécessaire pour la validation en suivant ce lien : http://92.243.9.64/user/".$userId."/manage-donations";
-        
-            $headers = "From:" . $from;
-        
-            mail($to,$subject,$message, $headers);
+            foreach ($donationUsers as $user){
+                // Si on est une Association
+                    if ('ROLE_ASSOC' == $user->getRole()->getCode()){
+                    $email = $user->getEmail(); // Déclaration de l'adresse de destination.
+                    $firstName = $user->getFirstName();
+                    $lastName = $user->getLastName();         
+                    $mail = (new \Swift_Message('Confirmation de réservation'))
+                    ->setFrom('ofoodbank@gmail.com')
+                    ->setTo($email)
+                    ->setBody(
+                            $this->renderView(
+                                'mailer/mail-reservation-assoc.html.twig',
+                                [
+                                    'email' => $email,
+                                    'donationTitle' => $donationTitle,
+                                    'donationId' => $donationId,
+                                    'firstName' => $firstName,
+                                    'lastName' => $lastName
+                                ]
+                            ),
+                            'text/html'
+                        );
+                                
+                $mailer->send($mail);
+                }
+                // Si on est Donateur 
+                    if ('ROLE_GIVER' == $user->getRole()->getCode()){
+                    $email = $user->getEmail(); // Déclaration de l'adresse de destination.
+                    $userId = $user->getId();
+                    $firstName = $user->getFirstName();
+                    $lastName = $user->getLastName(); 
+                    $mail = (new \Swift_Message("Votre don $donationTitle a été réservé"))
+                    ->setFrom('ofoodbank@gmail.com')
+                    ->setTo($email)
+                    ->setBody(
+                            $this->renderView(
+                                'mailer/mail-reservation-giver.html.twig',
+                                [
+                                    'email' => $email,
+                                    'donationTitle' => $donationTitle,
+                                    'donationId' => $donationId,
+                                    'firstName' => $firstName,
+                                    'lastName' => $lastName,
+                                    'userId' => $userId
+                                ]
+                            ),
+                            'text/html'
+                        );
+                $mailer->send($mail);
+                }
+            }
         }
-    }
-
-
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
@@ -211,7 +222,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/{id}/deselect", name="deselect", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function deselect(Donation $donation, EntityManagerInterface $em, StatusRepository $statusRepository)
+    public function deselect(Donation $donation, EntityManagerInterface $em, StatusRepository $statusRepository, \Swift_Mailer $mailer)
     {
         // on crée un nouvel objet Status
         $newStatus = $statusRepository->findOneByName('Dispo');
@@ -229,39 +240,36 @@ class DonationController extends AbstractController
             'Vous avez bien annulé la réservation de ce don'
         );
 
-        $donationTitle = $donation->getTitle();
-        $donationId = $donation->getId();
-        $headers = [];
-        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";;
+    // Envoi de mails lors de la réservation
+    $donationUsers = $donation->getUsers();
+    $donationTitle = $donation->getTitle();
+    $donationId = $donation->getId();
 
-
-        $donationUsers = $donation->getUsers();
-        foreach ($donationUsers as $user){
-            
+    foreach ($donationUsers as $user){
+        // Si on est Donateur 
             if ('ROLE_GIVER' == $user->getRole()->getCode()){
+            $email = $user->getEmail(); // Déclaration de l'adresse de destination.
+            $userId = $user->getId();
             $firstName = $user->getFirstName();
-            $lastName = $user->getLastName();
-            $mail = $user->getEmail(); // Déclaration de l'adresse de destination.
-    
-            ini_set( 'display_errors', 1 );
-
-            error_reporting( E_ALL );
-
-            $headers = 'Content-type: text/html; charset=utf8';
-
-            $from = "oFoodBank@gmail.com";
-        
-            $to = $mail;
-        
-            $subject = utf8_decode("Annulation réservation de votre don");
-        
-            $message = "Bonjour " .$firstName. " " .$lastName. ". La réservation pour votre don : ". $donationTitle .", à été annulée par l'association (http://92.243.9.64/dons/".$donationId." ). Gros bisous de la part d'Optimus Pikachu. Ps : Votez pour moi !";
-        
-            $headers = "From:" . $from;
-        
-            mail($to,$subject,$message, $headers);
+            $lastName = $user->getLastName(); 
+            $mail = (new \Swift_Message($donationTitle.' : Réservation annulée'))
+            ->setFrom('ofoodbank@gmail.com')
+            ->setTo($email)
+            ->setBody(
+                    $this->renderView(
+                        'mailer/mail-canceled-reservation-giver.html.twig',
+                        [
+                            'email' => $email,
+                            'donationTitle' => $donationTitle,
+                            'donationId' => $donationId,
+                            'firstName' => $firstName,
+                            'lastName' => $lastName,
+                            'userId' => $userId
+                        ]
+                    ),
+                    'text/html'
+                );
+        $mailer->send($mail);
         }
     }
 
@@ -328,17 +336,17 @@ class DonationController extends AbstractController
         $em->persist($donation);
         $em->flush();
 
-        // ajout d'un flash message
-        $this->addFlash(
-            'success',
-            'Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous'
-        );
+        $response = 'Don accepté';
+
+  
+        return $this->json([
+            'response' => $response,
+            'code' => 1
+            ]);
 
         //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
 
-        return $this->redirectToRoute('user_manage_donations', [
-            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
-        ]);
+        
     }
 
     /**
@@ -372,18 +380,25 @@ class DonationController extends AbstractController
         $em->flush();
 
         // ajout d'un Flash Message
-        $this->addFlash(
-            'success',
-            'Vous avez refusé la demande de l\'association'
-        );
+        // $this->addFlash(
+        //     'success',
+        //     'Vous avez refusé la demande de l\'association'
+        // );
 
         // dd($donation->getUsers());
 
+        $response = 'Don refusé';
+
+
+        return $this->json([
+            'response' => $response,
+            'code' => 1
+            ]);
+        
+
         //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
 
-        return $this->redirectToRoute('user_manage_donations', [
-            'id' => $this->getUser()->getId(), // l'utilisateur courant est ici le donateur
-        ]);
+       
     }
 
     /**
