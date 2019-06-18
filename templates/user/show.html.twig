@@ -3,7 +3,7 @@
 {% block title %}Page de profil{% endblock %}
 
 {% block body %}
-    <h2 class="text-center m-4">Mon Profil</h2>
+    <h2 class="text-center">Mon Profil</h2>
 
     {# Informations du User #}
     <div class="container mb-4">
@@ -24,34 +24,83 @@
     {# Dons reçus ou effectués en fonction du rôle du user connecté !#}
     <div class="text-center container ">
 
+{# Si on est connecté en tant que DONATEUR #}
         {% if is_granted('ROLE_GIVER') %}
-        <h3 id="#dons" class="font-italic text-center">Dons Effectués</h3>
-        <button type="button" class="btn-success rounded border p-3 mt-2"><a href="{{path('donation_new')}}" class="text-white">Nouveau don</a></button>
-        <div class="d-flex flex-wrap mt-4">
 
-            {% for donation in user.donations %}
-            <div class="col-sm-5 col-10 m-4 p-5 mx-auto border rounded">
-            <a href="{{path('donation_show', {'id': donation.id })}}" class="text-dark">
+        {# Dons proposés #}
+        <h3 id="#dons" class="font-italic text-center">Dons proposés</h3>
+        <button type="button" class="btn-success rounded border p-3 mt-2"><a href="{{path('donation_new')}}" class="text-white">Nouveau don</a></button>
+        <div class="d-flex flex-wrap mt-4 border-bottom">
+            {% for donation in donations if donation.status.name == "Dispo" %}
+            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
             <h4 class="font-italic">
                 {{ donation.title }}
             </h4>
-            </a>
-            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
             </div>
             {% endfor %}
         </div>
 
-        {% elseif is_granted('ROLE_ASSOC') %}
-        <h3 id="#dons" class="font-italic text-center">Dons Reçus</h3>
-        <div class="d-flex flex-wrap mt-4">
-            {% for donation in user.donations %}
+        {# Dons en attente de validation #}
+        <h3 id="#dons" class="font-italic text-center mt-4">Dons en attente de validation</h3>
+            <a class="" href=" {{ path('user_manage_donations', {'id': app.user.id })}} ">Valider vos dons réservés</a>
+        <div class="d-flex flex-wrap mt-4 border-bottom">        
+            {% for donation in donations if donation.status.name == "Réservé" %}
             <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
-            <a href="{{path('donation_show', {'id': donation.id })}}" class="text-dark">
-            <h4 class="font-italic">{{ donation.title }}</h4>
-            </a>
-            <img class="border rounded img-fluid" style="max-width: 70%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <h4 class="font-italic">
+                {{ donation.title }}
+            </h4>
+            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
             </div>
             {% endfor %}
+        </div>
+
+        {# Dons Donnés #}
+        <h3 id="#dons" class="font-italic text-center mt-4">Dons effectués</h3>
+        <div class="d-flex flex-wrap mt-4 border-bottom">
+            {% for donation in donations if donation.status.name == "Donné" %}
+            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+            <h4 class="font-italic">
+                {{ donation.title }}
+            </h4>
+            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+            </div>
+            {% endfor %}
+        </div>
+
+{# Si on est connecté en tant qu'ASSOCIATION #}
+        {% elseif is_granted('ROLE_ASSOC') %}
+
+        {# Dons réservés #}
+        <h3 id="#dons" class="font-italic text-center">Dons réservés</h3>
+        <div class="d-flex flex-wrap mt-4">
+            {% for donation in donations if donation.status.name == "Réservé" %}
+            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+            <h4 class="font-italic">
+                {{ donation.title }}
+            </h4>
+            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+            </div>
+            {% endfor %}
+        </div>
+
+        {# Dons Reçus #}
+        <h3 id="#dons" class="font-italic text-center">Dons reçus</h3>
+        <div class="d-flex flex-wrap mt-4">
+            {% for donation in donations if donation.status.name == "Donné" %}
+            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+            <h4 class="font-italic">
+                {{ donation.title }}
+            </h4>
+            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+            </div>
+            {% endfor %}
+        </div>
         </div>
         {% endif %}
     </div>
@@ -63,3 +112,4 @@
 
     <a href="#">Haut de la page</a>
 {% endblock %}
+

@@ -6,6 +6,33 @@ body{
 body, html{
     margin: 0;
     padding: 0;
+    height: 100%;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+.big-content{
+    flex: 1 ;
+}
+
+#header-pic{
+    background-image: url(../pictures/banner.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    margin-top: .5em;
+
+}
+
+#header-pic p{
+    position: absolute;
+    bottom: -10px;
+    right: 5px;
+    font-size: .8em;
+    color: white;
 }
 
 .hide-my-form{
@@ -16,6 +43,8 @@ body, html{
 .container-fluid{
     padding-left: 0;
     padding-right: 0;
+
+    
 }
 
 /* Background Infos profil */
@@ -43,12 +72,17 @@ h3{
 
 #footer-gradient {
     background-color : #E9F2DF;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 /* Gestion de l'image dans le footer */
 li.nav-item.text-lg-left.text-sm-center{
     text-align: center;
+        
 }
+
+
 
 /* Changement de couleur des boutons de classe btn-primary */
 .btn-primary{
@@ -114,7 +148,7 @@ li.nav-item.col-6.col-md-5 {
 }
 /* page détail d'un don */
 #reserved .fas{
-    color: #f49f0a;
+    color: white;
     margin-bottom: 0;
 }
 
@@ -122,13 +156,61 @@ li.nav-item.col-6.col-md-5 {
     background-color: #40a629;
     color: white;
 }
-#select:hover {
+#select:hover, #deselect:hover {
     text-decoration: none; 
 }
 
+#deselect{
+    background-color: #888;
+    color: white;
+}
+
 #reserved{
-    background-color: rgba(244, 159, 10, .4);
+    background-color:#f49f0a;
     padding: .2em;
+    color: white;
+    text-align: center;
+}
+
+.return-to-list{
+    text-align: right;
+    margin-top: .5em;
+}
+.return-to-list a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #40a629;
+}
+
+.return-to-list a:hover{
+    text-decoration: none;
+    color: #40a629;
+}
+
+#reward p{
+    margin-bottom: 0;
+}
+
+#btn-return{
+    margin: 1em 0 2em;
+    text-align: center;
+    padding-top: .5em;
+}
+
+.return{
+    padding: .7em;
+    border-radius: 3px;
+}
+
+.return:hover{
+    text-decoration: none;
+    color: white;
+}
+reserved{
+    background-color:#f49f0a;
+    padding: .2em;
+    color: white;
+    text-align: center;
 }
 
 .return-to-list{
@@ -166,6 +248,49 @@ li.nav-item.col-6.col-md-5 {
     color: white;
 }
 
+/*  
+* Rating styles
+*/
+.rating {
+    width: 226px;
+    margin: 0 auto 1em;
+    font-size: 35px;
+    overflow:hidden;
+}
+.rating input {
+  float: right;
+  opacity: 0;
+  position: absolute;
+}
+.rating a,
+.rating label {
+    float:right;
+    color: #aaa;
+    text-decoration: none;
+    -webkit-transition: color .4s;
+    -moz-transition: color .4s;
+    -o-transition: color .4s;
+    transition: color .4s;
+}
+.rating label:hover ~ label,
+.rating input:focus ~ label,
+.rating label:hover,
+.rating a:hover,
+.rating a:hover ~ a,
+.rating a:focus,
+.rating a:focus ~ a,
+.rating input:checked,
+input[type=radio]:checked + label,
+input[type=radio]:checked + label ~ label{
+    color: gold;
+    cursor: pointer;
+    margin-bottom: 10px;
+   
+  
+
+    
+    
+}
 /* Page 404 */
 .page-404 {
     background-image: url(../pictures/404-chou.jpg);
@@ -265,14 +390,6 @@ a.page-link{
     margin-bottom: 1em;
 }
 
-/* dans page about */
-
-/*.card-body-title{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}*/
-
 
 @media screen and (max-width: 768px) { 
     body{
@@ -309,3 +426,4 @@ a.page-link{
     }
 
 }
+  
