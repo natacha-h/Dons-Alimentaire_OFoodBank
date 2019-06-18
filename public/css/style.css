@@ -193,7 +193,8 @@ li.nav-item.col-6.col-md-5 {
     text-decoration: none;
     color: white;
 }
-reserved{
+
+#reserved {
     background-color:#f49f0a;
     padding: .2em;
     color: white;
