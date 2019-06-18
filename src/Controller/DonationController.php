@@ -24,7 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-
 /**
  * @Route("/dons", name="donation_")
  */
@@ -38,15 +37,13 @@ class DonationController extends AbstractController
         //repo = $this->getDoctrine()->getRepository(Donation::class);
 
         $donations = $donationRepository->findDonationWithProducts();
-
         $donationsList = $paginator->paginate(
             $donationRepository->findByStatusQuery(),
             $request->query->getInt('page', 1),
             10
         );
-
+        
         // dd($donations);
-
         $expiryDateArray = [];
         foreach($donations as $donation){
             // dump($donation);
@@ -58,7 +55,6 @@ class DonationController extends AbstractController
                 if($currentExpiry == false){
                     $currentExpiry = $expiryDate;
                 }
-
                 // Nombre de secondes écoulées plus faible <=> date plus proche
                 if($currentExpiry >= $expiryDate){
                     $currentExpiry = $expiryDate;
@@ -66,7 +62,6 @@ class DonationController extends AbstractController
             }
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
-
         // dump($expiryDateArray);
         // dump($donationsList);
         return $this->render('donation/list.html.twig', [
@@ -83,7 +78,6 @@ class DonationController extends AbstractController
         // on récupère le don
         $donation = $donationRepository->findDonationWithAllDetails($id);
         // dd($donation);
-
         // on récupère la collection de user afin d'identifier le donateur
         $users = $donation->getUsers();
         // pour chaque utilisateur
@@ -106,9 +100,7 @@ class DonationController extends AbstractController
         // dump($giver);
         // die;
         // dd(giver);
-
         // dump($donation->getUsers());
-
         return $this->render('donation/show.html.twig', [
             'donation' => $donation,
             'giver' => $giver,
@@ -131,7 +123,6 @@ class DonationController extends AbstractController
                 'danger',
                 'Le don a été réservé pendant que vous regardiez les détails <i class="far fa-sad-tear"></i>'
             );
-
         } //sinon c'est bon
         else {
             // on crée un nouvel objet Status 
@@ -144,21 +135,17 @@ class DonationController extends AbstractController
             // on persist et on flush
             $em->persist($donation);
             $em->flush();
-
             // // on crée la variable "collector" à qui on attribue l'utilisateur courant
             // $collector = $this->getUser();
-
             // ajout d'un flash message
             $this->addFlash(
                 'success',
                 'La demande de réservation est bien prise en compte'
             );
-
             // Envoi de mails lors de la réservation
             $donationUsers = $donation->getUsers();
             $donationTitle = $donation->getTitle();
             $donationId = $donation->getId();
-
             foreach ($donationUsers as $user){
                 // Si on est une Association
                     if ('ROLE_ASSOC' == $user->getRole()->getCode()){
@@ -217,7 +204,6 @@ class DonationController extends AbstractController
             // 'giver' => $donation->getUsers()[0],
             // 'collector'=> $collector,
         ]);
-
     }
 
     /**
@@ -234,60 +220,55 @@ class DonationController extends AbstractController
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
-
         // ajout d'un Flash Message
         $this->addFlash(
             'success',
             'Vous avez bien annulé la réservation de ce don'
         );
-
-    // Envoi de mails lors de la réservation
-    $donationUsers = $donation->getUsers();
-    $donationTitle = $donation->getTitle();
-    $donationId = $donation->getId();
-
-    foreach ($donationUsers as $user){
-        // Si on est Donateur 
-            if ('ROLE_GIVER' == $user->getRole()->getCode()){
-            $email = $user->getEmail(); // Déclaration de l'adresse de destination.
-            $userId = $user->getId();
-            $firstName = $user->getFirstName();
-            $lastName = $user->getLastName(); 
-            $mail = (new \Swift_Message($donationTitle.' : Réservation annulée'))
-            ->setFrom('ofoodbank@gmail.com')
-            ->setTo($email)
-            ->setBody(
-                    $this->renderView(
-                        'mailer/mail-canceled-reservation-giver.html.twig',
-                        [
-                            'email' => $email,
-                            'donationTitle' => $donationTitle,
-                            'donationId' => $donationId,
-                            'firstName' => $firstName,
-                            'lastName' => $lastName,
-                            'userId' => $userId
-                        ]
-                    ),
-                    'text/html'
-                );
-        $mailer->send($mail);
+        // Envoi de mails lors de la réservation
+        $donationUsers = $donation->getUsers();
+        $donationTitle = $donation->getTitle();
+        $donationId = $donation->getId();
+        foreach ($donationUsers as $user){
+            // Si on est Donateur 
+                if ('ROLE_GIVER' == $user->getRole()->getCode()){
+                $email = $user->getEmail(); // Déclaration de l'adresse de destination.
+                $userId = $user->getId();
+                $firstName = $user->getFirstName();
+                $lastName = $user->getLastName(); 
+                $mail = (new \Swift_Message($donationTitle.' : Réservation annulée'))
+                ->setFrom('ofoodbank@gmail.com')
+                ->setTo($email)
+                ->setBody(
+                        $this->renderView(
+                            'mailer/mail-canceled-reservation-giver.html.twig',
+                            [
+                                'email' => $email,
+                                'donationTitle' => $donationTitle,
+                                'donationId' => $donationId,
+                                'firstName' => $firstName,
+                                'lastName' => $lastName,
+                                'userId' => $userId
+                            ]
+                        ),
+                        'text/html'
+                    );
+            $mailer->send($mail);
+            }
         }
-    }
-
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
             // 'giver' => $donation->getUsers()[0]
         ]);
     }
-
+    
     /**
      * @Route("/api/address/{id}/coordonates", name="coordonates", methods={"POST"})
      */
     public function getCoordonates(Donation $donation, Addresser $addresser){
         // On récupere l'adresse du don concerné
         $address = $donation->getAddress();
-
         // On récupere les infos de son adresse pour construire l'url
         $number = $address->getNumber();
         $zipCode = $address->getZipCode();
@@ -296,7 +277,6 @@ class DonationController extends AbstractController
         // On remplace les espaces du nom de la rue par des + grâce au service
         $street1 = $address->getStreet1();
         $plussedStreet = $addresser->addresser($street1);
-
         // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
         if($number != null){
             // On construit l'url avec les valeurs de la donation concernée avec chiffre
@@ -305,10 +285,8 @@ class DonationController extends AbstractController
             // On construit l'url avec les valeurs de la donation concernée sans chiffre
             $response = file_get_contents('https://nominatim.openstreetmap.org/search?q=' . $plussedStreet . ',+' . $plussedCity . '&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
         }
-
         // On décode la réponse sous forme de tableau
         $response = json_decode($response, true);
-
         // Si le tableau est vide on retourne un code 0
         if(empty($response)){
             return $this->json([
@@ -323,6 +301,7 @@ class DonationController extends AbstractController
                 ]);
         }
     }
+
     /**
      * @Route("/{id}/accept", name="accept", requirements={"id"="\d+"}, methods={"POST"})
      */
@@ -336,17 +315,13 @@ class DonationController extends AbstractController
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
-
         $response = 'Don accepté';
-
   
         return $this->json([
             'response' => $response,
             'code' => 1
             ]);
-
         //TODO : NOTIFIER L'ASSO QUE SA DEMANDE EST ACCEPTÉE !!!!
-
         
     }
 
@@ -359,7 +334,6 @@ class DonationController extends AbstractController
         $newStatus = $statusRepository->findOneByName('Dispo');
         // on attribue le status au don
         $donation->setStatus($newStatus);
-
         // il faut supprimer l'association de la liste des users liée au don courant
             //1- on récupère la liste des utilisateurs liés au don
         $users = $donation->getUsers();
@@ -367,7 +341,6 @@ class DonationController extends AbstractController
         $asso = null;
         foreach ($users as $user){
             // dump($user->getRole()->getCode());
-
             //si le role de user est 'ROLE_ASSOC', on le donne en valeur de la variable $asso
             if ('ROLE_ASSOC' == $user->getRole()->getCode()){
                 $asso = $user;
@@ -379,27 +352,19 @@ class DonationController extends AbstractController
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
-
         // ajout d'un Flash Message
         // $this->addFlash(
         //     'success',
         //     'Vous avez refusé la demande de l\'association'
         // );
-
         // dd($donation->getUsers());
-
         $response = 'Don refusé';
-
-
         return $this->json([
             'response' => $response,
             'code' => 1
             ]);
         
-
         //TODO : NOTIFIER L'ASSOCIATION QUE SA DEMANDE EST REFUSÉE !!!!
-
-       
     }
 
     /**
@@ -408,7 +373,6 @@ class DonationController extends AbstractController
     public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
     {
         $donation = new Donation();
-
         $product = new Product();
         $product->setName('');
         $product->setQuantity(1);
@@ -416,20 +380,15 @@ class DonationController extends AbstractController
         $product->setExpiryDate(new \DateTime());
         $product->setCategory($cateRepo->findOneById(64));
         $donation->addProduct($product);
-
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
-
         $form = $this->createForm(DonationType::class, $donation);
-
         $addressFormNumber = $request->request->get('number');
         $addressFormStreet1 = $request->request->get('street1');
         $addressFormStreet2 = $request->request->get('street2');
         $addressFormZipCode = $request->request->get('zipCode');
         $addressFormCity = $request->request->get('city');
-
         $addressId = $request->request->get('index');
-
         $form->handleRequest($request);
         // dump($form->getData());
         
@@ -438,20 +397,16 @@ class DonationController extends AbstractController
             $file = $donation->getPicture();
             // dd($donation);
             if(!is_null($file)){
-
                 $extension = $file->guessExtension();
                 
                 if($extension != 'jpg' && $extension != 'jpeg' && $extension != 'png' && $extension != 'gif' ){
                     $this->addFlash('danger', 'Le format de votre image ne correspond pas');
-
                     return $this->render('donation/new.html.twig', [
                         'form' => $form->createView()
                     ]);
                 }
-
                 //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
                 $fileName = $this->generateUniqueFileName().'.'.$extension;
-
                 try {
                     //je deplace mon fichier dans le dossier souhaité
                     $file->move(
@@ -469,11 +424,9 @@ class DonationController extends AbstractController
                 $fileName = 'default-image.jpg';
                 $donation->setPicture($fileName);
             }
-
             // Je lui fournis un status disponible directement
             $status = $StatusRepo->findOneByName('Dispo');
             $donation->setStatus($status);
-
             // // Je persist l'adresse
             // $em->persist($donation->getAddress());
             
@@ -495,24 +448,17 @@ class DonationController extends AbstractController
                 $donation->setAddress($donationAddress);
             }
             // dd($donation->getAddress());
-
             // Je persist tous les produits
             foreach($donation->getProducts() as $product){
-
                 if($product->getExpiryDate() == null){
                     $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
-
                     return $this->redirectToRoute('donation_new');
                 }
-
                 $em->persist($product);
             }
-
             // Pour setter le giver je récupere le currentUser
             $user = $this->getUser();
-
             $donation->addUser($user);
-
             $currentPoints = $user->getPoints();
             $newPoints = $currentPoints + 5;
             $user->setPoints($newPoints);
@@ -520,36 +466,28 @@ class DonationController extends AbstractController
             // on utilise rewarder pour metre à jour (si besoin) le reward
             $reward = $rewarder->rewarder($newPoints);
             $user->setReward($reward);
-
             // Je vérifie qu'il y ait au moins un produit dans le don.
             $data = $form->getData();
-
             if(count($data->getProducts()) == 0){
-
                 $this->addFlash('danger', 'Veuillez ajouter au moins un produit');
-
                 return $this->render('donation/new.html.twig', [
                     'form' => $form->createView()
                 ]);
             }
-
             // Je persist la donation
             $em->persist($donation);
             // J'effectue toutes les insertions en bdd
             $em->flush();
-
             // J'ajoute un flashMessage pour indiquer que tout s'est bien passé
             $this->addFlash('success', 'Le don a bien été publié !');
             // Je retourne a la liste des tags
             return $this->redirectToRoute('donation_list');
-
         }
         
         return $this->render('donation/new.html.twig', [
             'form' => $form->createView()
         ]); 
     }
-
 
     /**
      * @return string
@@ -561,10 +499,12 @@ class DonationController extends AbstractController
         return md5(uniqid());
     }
 
-//////////////////Systeme de notation////////////////////////////
+    // Ajouter au fur et a mesure dans la base de données
+    // A la fin de l'ajout des produits
+    // Je récupere les id des produits
 
+    //////////////////Systeme de notation////////////////////////////
     //Il va nous falloir une nouvelle route /donation/{id}/votes
-
     /**
      * @Route("/{id}/vote", name="vote")
      */
@@ -572,45 +512,32 @@ class DonationController extends AbstractController
         // On récupere le vote saisi par l'utilisateur
         $userVote = $request->request->get('stars');
         dump($userVote);
-
-
         if($donation->getIsVoted() == null){
             // On récupere l'utilisateur
             $user = $userRepo->findUserDonationByRole($id);
-
             $donationUser = $user[0];
-
             /*Si cette note vaut null alors cela signifie que le donateur n'a pas encore eu de notes
             Donc la note BDD Donateur vaudra celle saisie par l'utilisateur*/
-
             if($donationUser->getRating() == null){
                 $donationUser->setRating($userVote); 
                 $donation->setIsVoted(1);
             }
-
             // Si elle ne vaut pas null alors le donateur a déjà été noté
             //On va donc faire une moyenne
             //Note en BDD = ( Note en BDD + vote du jour ) / 2
-
             else {
                 $donationUser->setRating(($donationUser->getRating()+$userVote)/2);
                 $donation->setIsVoted(1);
             }
             
-            
             //On push ensuite cette valeur en base de donnée pour pouvoir la réutiliser
-            
             $em->flush();
         }
-
         return $this->redirectToRoute('donation_show', [
             'id' => $id
         ]);
         
     }
-
+    
 }
 
-// Ajouter au fur et a mesure dans la base de données
-// A la fin de l'ajout des produits
-// Je récupere les id des produits
