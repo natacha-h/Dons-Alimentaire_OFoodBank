@@ -51,7 +51,7 @@ class DonationType extends AbstractType
             ->add('Publier', SubmitType::class, [
                 'label' => 'Publier le don',
                 'attr' => [
-                    'class' => 'btn dark-green'
+                    'class' => 'btn dark-green publish-donation'
                 ]
             ])
         ;

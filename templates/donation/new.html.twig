@@ -79,16 +79,5 @@
 
 
 {% block javascripts %}
-    <script>
-        $(document).ready(function(){
-            // On cible l'input
-            $('input[type="file"]').change(function(e){
-                // On récupere le nom du fichier
-                var fileName = e.target.files[0].name;
-                // On fournit en attribut le nom de l'image
-                // Pour l'utiliser dans le css
-                $('.custom-file-label').attr('imgName', fileName);
-            });
-        });
-    </script>
+    <script src="{{asset('js/file-name.js')}}"></script>
 {% endblock %}
