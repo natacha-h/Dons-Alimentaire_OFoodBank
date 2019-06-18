@@ -298,9 +298,10 @@ class DonationController extends AbstractController
         $address = $donation->getAddress();
         // On récupere les infos de son adresse pour construire l'url
         $number = $address->getNumber();
+        // On utilise le zipcode pour récupérer les coordonées GPS
         $zipCode = $address->getZipCode();
         
-        $city = $address->getCity();
+        // $city = $address->getCity();
         // $plussedCity = $addresser->addresser($city); 
         // On remplace les espaces du nom de la rue par des + grâce au service
         $street1 = $address->getStreet1();
