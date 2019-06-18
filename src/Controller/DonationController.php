@@ -299,18 +299,20 @@ class DonationController extends AbstractController
         // On récupere les infos de son adresse pour construire l'url
         $number = $address->getNumber();
         $zipCode = $address->getZipCode();
+        
         $city = $address->getCity();
-        $plussedCity = $addresser->addresser($city); 
+        // $plussedCity = $addresser->addresser($city); 
         // On remplace les espaces du nom de la rue par des + grâce au service
         $street1 = $address->getStreet1();
         $plussedStreet = $addresser->addresser($street1);
+        // dd($plussedStreet);
         // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
         if($number != null){
             // On construit l'url avec les valeurs de la donation concernée avec chiffre
-            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q='.$number.'+'. $plussedStreet .',+'. $plussedCity .'&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q='.$number.'+'. $plussedStreet .',+'. $zipCode .'&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
         } else{
             // On construit l'url avec les valeurs de la donation concernée sans chiffre
-            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q=' . $plussedStreet . ',+' . $plussedCity . '&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
+            $response = file_get_contents('https://nominatim.openstreetmap.org/search?q=' . $plussedStreet . ',+' . $zipCode . '&format=json&polygon=1&addressdetails=1&limit=1&countrycodes=fr&email=rpelletier86@gmail.com');
         }
         // On décode la réponse sous forme de tableau
         $response = json_decode($response, true);
