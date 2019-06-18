@@ -2,19 +2,21 @@
 
 {% block title %}Accueil{% endblock %}
 
+{% block stylesheets %}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
 
-
-
-<h2 class="display-4">
-    <center>Notre mission</center>
+<h2 class="text-center">
+    Notre mission
 </h2>
 
 
 {# <div class="card">
     <div class="card-body"> #}
 <div>
-    <p>Nous avons crée cette plateforme afin de lutter contre la précarité et le gaspillage alimentaire.
+    <p>Nous avons créé cette plateforme afin de lutter contre la précarité et le gaspillage alimentaire.
     Ce site est basé sur les dons.
     Notre mission première est de mettre en relation des donateurs et les associations pour leurs échanges.
     </p>
@@ -28,12 +30,12 @@
     </div>
 
 
-    <p>Chaque année en France:
+    <p>Chaque année en France :
         Une personne jette en moyenne 7 kilos d’aliments non déballés.
         Le gaspillage représente 10 millions de tonnes, répartis à hauteur de 32% au niveau de l'étape de la
-        production; 21% sur la transformation; 14% sur la distribution et 33% au niveau de la consommation c'est
-        à dire moi, vous, nous tous. Le schéma ci-dessous représente la répartition du gaspillage alimentaire
-        sur les étapes de la chaîne de mise à disposition des produits et les impacts associé.
+        production ; 21% sur la transformation ; 14% sur la distribution et 33% au niveau de la consommation c'est
+        à dire moi, vous, nous tous. Le schéma ci-contre représente la répartition du gaspillage alimentaire
+        sur les étapes de la chaîne de mise à disposition des produits et les impacts associés.
     </p>
 
 
@@ -47,21 +49,21 @@
 {# </div>
 </div> #}
 
-<h2 class="display-4">
+<h2 class="text-center">
     <center>Les derniers dons</center>
 </h2>
 
-<div class="row mt-3">
+<div class="row mt-3" >
     {% for donation in donations %}
 
-    <div class="col-md-4 col-12 my-2">
+    <div class="col-md-4 col-12 my-2" data-aos="fade-up">
         <div class="card">
             <div class="card-body">
                 {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
                 <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="aleatoire">
+                <h3 class="card-title">{{donation.title}}</h3>
                 <div class="d-flex flex-row align-items-center justify-content-between flex-wrap">
                     <div>
-                        <h3 class="card-title">{{donation.title}}</h3>
                         <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
                     </div>
                     <a href="{{path('donation_show', {'id': donation.id})}}" class="btn btn-primary">Plus d'infos</a>
@@ -73,4 +75,11 @@
     {% endfor %}
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 {% endblock %}
