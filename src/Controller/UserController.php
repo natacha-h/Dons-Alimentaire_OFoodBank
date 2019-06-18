@@ -5,7 +5,6 @@ use App\Form\UserType;
 use App\Utils\Rewarder;
 use App\Repository\DonationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,7 +55,7 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"}, methods={"GET","POST"})
      */
-    public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder, PaginatorInterface $paginator, DonationRepository $donationRepository): Response
+    public function show(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder, DonationRepository $donationRepository): Response
     { 
         $this->denyAccessUnlessGranted('view', $user);
 
