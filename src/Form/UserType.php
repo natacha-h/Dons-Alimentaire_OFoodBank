@@ -96,6 +96,9 @@ class UserType extends AbstractType
         }
         };
         $builder
+
+        // ->addEventListener(FormEvents::PRE_SUBMIT, $listener)
+
         ->add('firstname', TextType::class, [
             'label' => 'Prénom*',
             'constraints' => [
