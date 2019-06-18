@@ -3,19 +3,8 @@ body{
     margin: 0 auto;
 }
 
-body, html{
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-body{
-    display: flex;
-    flex-direction: column;
-}
-
 .big-content{
-    flex: 1 ;
+    min-height: 60vh;
 }
 
 #header-pic{
@@ -72,8 +61,6 @@ h3{
 
 #footer-gradient {
     background-color : #E9F2DF;
-    flex-shrink: 0;
-    margin-top: auto;
 }
 
 /* Gestion de l'image dans le footer */
