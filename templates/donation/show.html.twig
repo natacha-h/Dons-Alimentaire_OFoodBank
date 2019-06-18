@@ -25,47 +25,51 @@
         {# {{dump(app.user.id)}} #}
 
         <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-            {# Formulaire de sélection/déselection du don #}
-            <div id="select-donation" class="mb-2">
-                {# si le don est déja réservé #}
-                {% if "Réservé" == donation.status.name %}
-                    <p id="reserved" class="mb-3">
-                        <i class="fas fa-clock"></i> Ce don est réservé
-                    </p>
+            {% if donation.status.name != "Donné" %}
+                {# Formulaire de sélection/déselection du don #}
+                <div id="select-donation" class="mb-2">
+                    {# si le don est déja réservé #}
+                    {% if "Réservé" == donation.status.name %}
+                        <p id="reserved" class="mb-3">
+                            <i class="fas fa-clock"></i> Ce don est réservé
+                        </p>
 
-                        {# {{dump(app.user.id)}} #}
+                            {# {{dump(app.user.id)}} #}
 
-                    
-                    {% if collector %} {# Si un collector existe #}
-                                {# {{dump(collector)}} #}
-                        {% if app.user %} {# et si un utilisateur est connecté #}
-                            {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
-                            {% if app.user.id == collector.id %}
-                                {# {{dump(collector.id)}} #}
-                                <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
-                                    
-                                    <button class="btn btn-link" id="deselect">
-                                        Annuler la réservation de ce don <i class="far fa-times-circle"></i>
-                                    </button>
-                                </form>
-                            
-                            {% endif %}
-                        {% endif %}                                           
-                    {% endif %}
-                
-                {# si le don est disponible  #}
-                {% elseif is_granted('ROLE_ASSOC') %}
-                    
-                        <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                        
+                        {% if collector %} {# Si un collector existe #}
+                                    {# {{dump(collector)}} #}
+                            {% if app.user %} {# et si un utilisateur est connecté #}
+                                {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
+                                {% if app.user.id == collector.id %}
+                                    {# {{dump(collector.id)}} #}
+                                    <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
+                                        
+                                        <button class="btn btn-link" id="deselect">
+                                            Annuler la réservation de ce don <i class="far fa-times-circle"></i>
+                                        </button>
+                                    </form>
                                 
-                            <button class="btn btn-link" id="select">
-                            Réserver ce don <i class="far fa-check-circle"></i>
-                            </button>
-                        </form>   
-                    {% else %}
-                        Vous ne pouvez pas réserver ce don
-                {% endif %}            
-            </div>
+                                {% endif %}
+                            {% endif %}                                           
+                        {% endif %}
+                    
+                    {# si le don est disponible  #}
+                    {% elseif is_granted('ROLE_ASSOC') %}
+                        
+                            <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                                    
+                                <button class="btn btn-link" id="select">
+                                Réserver ce don <i class="far fa-check-circle"></i>
+                                </button>
+                            </form>   
+                        {% else %}
+                            Vous ne pouvez pas réserver ce don
+                    {% endif %}            
+                </div>
+            
+            {% endif %}
+            
             
             {# Informations sur le donateur #}
             <div>
@@ -79,30 +83,34 @@
                     Téléphone: {{ giver.phoneNumber}} <br>
                     e-mail : {{ giver.email}} <br>
                 </p>
-
+{# {{dump(donation.status)}} #}
                 <div class="d-flex flex-row align-items-center row">
                     <p class="mb-0 col-md-3 col-12 pr-0"> Note : {{giver.rating}}</p>  
                     <div class="rating rating2 m-0 w-100 col-md-9  col-12">
                     
-                        <form method="post" action='{{path('donation_vote', {'id': donation.id})}}' class="d-flex flex-row-reverse col-10 align-items-center justify-content-end pl-0"><!--
+                        <form method="post" action='{{path('donation_vote', {'id': donation.id})}}' class="d-flex flex-row-reverse flex-wrap col-10 align-items-center justify-content-end pl-0"><!--
                            -->  {% if collector %}
                                     {% if app.user %}
                                         {% if app.user.id == collector.id %}
-                                            {% if donation.isVoted == null  %}
-                                            <button type="submit" class="btn btn-secondary ml-1">Voter</button>
-                                        {% else %}
-                                                <p>Vous avez déjà voté !</p>    
+                                            {% if donation.status.name == 'Donné' %}                                            
+                                                {% if donation.isVoted == null  %}
+                                                <button type="submit" class="btn btn-secondary ml-1 order-md-2 order-1 order-lg-1">Voter</button>
+                                                {% else %}
+                                                    <p class="h6 ml-1 order-md-2 order-1 order-lg-1">Vous avez déjà voté !</p>    
+                                                {% endif %}
                                             {% endif %}
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
-                           <!--
-                            --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
-                            --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
-                            --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
-                            --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
-                            --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
-                            --> 
+                           <div class="order-1">
+                                <!--
+                                --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
+                                --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
+                                --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
+                                --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
+                                --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
+                                --> 
+                           </div>
                         </form>
                     </div>
                 </div>
@@ -220,35 +228,3 @@
     <script src="{{ asset('js/map.js') }}"></script>
 {% endblock %}
 
-
-{# 
-
-     <div class="d-flex flex-row align-items-center row">
-                    <p class="mb-0 col-md-3 col-12 pr-0"> Note : {{giver.rating}}</p>  
-                    <div class="rating rating2 m-0 w-100 col-md-9  col-12">
-                    
-                        <form method="post" action='{{path('donation_vote', {'id': donation.id})}}' class="d-flex flex-row-reverse col-10 align-items-center justify-content-end pl-0"><!--
-                           -->  {% if collector %}
-                                    {% if app.user %}
-                                        {% if app.user.id == collector.id %}
-                                            {% if donation.isVoted == null  %}
-                                            <button type="submit" class="btn btn-secondary ml-1">Voter</button>
-                                        {% else %}
-                                                <p>Vous avez déjà voté !</p>    
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                           <!--
-                            --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
-                            --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
-                            --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
-                            --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
-                            --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
-                            --> 
-                        </form>
-                    </div>
-                </div>
-
-
- #}
