@@ -1,0 +1,13 @@
+{% block body %}
+
+    <center><h2>Vous avez refusé la réservation du don : {{ donationTitle }}</h2></center>
+
+    <p> Bonjour {{ firstName }} {{ lastName }}.</p>
+    <p> Le refus de réservation de votre don : {{ donationTitle }} a bien été pris en compte.</p>
+
+    <p>Le don est désormais remis au statut "Disponible". Voir le don concerné : http://92.243.9.64/dons/{{ donationId }}</p>
+
+    <p> Ce mail vous a été envoyé par O'FoodBank  </p>
+    
+{% endblock %}
+    
