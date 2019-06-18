@@ -306,6 +306,10 @@ a.page-link{
         width: 100%
     }
 
+    #logo img{
+        max-width: 95%;
+    }
+
     h2{
         margin: .7em 0;
     }
