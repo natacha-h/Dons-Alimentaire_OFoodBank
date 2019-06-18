@@ -9,15 +9,14 @@
 {# {{ dump(app.request.headers.get('referer'))}}
 {{dump(app.request.attributes.get("_route"))}} #}
 {# {{dump(app.request.query.get("connexion"))}} #}
-{% if (app.request.query.get("connexion")) != "direct" %}
+{% if (app.request.query.get("connexion")) != "direct" and error == null %}
 <div class="alert alert-warning"> 
         Vous devez être connecté pour accéder au détail des dons
     </div>  
-        
 {% endif %}
 
     <form method="post" class="big-content">
-        {% if error %}
+        {% if error != null %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
         <div class="text-center">
