@@ -61,7 +61,6 @@ class UserController extends AbstractController
 
         //Ajout de la requête custom pour les donations Disponibles
         $donations = $donationRepository->findDonationsByStatus($user->getId());
-        // dump($donations);
 
         //Je récupère l'ancien mot de passe
         $oldPassword = $user->getPassword();
@@ -89,10 +88,28 @@ class UserController extends AbstractController
                 'id' => $user->getId(),
             ]);
         }
+
+
+            //récupérer les dons de status "RÉSERVÉ" de l'utilisateur courant
+            $usersDonation = $this->getUser()->getDonations();
+            // dd($usersDonation);
+            // on stocke les donations réservées dans un tableau
+                //1 . Création du tableau
+                $reserved = [];
+            // on boucle sur la collection de donations reçues
+            foreach($usersDonation as $donation){
+                // dump($donation->getStatus());
+                // si le nom du status est réservé, on ajoute au tableau
+                if ('Réservé' == $donation->getStatus()->getName()){
+                    $reserved[] = $donation;
+                }
+            }
+
         return $this->render('user/show.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
-            'donations' => $donations
+            'donations' => $donations,
+            'reserved' => $reserved,
         ]);
     }
     
@@ -108,28 +125,28 @@ class UserController extends AbstractController
      * @Route("/{id}/manage-donations", name="manage_donations", requirements={"id"="\d+"}, methods={"GET"})
      * méthode qui affiche la liste des dons en attente de validation
      */
-    public function manageDonation(){
+    // public function manageDonation(){
         
-        //récupérer les dons de status "RÉSERVÉ" de l'utilisateur courant
-        $usersDonation = $this->getUser()->getDonations();
-        // dd($usersDonation);
-        // on stocke les donations réservées dans un tableau
-            //1 . Création du tableau
-            $reserved = [];
-        // on boucle sur la collection de donations reçues
-        foreach($usersDonation as $donation){
-            // dump($donation->getStatus());
-            // si le nom du status est réservé, on ajoute au tableau
-            if ('Réservé' == $donation->getStatus()->getName()){
-                $reserved[] = $donation;
-            }
-        }
-        // dump($reserved);
-        // die;
+    //     //récupérer les dons de status "RÉSERVÉ" de l'utilisateur courant
+    //     $usersDonation = $this->getUser()->getDonations();
+    //     // dd($usersDonation);
+    //     // on stocke les donations réservées dans un tableau
+    //         //1 . Création du tableau
+    //         $reserved = [];
+    //     // on boucle sur la collection de donations reçues
+    //     foreach($usersDonation as $donation){
+    //         // dump($donation->getStatus());
+    //         // si le nom du status est réservé, on ajoute au tableau
+    //         if ('Réservé' == $donation->getStatus()->getName()){
+    //             $reserved[] = $donation;
+    //         }
+    //     }
+    //     // dump($reserved);
+    //     // die;
 
-        return $this->render('user/manage_donations.html.twig', [
-            'donations' => $reserved
-        ]);
-    }
+    //     return $this->render('user/manage_donations.html.twig', [
+    //         'reserved' => $reserved
+    //     ]);
+    // }
   
 }
