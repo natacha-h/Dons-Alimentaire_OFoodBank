@@ -2,6 +2,7 @@
 
 {% block title %}Page de profil{% endblock %}
 
+
 {% block body %}
     <h2 class="text-center">Mon Profil</h2>
 
@@ -32,13 +33,15 @@
         <button type="button" class="btn-success rounded border p-3 mt-2"><a href="{{path('donation_new')}}" class="text-white">Nouveau don</a></button>
         <div class="d-flex flex-wrap mt-4 border-bottom">
             {% for donation in donations if donation.status.name == "Dispo" %}
-            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
-            <h4 class="font-italic">
-                {{ donation.title }}
-            </h4>
-            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
-            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
-            </div>
+                {% if loop.index <= 6 %}
+                    <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+                    <h4 class="font-italic">
+                        {{ donation.title }}
+                    </h4>
+                    <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+                    <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
 
@@ -47,27 +50,31 @@
             <a class="" href=" {{ path('user_manage_donations', {'id': app.user.id })}} ">Valider vos dons réservés</a>
         <div class="d-flex flex-wrap mt-4 border-bottom">        
             {% for donation in donations if donation.status.name == "Réservé" %}
-            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
-            <h4 class="font-italic">
-                {{ donation.title }}
-            </h4>
-            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
-            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
-            </div>
+                {% if loop.index <= 6 %}
+                    <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+                    <h4 class="font-italic">
+                        {{ donation.title }}
+                    </h4>
+                    <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+                    <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
 
         {# Dons Donnés #}
         <h3 id="#dons" class="font-italic text-center mt-4">Dons effectués</h3>
         <div class="d-flex flex-wrap mt-4 border-bottom">
-            {% for donation in donations if donation.status.name == "Donné" %}
-            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
-            <h4 class="font-italic">
-                {{ donation.title }}
-            </h4>
-            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
-            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
-            </div>
+            {% for donation in donations|slice(0, 1) if donation.status.name == "Donné" %}
+                {% if loop.index <= 6 %}
+                    <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+                    <h4 class="font-italic">
+                        {{ donation.title }}
+                    </h4>
+                    <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+                    <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
 
@@ -78,13 +85,15 @@
         <h3 id="#dons" class="font-italic text-center">Dons réservés</h3>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Réservé" %}
-            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
-            <h4 class="font-italic">
-                {{ donation.title }}
-            </h4>
-            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
-            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
-            </div>
+                {% if loop.index <= 6 %} 
+                    <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+                    <h4 class="font-italic">
+                        {{ donation.title }}
+                    </h4>
+                    <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+                    <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
 
@@ -92,13 +101,15 @@
         <h3 id="#dons" class="font-italic text-center">Dons reçus</h3>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Donné" %}
-            <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
-            <h4 class="font-italic">
-                {{ donation.title }}
-            </h4>
-            <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
-            <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
-            </div>
+                {% if loop.index <= 6 %}
+                    <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
+                    <h4 class="font-italic">
+                        {{ donation.title }}
+                    </h4>
+                    <img class="border rounded img-fluid" style="max-width: 80%;" src="{{ asset('uploads/pictures/' ~ donation.picture) }}"></img>
+                    <button type="button" class="btn-success rounded border p-2 mt-2"><a href="{{path('donation_show', {'id': donation.id })}}" class="text-white">Plus d'infos</a></button>            
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
         </div>
