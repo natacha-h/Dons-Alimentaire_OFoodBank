@@ -1,11 +1,4 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Gérer les réservations{% endblock %}
-
-{% block body %}
-    <h2> Mes dons réservés </h2>
-
-    <table class="table col-12">
+    <table class="table border-bottom">
             <thead>
                 <tr>
                     <th scope="col">Nom du don </th>
@@ -15,12 +8,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for donation in donations %}
+                {% for donation in reserved %}
                 <tr data-id="{{donation.id}}">
                     {# <pre>
                         {{ dump(donation) }}
                     </pre> #}
-                    <td>{{donation.title}}</td>
+                    <td><a href="{{path('donation_show', {'id': donation.id })}}" >{{donation.title}}</a></td>
                     <td> 
                         {% for user in donation.users %}
                         {# <pre>
@@ -50,8 +43,4 @@
                 {% endfor %}
             </tbody>  
     </table>  
-{% endblock %}
 
-{% block javascripts %}
-    <script src="{{asset('js/accept-refuse.js')}} "> </script>
-{% endblock %}
