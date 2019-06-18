@@ -76,10 +76,84 @@
                 </p>
                 <p>
                     Contact : {{ giver.firstname}} {{ giver.lastname}} <br>
-                    Téléphone : {{ giver.phoneNumber}} <br>
+                    Téléphone: {{ giver.phoneNumber}} <br>
                     e-mail : {{ giver.email}} <br>
-                    Note : {{ giver.rating}} 
                 </p>
+
+                <div class="d-flex flex-row align-items-center row">
+                    <p class="mb-0 col-md-3 col-12 pr-0"> Note : {{giver.rating}}</p>  
+                    <div class="rating rating2 m-0 w-100 col-md-9  col-12">
+                    
+                        <form method="post" action='{{path('donation_vote', {'id': donation.id})}}' class="d-flex flex-row-reverse col-10 align-items-center justify-content-end pl-0"><!--
+                           -->  {% if collector %}
+                                    {% if app.user %}
+                                        {% if app.user.id == collector.id %}
+                                            {% if donation.isVoted == null  %}
+                                            <button type="submit" class="btn btn-secondary ml-1">Voter</button>
+                                        {% else %}
+                                                <p>Vous avez déjà voté !</p>    
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                           <!--
+                            --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
+                            --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
+                            --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
+                            --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
+                            --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
+                            --> 
+                        </form>
+                    </div>
+                </div>
+                   
+                    {# Systeme de notation uniquement pour l'asso qui a bénéficié du don #}
+                    {#{{dump(giver.rating)}}#}
+                
+                    
+                {# <div class="rating rating2 m-0">
+                    <form method="post" action='{{path('donation_vote', {'id': donation.id})}}'><!--
+                        --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
+                        --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
+                        --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
+                        --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
+                        --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
+                        -->
+
+                      
+
+                        {% if collector %}
+                            {% if app.user %}
+                                {% if app.user.id == collector.id %}
+                                    {% if donation.isVoted == null  %}
+                                        <button type="submit" class="btn btn-secondary">Voter</button>
+                                    {% else %}
+                                        <p>Vous avez déjà voté !</p>    
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %} #}
+
+                          
+
+                        {# 
+                        Si on veut qu'une association vote une fois un donateur
+                            Ajout d'un champ isVoted dans la table Donation
+                            Champ qui vaut null de base
+
+                            Lorsque le collecteur va voter
+                            On récupere son vote et on passe le champ isVoted à 1
+                            
+                            On peut désormais afficher dans la vue le bouton voter pour le collectur
+                            uniquement si celui-ci n'a pas encore voté
+
+                            Sinon on lui affiche qu'il a déjà voté sur ce don.
+
+                         #}
+                        
+                    {# </form>
+                </div> #}
+
                 <div id="reward">
                     <img src="{{ asset('pictures/' ~ (giver.reward.picture))}} " alt="reward niveau {{giver.reward.code}}" class="img-fluid mb-2" > 
                     <p>
@@ -145,3 +219,36 @@
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script src="{{ asset('js/map.js') }}"></script>
 {% endblock %}
+
+
+{# 
+
+     <div class="d-flex flex-row align-items-center row">
+                    <p class="mb-0 col-md-3 col-12 pr-0"> Note : {{giver.rating}}</p>  
+                    <div class="rating rating2 m-0 w-100 col-md-9  col-12">
+                    
+                        <form method="post" action='{{path('donation_vote', {'id': donation.id})}}' class="d-flex flex-row-reverse col-10 align-items-center justify-content-end pl-0"><!--
+                           -->  {% if collector %}
+                                    {% if app.user %}
+                                        {% if app.user.id == collector.id %}
+                                            {% if donation.isVoted == null  %}
+                                            <button type="submit" class="btn btn-secondary ml-1">Voter</button>
+                                        {% else %}
+                                                <p>Vous avez déjà voté !</p>    
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                           <!--
+                            --><input name="stars" value="5" id="e5" type="radio" {{ (giver.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
+                            --><input name="stars" value="4" id="e4" type="radio" {{ (giver.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
+                            --><input name="stars" value="3" id="e3" type="radio" {{ (giver.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
+                            --><input name="stars" value="2" id="e2" type="radio" {{ (giver.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
+                            --><input name="stars" value="1" id="e1" type="radio" {{ (giver.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
+                            --> 
+                        </form>
+                    </div>
+                </div>
+
+
+ #}
