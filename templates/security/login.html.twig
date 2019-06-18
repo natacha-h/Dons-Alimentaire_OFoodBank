@@ -9,7 +9,7 @@
 {# {{ dump(app.request.headers.get('referer'))}}
 {{dump(app.request.attributes.get("_route"))}} #}
 {# {{dump(app.request.query.get("connexion"))}} #}
-{% if (app.request.query.get("connexion")) != "direct" %}
+{% if (app.request.query.get("connexion")) != "direct" and null == error %}
 <div class="alert alert-warning"> 
         Vous devez être connecté pour accéder au détail des dons
     </div>  
