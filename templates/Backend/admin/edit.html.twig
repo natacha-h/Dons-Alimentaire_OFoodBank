@@ -8,6 +8,6 @@
     {{ include('Backend/admin/_form.html.twig') }}
     
     {# Bouton de retour a la liste des utilisateurs #}
-    <a href="{{path('admin_manage')}}" class="btn btn-info float-right">Retour à la liste des utilisateurs</a>
+    <div id="btn-return"><a href="{{path('admin_manage')}}" class="btn btn-info">Retour à la liste des utilisateurs</a></div>
 
 {% endblock %}
