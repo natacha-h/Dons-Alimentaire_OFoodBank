@@ -25,47 +25,51 @@
         {# {{dump(app.user.id)}} #}
 
         <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-            {# Formulaire de sélection/déselection du don #}
-            <div id="select-donation" class="mb-2">
-                {# si le don est déja réservé #}
-                {% if "Réservé" == donation.status.name %}
-                    <p id="reserved" class="mb-3">
-                        <i class="fas fa-clock"></i> Ce don est réservé
-                    </p>
+            {% if donation.status.name != "Donné" %}
+                {# Formulaire de sélection/déselection du don #}
+                <div id="select-donation" class="mb-2">
+                    {# si le don est déja réservé #}
+                    {% if "Réservé" == donation.status.name %}
+                        <p id="reserved" class="mb-3">
+                            <i class="fas fa-clock"></i> Ce don est réservé
+                        </p>
 
-                        {# {{dump(app.user.id)}} #}
+                            {# {{dump(app.user.id)}} #}
 
-                    
-                    {% if collector %} {# Si un collector existe #}
-                                {# {{dump(collector)}} #}
-                        {% if app.user %} {# et si un utilisateur est connecté #}
-                            {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
-                            {% if app.user.id == collector.id %}
-                                {# {{dump(collector.id)}} #}
-                                <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
-                                    
-                                    <button class="btn btn-link" id="deselect">
-                                        Annuler la réservation de ce don <i class="far fa-times-circle"></i>
-                                    </button>
-                                </form>
-                            
-                            {% endif %}
-                        {% endif %}                                           
-                    {% endif %}
-                
-                {# si le don est disponible  #}
-                {% elseif is_granted('ROLE_ASSOC') %}
-                    
-                        <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                        
+                        {% if collector %} {# Si un collector existe #}
+                                    {# {{dump(collector)}} #}
+                            {% if app.user %} {# et si un utilisateur est connecté #}
+                                {# si l'ID de l'utilisateur connecté est le même que celui du collector existant, on affiche le bouton qui permet de déselctionner le don #}
+                                {% if app.user.id == collector.id %}
+                                    {# {{dump(collector.id)}} #}
+                                    <form action="{{path('donation_deselect', {'id': donation.id}, {'method' : 'POST'})}}" method="POST">
+                                        
+                                        <button class="btn btn-link" id="deselect">
+                                            Annuler la réservation de ce don <i class="far fa-times-circle"></i>
+                                        </button>
+                                    </form>
                                 
-                            <button class="btn btn-link" id="select">
-                            Réserver ce don <i class="far fa-check-circle"></i>
-                            </button>
-                        </form>   
-                    {% else %}
-                        Vous ne pouvez pas réserver ce don
-                {% endif %}            
-            </div>
+                                {% endif %}
+                            {% endif %}                                           
+                        {% endif %}
+                    
+                    {# si le don est disponible  #}
+                    {% elseif is_granted('ROLE_ASSOC') %}
+                        
+                            <form action="{{path('donation_select', {'id': donation.id}, {'method' : 'POST'})}} " method="POST">
+                                    
+                                <button class="btn btn-link" id="select">
+                                Réserver ce don <i class="far fa-check-circle"></i>
+                                </button>
+                            </form>   
+                        {% else %}
+                            Vous ne pouvez pas réserver ce don
+                    {% endif %}            
+                </div>
+            
+            {% endif %}
+            
             
             {# Informations sur le donateur #}
             <div>
