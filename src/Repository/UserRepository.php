@@ -48,4 +48,15 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
+    public function findUserDonationByRole($id){
+        return $this->createQueryBuilder('u')
+            ->join('u.donations', 'd')
+            ->andWhere('d.id = :id')
+            ->setParameter('id', $id)
+            ->join('u.role', 'r')
+            ->andWhere('r.code = :role_code')
+            ->setParameter('role_code', 'ROLE_GIVER')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,0 +1,14 @@
+{% block body %}
+
+    <center><h2>La réservation pour le don : {{ donationTitle }} a été acceptée</h2></center>
+
+    <p> Bonjour {{ firstName }} {{ lastName }}. </p>
+    
+    <p> La réservation que vous aviez faite sur le don : {{ donationTitle }} a été acceptée par le donateur. Désormais, merci de faire le nécessaire avec le donateur, en le contactant, pour que la transaction s'effectue.</p>
+
+    <p> Voir le don concerné : http://92.243.9.64/dons/{{ donationId }}</p>
+
+    <p> Ce mail vous a été envoyé par O'FoodBank  </p>
+    
+{% endblock %}
+    
