@@ -304,6 +304,7 @@ class DonationController extends AbstractController
         // On remplace les espaces du nom de la rue par des + grâce au service
         $street1 = $address->getStreet1();
         $plussedStreet = $addresser->addresser($street1);
+        dd($plussedStreet);
         // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
         if($number != null){
             // On construit l'url avec les valeurs de la donation concernée avec chiffre
