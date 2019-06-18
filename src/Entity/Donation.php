@@ -59,6 +59,11 @@ class Donation
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $isVoted;
+
 
     public function __construct()
     {
@@ -197,6 +202,18 @@ class Donation
                 $product->setDonation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsVoted(): ?int
+    {
+        return $this->isVoted;
+    }
+
+    public function setIsVoted(?int $isVoted): self
+    {
+        $this->isVoted = $isVoted;
 
         return $this;
     }

@@ -2,14 +2,14 @@
 namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Utils\Rewarder;
+use App\Repository\DonationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Utils\Rewarder;
-use App\Repository\DonationRepository;
 
 /**
  * @Route("/user", name="user_")
@@ -61,7 +61,7 @@ class UserController extends AbstractController
 
         //Ajout de la requête custom pour les donations Disponibles
         $donations = $donationRepository->findDonationsByStatus($user->getId());
-        dump($donations);
+        // dump($donations);
 
         //Je récupère l'ancien mot de passe
         $oldPassword = $user->getPassword();
