@@ -515,13 +515,13 @@ class DonationController extends AbstractController
     public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
     {
         $donation = new Donation();
-        $product = new Product();
-        $product->setName('');
-        $product->setQuantity(1);
-        $product->setDescription('');
-        $product->setExpiryDate(new \DateTime());
-        $product->setCategory($cateRepo->findOneById(64));
-        $donation->addProduct($product);
+        // $product = new Product();
+        // $product->setName('');
+        // $product->setQuantity(1);
+        // $product->setDescription('');
+        // $product->setExpiryDate(new \DateTime());
+        // $product->setCategory($cateRepo->findOneById(64));
+        // $donation->addProduct($product);
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
         $form = $this->createForm(DonationType::class, $donation);
@@ -533,8 +533,9 @@ class DonationController extends AbstractController
         $addressId = $request->request->get('index');
         $form->handleRequest($request);
         // dump($form->getData());
-        
+        dump($form->getData()->getProducts());
         if ($form->isSubmitted() && $form->isValid()) {
+
             //avant l'enregistrement d'un don je dois recupérer l'objet fichier qui n'est pas une chaine de caractère
             $file = $donation->getPicture();
             // dd($donation);
@@ -624,6 +625,7 @@ class DonationController extends AbstractController
                 }
 
                 // Si mon tableau d'erreur est vide alors je peux enregistrer en base de données
+                // Le tableau me permet uniquement de vérifier si il y a des erreurs
                 if(count($errorList) == 0){
                     //on persist la nouvelle adresse
                     $em->persist($donationAddress);
@@ -633,8 +635,7 @@ class DonationController extends AbstractController
                 // Sinon je signale les erreur
                 else {
                     return $this->render('donation/new.html.twig', [
-                        'form' => $form->createView(),
-                        'errorList' => $errorList
+                        'form' => $form->createView()
                     ]); 
                 }
 
@@ -647,6 +648,12 @@ class DonationController extends AbstractController
                     $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
                     return $this->redirectToRoute('donation_new');
                 }
+                dump($product->getName());
+                if($product->getName() == null){
+                    $this->addFlash('danger', 'Veuillez renseigner le nom du produit');
+                    return $this->redirectToRoute('donation_new');
+                }
+
                 $em->persist($product);
             }
             // Pour setter le giver je récupere le currentUser
