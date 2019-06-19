@@ -385,19 +385,22 @@ a.page-link{
 
 .subpoper{
     display:none;
-    z-index:999;
 }
 
 .mainpoper:hover + .subpoper{
     display:inline-block;
+    position:absolute;
+    margin-top: 10px;
+    margin-left: 3px;
+    white-space:nowrap;
+    background-color:white;
     color: grey;
-    z-index:999;
+    z-index:10;
     font-size: 0.5em;
     font-style: italic;
     border: 1px solid grey;
     border-radius: 6px;
     padding: 2px;
-    /* float: right; */
 }
 
 @media screen and (max-width: 768px) { 
@@ -438,5 +441,9 @@ a.page-link{
         margin-bottom: 1em;
     }
 
+
+    .mainpoper:hover + .subpoper{
+        display: none;
+    }
 }
   

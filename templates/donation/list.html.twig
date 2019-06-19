@@ -21,6 +21,7 @@
                 <div class="card-body">
                     {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
                     <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="image du don">
+                    
                     <h3 class="card-title">
                         {{donation.title}}
                         {% if "Dispo" == donation.status.name %}
