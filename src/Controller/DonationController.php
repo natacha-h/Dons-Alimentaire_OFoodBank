@@ -535,7 +535,7 @@ class DonationController extends AbstractController
         // dump($form->getData());
         
         if ($form->isSubmitted() && $form->isValid()) {
-            //avant l'enregistrement d'un don je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
+            //avant l'enregistrement d'un don je dois recupérer l'objet fichier qui n'est pas une chaine de caractère
             $file = $donation->getPicture();
             // dd($donation);
             if(!is_null($file)){
@@ -547,10 +547,10 @@ class DonationController extends AbstractController
                         'form' => $form->createView()
                     ]);
                 }
-                //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
+                //je génère un nom de fichier unique pour éviter d'écraser un fichier du meme nom & je concatène avec l'extension du fichier d'origine
                 $fileName = $this->generateUniqueFileName().'.'.$extension;
                 try {
-                    //je deplace mon fichier dans le dossier souhaité
+                    //je déplace mon fichier dans le dossier souhaité
                     $file->move(
                         $this->getParameter('picture_directory'),
                         $fileName
@@ -561,7 +561,7 @@ class DonationController extends AbstractController
                 }
                 $donation->setPicture($fileName);
             }
-            // Je gere le fait de donner une image standard au don
+            // Je gère le fait de donner une image standard au don
             else {
                 $fileName = 'default-image.jpg';
                 $donation->setPicture($fileName);
@@ -579,10 +579,19 @@ class DonationController extends AbstractController
             } else {// sinon c'est qu'il a choisi une autre adresse
                 // on l'enregistre
                 $donationAddress = new Address();
-                $donationAddress->setNumber($addressFormNumber);
+
+                if($addressFormNumber){
+                    $donationAddress->setNumber($addressFormNumber);
+                }
+
                 $donationAddress->setStreet1($addressFormStreet1);
-                $donationAddress->setStreet2($addressFormStreet2);
+
+                if($addressFormStreet2){
+                    $donationAddress->setStreet2($addressFormStreet2);
+                }
+
                 $donationAddress->setZipCode($addressFormZipCode);
+
                 $donationAddress->setCity($addressFormCity);
                 //on persist la nouvelle adresse
                 $em->persist($donationAddress);
