@@ -515,13 +515,13 @@ class DonationController extends AbstractController
     public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
     {
         $donation = new Donation();
-        $product = new Product();
-        $product->setName('');
-        $product->setQuantity(1);
-        $product->setDescription('');
-        $product->setExpiryDate(new \DateTime());
-        $product->setCategory($cateRepo->findOneById(64));
-        $donation->addProduct($product);
+        // $product = new Product();
+        // $product->setName('');
+        // $product->setQuantity(1);
+        // $product->setDescription('');
+        // $product->setExpiryDate(new \DateTime());
+        // $product->setCategory($cateRepo->findOneById(64));
+        // $donation->addProduct($product);
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
         $form = $this->createForm(DonationType::class, $donation);
@@ -533,9 +533,10 @@ class DonationController extends AbstractController
         $addressId = $request->request->get('index');
         $form->handleRequest($request);
         // dump($form->getData());
-        
+        // dump($form->getData()->getProducts());
         if ($form->isSubmitted() && $form->isValid()) {
-            //avant l'enregistrement d'un don je dois recuperer l'objet fichier qui n'est pas une chaine de caractere
+
+            //avant l'enregistrement d'un don je dois recupérer l'objet fichier qui n'est pas une chaine de caractère
             $file = $donation->getPicture();
             // dd($donation);
             if(!is_null($file)){
@@ -547,10 +548,10 @@ class DonationController extends AbstractController
                         'form' => $form->createView()
                     ]);
                 }
-                //je genere un nom de fichier unique pour eviter d'ecraser un fichier du meme nom & je concatene avec l'extension du fichier d'origine
+                //je génère un nom de fichier unique pour éviter d'écraser un fichier du meme nom & je concatène avec l'extension du fichier d'origine
                 $fileName = $this->generateUniqueFileName().'.'.$extension;
                 try {
-                    //je deplace mon fichier dans le dossier souhaité
+                    //je déplace mon fichier dans le dossier souhaité
                     $file->move(
                         $this->getParameter('picture_directory'),
                         $fileName
@@ -561,7 +562,7 @@ class DonationController extends AbstractController
                 }
                 $donation->setPicture($fileName);
             }
-            // Je gere le fait de donner une image standard au don
+            // Je gère le fait de donner une image standard au don
             else {
                 $fileName = 'default-image.jpg';
                 $donation->setPicture($fileName);
@@ -579,15 +580,66 @@ class DonationController extends AbstractController
             } else {// sinon c'est qu'il a choisi une autre adresse
                 // on l'enregistre
                 $donationAddress = new Address();
-                $donationAddress->setNumber($addressFormNumber);
-                $donationAddress->setStreet1($addressFormStreet1);
-                $donationAddress->setStreet2($addressFormStreet2);
-                $donationAddress->setZipCode($addressFormZipCode);
-                $donationAddress->setCity($addressFormCity);
-                //on persist la nouvelle adresse
-                $em->persist($donationAddress);
-                // on attribue la nouvelle addresse au don
-                $donation->setAddress($donationAddress);
+                
+                // Je crée un tableau qui va contenir les erreurs vides.
+                $errorList = [];
+
+                // Si le numero est saisi alors je peux le setter
+                if($addressFormNumber){
+                    $donationAddress->setNumber($addressFormNumber);
+                }
+
+                // Si l'adresse n'est pas vide je la sette
+                if(trim($addressFormStreet1) != ''){
+                    $donationAddress->setStreet1($addressFormStreet1);
+                }
+                // Sinon je remplis le tableau d'erreur
+                else{
+                    $this->addFlash('warning', 'Veuillez renseigner un nom de rue');
+                    $errorList['street'] = 'Veuillez renseigner le nom de la rue';
+                }
+
+                // Si complément est rempli alors je le sette
+                if($addressFormStreet2){
+                    $donationAddress->setStreet2($addressFormStreet2);
+                }
+
+                // Si zipCode pas vide alors je sette
+                if(trim($addressFormZipCode) != ''){
+                    $donationAddress->setZipCode($addressFormZipCode);
+                }
+                // Sinon je remplis le tableau d'erreur
+                else {
+                    $this->addFlash('warning', 'Veuillez renseigner un code postal');
+                    $errorList['zipCode'] = 'Veuillez renseigner le code postal';
+                }
+
+                // Si city pas vide alors je sette
+                if(trim($addressFormCity) != ''){
+                    $donationAddress->setCity($addressFormCity);
+                }
+                // Sinon je remplis le tableau d'erreur
+                else{
+                    $this->addFlash('warning', 'Veuillez renseigner un nom de ville');
+                    $errorList['city'] = 'Veuillez renseigner le nom de la ville';
+                }
+
+                // Si mon tableau d'erreur est vide alors je peux enregistrer en base de données
+                // Le tableau me permet uniquement de vérifier si il y a des erreurs
+                if(count($errorList) == 0){
+                    //on persist la nouvelle adresse
+                    $em->persist($donationAddress);
+                    // on attribue la nouvelle addresse au don
+                    $donation->setAddress($donationAddress);
+                }
+                // Sinon je signale les erreur
+                else {
+                    return $this->render('donation/new.html.twig', [
+                        'form' => $form->createView()
+                    ]); 
+                }
+
+
             }
             // dd($donation->getAddress());
             // Je persist tous les produits
@@ -596,6 +648,12 @@ class DonationController extends AbstractController
                     $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
                     return $this->redirectToRoute('donation_new');
                 }
+                // dump($product->getName());
+                if($product->getName() == null){
+                    $this->addFlash('danger', 'Veuillez renseigner le nom du produit');
+                    return $this->redirectToRoute('donation_new');
+                }
+
                 $em->persist($product);
             }
             // Pour setter le giver je récupere le currentUser

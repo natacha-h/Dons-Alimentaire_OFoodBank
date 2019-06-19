@@ -98,7 +98,7 @@ class MainController extends AbstractController
             }
 
             //dump($arrayErrors);
-            dump($email);
+            // dump($email);
             // Si tableau d'erreur vide alors envoyer le mail
 
             if(count($arrayErrors) == 0){
