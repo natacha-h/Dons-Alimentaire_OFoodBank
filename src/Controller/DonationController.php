@@ -579,24 +579,66 @@ class DonationController extends AbstractController
             } else {// sinon c'est qu'il a choisi une autre adresse
                 // on l'enregistre
                 $donationAddress = new Address();
+                
+                // Je crée un tableau qui va contenir les erreurs vides.
+                $errorList = [];
 
+                // Si le numero est saisi alors je peux le setter
                 if($addressFormNumber){
                     $donationAddress->setNumber($addressFormNumber);
                 }
 
-                $donationAddress->setStreet1($addressFormStreet1);
+                // Si l'adresse n'est pas vide je la sette
+                if(trim($addressFormStreet1) != ''){
+                    $donationAddress->setStreet1($addressFormStreet1);
+                }
+                // Sinon je remplis le tableau d'erreur
+                else{
+                    $this->addFlash('warning', 'Veuillez renseigner un nom de rue');
+                    $errorList['street'] = 'Veuillez renseigner le nom de la rue';
+                }
 
+                // Si complément est rempli alors je le sette
                 if($addressFormStreet2){
                     $donationAddress->setStreet2($addressFormStreet2);
                 }
 
-                $donationAddress->setZipCode($addressFormZipCode);
+                // Si zipCode pas vide alors je sette
+                if(trim($addressFormZipCode) != ''){
+                    $donationAddress->setZipCode($addressFormZipCode);
+                }
+                // Sinon je remplis le tableau d'erreur
+                else {
+                    $this->addFlash('warning', 'Veuillez renseigner un code postal');
+                    $errorList['zipCode'] = 'Veuillez renseigner le code postal';
+                }
 
-                $donationAddress->setCity($addressFormCity);
-                //on persist la nouvelle adresse
-                $em->persist($donationAddress);
-                // on attribue la nouvelle addresse au don
-                $donation->setAddress($donationAddress);
+                // Si city pas vide alors je sette
+                if(trim($addressFormCity) != ''){
+                    $donationAddress->setCity($addressFormCity);
+                }
+                // Sinon je remplis le tableau d'erreur
+                else{
+                    $this->addFlash('warning', 'Veuillez renseigner un nom de ville');
+                    $errorList['city'] = 'Veuillez renseigner le nom de la ville';
+                }
+
+                // Si mon tableau d'erreur est vide alors je peux enregistrer en base de données
+                if(count($errorList) == 0){
+                    //on persist la nouvelle adresse
+                    $em->persist($donationAddress);
+                    // on attribue la nouvelle addresse au don
+                    $donation->setAddress($donationAddress);
+                }
+                // Sinon je signale les erreur
+                else {
+                    return $this->render('donation/new.html.twig', [
+                        'form' => $form->createView(),
+                        'errorList' => $errorList
+                    ]); 
+                }
+
+
             }
             // dd($donation->getAddress());
             // Je persist tous les produits
