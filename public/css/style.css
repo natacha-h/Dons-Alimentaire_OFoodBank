@@ -383,6 +383,22 @@ a.page-link{
     margin-bottom: 1em;
 }
 
+.subpoper{
+    display:none;
+    z-index:999;
+}
+
+.mainpoper:hover + .subpoper{
+    display:inline-block;
+    color: grey;
+    z-index:999;
+    font-size: 0.5em;
+    font-style: italic;
+    border: 1px solid grey;
+    border-radius: 6px;
+    padding: 2px;
+    /* float: right; */
+}
 
 @media screen and (max-width: 768px) { 
     body{
