@@ -533,7 +533,7 @@ class DonationController extends AbstractController
         $addressId = $request->request->get('index');
         $form->handleRequest($request);
         // dump($form->getData());
-        dump($form->getData()->getProducts());
+        // dump($form->getData()->getProducts());
         if ($form->isSubmitted() && $form->isValid()) {
 
             //avant l'enregistrement d'un don je dois recupérer l'objet fichier qui n'est pas une chaine de caractère

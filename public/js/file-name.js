@@ -9,4 +9,8 @@ $(document).ready(function(){
         // Pour l'utiliser dans le css
         $('.custom-file-label').attr('imgName', fileName);
     });
+
+    // Je positionne mon bouton publier a droite
+    $('#donation_Publier').parent().addClass('set-right');
+
 });
