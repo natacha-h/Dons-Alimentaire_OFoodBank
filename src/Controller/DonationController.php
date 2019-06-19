@@ -648,7 +648,7 @@ class DonationController extends AbstractController
                     $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
                     return $this->redirectToRoute('donation_new');
                 }
-                dump($product->getName());
+                // dump($product->getName());
                 if($product->getName() == null){
                     $this->addFlash('danger', 'Veuillez renseigner le nom du produit');
                     return $this->redirectToRoute('donation_new');
