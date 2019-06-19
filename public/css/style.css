@@ -273,12 +273,13 @@ input[type=radio]:checked + label ~ label{
     color: gold;
     cursor: pointer;
     margin-bottom: 10px;
-   
-  
-
-    
-    
 }
+
+/* Bouton publish */
+body > main > form[name="donation"] > div:nth-child(5){
+    text-align: right;
+}
+
 /* Page 404 */
 .page-404 {
     background-image: url(../pictures/404-chou.jpg);
@@ -366,6 +367,10 @@ a.page-link{
     On récupere le nom de l'attribut grâce au jQuery
     voir fichier new don ligne 150
 */
+.custom-file-label{
+    overflow: hidden;
+}
+
 .custom-file-label:before{
     content: attr(imgName);
 }
