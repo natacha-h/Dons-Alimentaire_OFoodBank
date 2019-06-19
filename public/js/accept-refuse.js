@@ -38,7 +38,7 @@ function handleAcceptButton(event){
         $lineToDelete.remove();
         // on affiche un FlashMessage
         var $flashMessage = $('<div class="alert alert-success mt-3"> Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous</div>');
-        $('h2').before($flashMessage);
+        $('#manage-dons').before($flashMessage);
       }
       
       // TODO faire les actions souhaitées après la récupération de la réponse
@@ -79,7 +79,7 @@ function handleRefuseButton(event){
 
         // on affiche un FlashMessage
         var $flashMessage = $('<div class="alert alert-success mt-3"> Vous avez refusé la demande de l\'association, votre don est à nouveau disponible à la réservation</div>');
-        $('h2').before($flashMessage);
+        $('#manage-dons').before($flashMessage);
       }
       
       // TODO faire les actions souhaitées après la récupération de la réponse

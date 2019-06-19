@@ -14,9 +14,19 @@
             <h5>Téléphone : {{ user.phoneNumber }}</h5>
             <h5 class="">{{ user.email }}</h5>
             {% if is_granted('ROLE_GIVER') %}
-            <h5 class="">Note : {{ user.rating }} / 5</h5>
-            <img src="{{ asset('pictures/' ~ (user.reward.picture))}} " alt="reward niveau {{user.reward.code}}" class="img-fluid mb-2" >
-            <h5 class="">Niveau : {{ user.reward.title }}</h5>
+            <div class="rating rating2 m-auto">
+                <div class="order-1 mr-4 p-2">
+                <!--
+                --><input name="stars" value="5" id="e5" type="radio" {{ (user.rating) == (5) ? 'checked' }}><label for="e5">★</label><!--
+                --><input name="stars" value="4" id="e4" type="radio" {{ (user.rating) == (4) ? 'checked' }}><label for="e4">★</label><!--
+                --><input name="stars" value="3" id="e3" type="radio" {{ (user.rating) == (3) ? 'checked' }}><label for="e3">★</label><!--
+                --><input name="stars" value="2" id="e2" type="radio" {{ (user.rating) == (2) ? 'checked' }}><label for="e2">★</label><!--
+                --><input name="stars" value="1" id="e1" type="radio" {{ (user.rating) == (1) ? 'checked' }}><label for="e1">★</label><!--
+                --> 
+                </div>
+            </div>
+            <h5 class="mb-3">Niveau : {{ user.reward.title }}</h5>
+            <img src="{{ asset('pictures/' ~ (user.reward.picture))}} " alt="reward niveau {{user.reward.code}}" class="img-fluid mb-3" >
             {% endif %}
             
             <h5 class=""><a href="#modif-profil" class="text-dark stretched-link">Modifer mon profil</a></h5>
@@ -47,11 +57,11 @@
         </div>
 
         {# Dons en attente de validation #}
-        <h2 id="#dons" class="font-italic text-center mt-4">Dons en attente de validation</h2>
+        <h2 id="manage-dons" class="font-italic text-center mt-4">Dons en attente de validation</h2>
             {% include "user/manage_donations.html.twig" %}
 
         {# Dons Donnés #}
-        <h2 id="#dons" class="font-italic text-center mt-4">Dons effectués</h2>
+        <h2 class="font-italic text-center mt-4">Dons effectués</h2>
         <div class="d-flex flex-wrap mt-4 border-bottom">
             {% for donation in donations|slice(0, 1) if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
@@ -70,7 +80,7 @@
         {% elseif is_granted('ROLE_ASSOC') %}
 
         {# Dons réservés #}
-        <h2 id="#dons" class="font-italic text-center">Dons réservés</h2>
+        <h2 class="font-italic text-center">Dons réservés</h2>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Réservé" %}
                 {% if loop.index <= 6 %} 
@@ -86,7 +96,7 @@
         </div>
 
         {# Dons Reçus #}
-        <h2 id="#dons" class="font-italic text-center">Dons reçus</h2>
+        <h2 class="font-italic text-center">Dons reçus</h2>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
