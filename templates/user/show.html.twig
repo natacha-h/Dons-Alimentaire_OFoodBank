@@ -57,11 +57,11 @@
         </div>
 
         {# Dons en attente de validation #}
-        <h2 id="#dons" class="font-italic text-center mt-4">Dons en attente de validation</h2>
+        <h2 id="manage-dons" class="font-italic text-center mt-4">Dons en attente de validation</h2>
             {% include "user/manage_donations.html.twig" %}
 
         {# Dons Donnés #}
-        <h2 id="#dons" class="font-italic text-center mt-4">Dons effectués</h2>
+        <h2 class="font-italic text-center mt-4">Dons effectués</h2>
         <div class="d-flex flex-wrap mt-4 border-bottom">
             {% for donation in donations|slice(0, 1) if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
@@ -80,7 +80,7 @@
         {% elseif is_granted('ROLE_ASSOC') %}
 
         {# Dons réservés #}
-        <h2 id="#dons" class="font-italic text-center">Dons réservés</h2>
+        <h2 class="font-italic text-center">Dons réservés</h2>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Réservé" %}
                 {% if loop.index <= 6 %} 
@@ -96,7 +96,7 @@
         </div>
 
         {# Dons Reçus #}
-        <h2 id="#dons" class="font-italic text-center">Dons reçus</h2>
+        <h2 class="font-italic text-center">Dons reçus</h2>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
