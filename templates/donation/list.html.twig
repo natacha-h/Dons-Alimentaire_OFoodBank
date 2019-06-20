@@ -21,12 +21,15 @@
                 <div class="card-body">
                     {# {{ asset('uploads/pictures/' ~ donation.picture) }} #}
                     <img src="{{ asset('uploads/pictures/' ~ donation.picture) }}" class="card-img regul-size" alt="image du don">
+                    
                     <h3 class="card-title">
                         {{donation.title}}
                         {% if "Dispo" == donation.status.name %}
-                                <img src="{{asset('pictures/status_dispo.png')}} " alt="Don disponible">
+                            <img class="mainpoper" src="{{asset('pictures/status_dispo.png')}} " alt="Don disponible">
+                            <div class="subpoper">Ce don est disponible</div>
                         {% elseif "Réservé" == donation.status.name %}
-                                <img src="{{asset('pictures/status_reserve.png')}} " alt="Don déjà réservé">                         
+                            <img class="mainpoper" src="{{asset('pictures/status_reserve.png')}} " alt="Don déjà réservé">                         
+                            <div class="subpoper">Ce don est réservé</div>
                         {% endif %}
                     </h3>
                     <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
@@ -47,16 +50,3 @@
 </div>
 {% endblock %}
 
-
-
-{% block javascripts %}
-    <script>
-        {# $(document).ready(function(){
-            var cardImg = $('.regul-size');
-            var defaultImg = ($(cardImg).attr('src') === 'default-image.jpg');
-            console.log(defaultImg);
-        }); #}
-    </script>
-
-
-{% endblock %}
