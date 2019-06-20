@@ -63,7 +63,7 @@
         {# Dons Donnés #}
         <h2 class="font-italic text-center mt-4">Dons effectués <img src="{{ asset('pictures/status_donne.png') }}"></h2>
         <div class="d-flex flex-wrap mt-4 border-bottom">
-            {% for donation in donations|slice(0, 1) if donation.status.name == "Donné" %}
+            {% for donation in donations if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
                     <div class="col-sm-5 col-10 m-4 p-3 mx-auto border rounded">
                     <h4 class="font-italic">
