@@ -40,7 +40,7 @@
         {% if is_granted('ROLE_GIVER') %}
 
         {# Dons proposés #}
-        <h2 id="#dons" class="font-italic text-center">Dons proposés</h2>
+        <h2 id="#dons" class="font-italic text-center">Dons proposés <img src="{{ asset('pictures/status_dispo.png') }}"></h2> 
         <button type="button" class="btn-success rounded border p-3 mt-2"><a href="{{path('donation_new')}}" class="text-white">Nouveau don</a></button>
         <div class="d-flex flex-wrap mt-4 border-bottom">
             {% for donation in donations if donation.status.name == "Dispo" %}
@@ -57,11 +57,11 @@
         </div>
 
         {# Dons en attente de validation #}
-        <h2 id="manage-dons" class="font-italic text-center mt-4">Dons en attente de validation</h2>
+        <h2 id="manage-dons" class="font-italic text-center mt-4">Dons en attente de validation <img src="{{ asset('pictures/status_reserve.png') }}"></h2>
             {% include "user/manage_donations.html.twig" %}
 
         {# Dons Donnés #}
-        <h2 class="font-italic text-center mt-4">Dons effectués</h2>
+        <h2 class="font-italic text-center mt-4">Dons effectués <img src="{{ asset('pictures/status_donne.png') }}"></h2>
         <div class="d-flex flex-wrap mt-4 border-bottom">
             {% for donation in donations|slice(0, 1) if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
@@ -80,7 +80,7 @@
         {% elseif is_granted('ROLE_ASSOC') %}
 
         {# Dons réservés #}
-        <h2 class="font-italic text-center">Dons réservés</h2>
+        <h2 class="font-italic text-center">Dons réservés <img src="{{ asset('pictures/status_reserve.png') }}"></h2>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Réservé" %}
                 {% if loop.index <= 6 %} 
@@ -96,7 +96,7 @@
         </div>
 
         {# Dons Reçus #}
-        <h2 class="font-italic text-center">Dons reçus</h2>
+        <h2 class="font-italic text-center">Dons reçus <img src="{{ asset('pictures/status_donne.png') }}"></h2>
         <div class="d-flex flex-wrap mt-4">
             {% for donation in donations if donation.status.name == "Donné" %}
                 {% if loop.index <= 6 %}
