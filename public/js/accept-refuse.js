@@ -37,7 +37,7 @@ function handleAcceptButton(event){
         // console.log($lineToDelete);
         $lineToDelete.remove();
         // on affiche un FlashMessage
-        var $flashMessage = $('<div class="alert alert-success mt-3"> Vous avez accepté la demande de l\'assocation, elle va être notifiée et prendra contact avec vous</div>');
+        var $flashMessage = $('<div class="alert alert-success mt-3"> Vous avez accepté la demande de l\'association, elle va être notifiée et prendra contact avec vous</div>');
         $('#manage-dons').before($flashMessage);
       }
       

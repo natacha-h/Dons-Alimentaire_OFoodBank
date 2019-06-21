@@ -645,7 +645,7 @@ class DonationController extends AbstractController
             // Je persist tous les produits
             foreach($donation->getProducts() as $product){
                 if($product->getExpiryDate() == null){
-                    $this->addFlash('danger', 'Veuillez renseigner la date dexpiration');
+                    $this->addFlash('danger', 'Veuillez renseigner la date d\'expiration');
                     return $this->redirectToRoute('donation_new');
                 }
                 // dump($product->getName());
