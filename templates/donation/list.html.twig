@@ -33,6 +33,7 @@
                         {% endif %}
                     </h3>
                     <p class="card-text">Crée le {{donation.createdAt|date("d/m/Y")}}</p>
+                    <p class="card-text">À {{donation.address.city}} ({{donation.address.zipcode}})</p>
                     {% if expiryDateArray[donation.id] is defined %}
                         <p class="card-text">Date de péremption : {{ expiryDateArray[donation.id]|date("d/m/Y") }}</p>
                     {% endif %}
