@@ -687,10 +687,10 @@ class DonationController extends AbstractController
             //dump($department);
             $splitDepartment = str_split($department, 2);
             $shortDepartment = $splitDepartment[0] . '%';
-            dump($shortDepartment);
+            //dump($shortDepartment);
             // 2/ récupérer la collection des associations situées dans le département
             $associations = $userRepo->findUserByZipCode($shortDepartment);
-            dd($associations);
+            //dd($associations);
             // 3/ envoyer l'e-mail
 
 

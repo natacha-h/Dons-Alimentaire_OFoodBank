@@ -65,6 +65,7 @@ class UserRepository extends ServiceEntityRepository
             ->join('u.address', 'a')        
             ->where('a.zip_code LIKE :zip_code')
             ->setParameter('zip_code', $zipCode)
+            ->andWhere('u.role = 2')
             ->getQuery()
             ->getResult();
     }
