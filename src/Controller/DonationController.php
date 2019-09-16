@@ -512,16 +512,16 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder, UserRepository $userRepo)
     {
         $donation = new Donation();
-        // $product = new Product();
-        // $product->setName('');
-        // $product->setQuantity(1);
-        // $product->setDescription('');
-        // $product->setExpiryDate(new \DateTime());
-        // $product->setCategory($cateRepo->findOneById(64));
-        // $donation->addProduct($product);
+            // $product = new Product();
+            // $product->setName('');
+            // $product->setQuantity(1);
+            // $product->setDescription('');
+            // $product->setExpiryDate(new \DateTime());
+            // $product->setCategory($cateRepo->findOneById(64));
+            // $donation->addProduct($product);
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
         $form = $this->createForm(DonationType::class, $donation);
@@ -680,6 +680,20 @@ class DonationController extends AbstractController
             $em->flush();
             // J'ajoute un flashMessage pour indiquer que tout s'est bien passé
             $this->addFlash('success', 'Le don a bien été publié !');
+
+            //envoi d'un e-mail aux associations situées dans le département du nouveau don
+            // 1 / récupérer le code postal du don
+            $department = strval($donation->getAddress()->getZipCode());
+            //dump($department);
+            $splitDepartment = str_split($department, 2);
+            $shortDepartment = $splitDepartment[0] . '%';
+            dump($shortDepartment);
+            // 2/ récupérer la collection des associations situées dans le département
+            $associations = $userRepo->findUserByZipCode($shortDepartment);
+            dd($associations);
+            // 3/ envoyer l'e-mail
+
+
             // Je retourne a la liste des tags
             return $this->redirectToRoute('donation_list');
         }
