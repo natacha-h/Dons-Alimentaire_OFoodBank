@@ -1,0 +1,13 @@
+{% block body %}
+
+    <center><h2>Un nouveau don a été publié dans votre département</h2></center>
+
+    <p> Bonjour {{ firstName }} {{ lastName }}. </p>
+    <p>  Un nouveau don : {{ donationTitle }} a été publié. Il est localisé à {{donationZipCode}} {{donationCity}}.</p>
+
+    <p>Voir le don concerné : http://92.243.9.64/dons/{{ donationId }}</p>
+
+    <p> Ce mail vous a été envoyé par O'FoodBank  </p>
+    
+{% endblock %}
+    

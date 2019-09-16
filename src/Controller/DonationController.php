@@ -512,7 +512,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder, UserRepository $userRepo)
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder, UserRepository $userRepo, \Swift_Mailer $mailer)
     {
         $donation = new Donation();
             // $product = new Product();
@@ -692,7 +692,33 @@ class DonationController extends AbstractController
             $associations = $userRepo->findUserByZipCode($shortDepartment);
             //dd($associations);
             // 3/ envoyer l'e-mail
+            // on boucle sur la collection d'association
+            foreach($associations as $asso) {
 
+                $email = $asso->getEmail(); // Déclaration de l'adresse de destination.
+                        $firstName = $asso->getFirstName();
+                        $lastName = $asso->getLastName();         
+                        $mail = (new \Swift_Message('Un nouveau don a été publié dans votre département'))
+                        ->setFrom('ofoodbank@gmail.com')
+                        ->setTo($email)
+                        ->setBody(
+                                $this->renderView(
+                                    'mailer/mail-new-donation-in-area.html.twig',
+                                    [
+                                        'email' => $email,
+                                        'donationTitle' => $donation->getTitle(),
+                                        'donationId' => $donation->getId(),
+                                        'donationCity' =>$donation->getAddress()->getCity(),
+                                        'donationZipCode'=>$department,
+                                        'firstName' => $firstName,
+                                        'lastName' => $lastName
+                                    ]
+                                ),
+                                'text/html'
+                            );
+                                    
+                    $mailer->send($mail);
+            }
 
             // Je retourne a la liste des tags
             return $this->redirectToRoute('donation_list');
