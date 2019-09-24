@@ -118,7 +118,7 @@ class DonationController extends AbstractController
         // dd($currentStatus);
         
         // si le don est déjà réservé
-        if ("Réservé" == $currentStatus){
+        if ($donation->getStatus()->getReserved() == $currentStatus){
             // on affiche un flashMessage pour informer l'utilisateur
             $this->addFlash(
                 'danger',

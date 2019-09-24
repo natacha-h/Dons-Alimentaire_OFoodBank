@@ -11,6 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Status
 {
+
+    private const GIVEN = "Donné";
+    private const DISPO = "Dispo";
+    private const RESERVED = "Réservé"; 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -79,5 +83,10 @@ class Status
         }
 
         return $this;
+    }
+
+    public function getReserved()
+    {
+        self::RESERVED;
     }
 }
