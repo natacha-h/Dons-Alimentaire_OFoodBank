@@ -100,8 +100,6 @@ class DonationRepository extends ServiceEntityRepository
             }
     */
 
-
-    
     public function findDonationWithAllDetails($value)
     {
          return $this->createQueryBuilder('d')
@@ -117,8 +115,6 @@ class DonationRepository extends ServiceEntityRepository
             ->andWhere('s.id = d.status')
             ->getQuery()
             ->getOneOrNullResult()
-        ;
-        
+        ;        
     }
-
 }
