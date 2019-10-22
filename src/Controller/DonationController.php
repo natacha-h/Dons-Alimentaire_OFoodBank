@@ -3,25 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Address;
-use App\Entity\Product;
 use App\Utils\Rewarder;
 use App\Entity\Donation;
 use App\Utils\Addresser;
-use App\Form\ProductType;
 use App\Form\DonationType;
 use App\Repository\UserRepository;
 use App\Repository\StatusRepository;
-use App\Repository\AddressRepository;
-use Proxies\__CG__\App\Entity\Status;
 use App\Repository\CategoryRepository;
 use App\Repository\DonationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 /**
@@ -34,19 +27,14 @@ class DonationController extends AbstractController
      */
     public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request)
     {
-        //repo = $this->getDoctrine()->getRepository(Donation::class);
-
         $donations = $donationRepository->findDonationWithProducts();
         $donationsList = $paginator->paginate(
             $donationRepository->findByStatusQuery(),
             $request->query->getInt('page', 1),
             10
-        );
-        
-        // dd($donations);
+        );       
         $expiryDateArray = [];
         foreach($donations as $donation){
-            // dump($donation);
             $currentExpiry = false;
             foreach($donation->getProducts() as $product){
                 $expiryDate = $product->getExpiryDate();
@@ -62,8 +50,6 @@ class DonationController extends AbstractController
             }
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
-        // dump($expiryDateArray);
-        // dump($donationsList);
         return $this->render('donation/list.html.twig', [
             'donations' => $donationsList,
             'expiryDateArray' => $expiryDateArray
@@ -77,15 +63,12 @@ class DonationController extends AbstractController
     {
         // on récupère le don
         $donation = $donationRepository->findDonationWithAllDetails($id);
-        // dd($donation);
         // on récupère la collection de user afin d'identifier le donateur
         $users = $donation->getUsers();
         // pour chaque utilisateur
         $collector = null;
         foreach ($users as $user){
-            // dump($user->getRoles());
             // on récupère le tableau de rôle et on boucle dessus            
-            // dump($role);
             // si le rôle est 'ROLE_ASSOC', on identifie l'utilisateur
             if ('ROLE_ASSOC' == $user->getRole()->getCode()){
                 $collector = $user;
@@ -96,11 +79,6 @@ class DonationController extends AbstractController
             }
             
         }
-        // dump($collector);
-        // dump($giver);
-        // die;
-        // dd(giver);
-        // dump($donation->getUsers());
         return $this->render('donation/show.html.twig', [
             'donation' => $donation,
             'giver' => $giver,
@@ -115,7 +93,6 @@ class DonationController extends AbstractController
     {
         //on vérifie le status actuel du don
         $currentStatus = $donation->getStatus()->getName();
-        // dd($currentStatus);
         
         // si le don est déjà réservé
         if ($donation->getStatus()->getReserved() == $currentStatus){
@@ -128,7 +105,6 @@ class DonationController extends AbstractController
         else {
             // on crée un nouvel objet Status 
             $newStatus = $statusRepository->findOneByName('Réservé');
-            // dd($newStatus);
             // on change le status de la donnation
             $donation->setStatus($newStatus);
             // on ajoute l'id du demandeur à la donnation
@@ -136,8 +112,6 @@ class DonationController extends AbstractController
             // on persist et on flush
             $em->persist($donation);
             $em->flush();
-            // // on crée la variable "collector" à qui on attribue l'utilisateur courant
-            // $collector = $this->getUser();
             // ajout d'un flash message
             $this->addFlash(
                 'success',
@@ -202,8 +176,6 @@ class DonationController extends AbstractController
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
-            // 'giver' => $donation->getUsers()[0],
-            // 'collector'=> $collector,
         ]);
     }
 
@@ -286,7 +258,6 @@ class DonationController extends AbstractController
         return $this->redirectToRoute('donation_show', [
             'donation' => $donation,
             'id' => $donation->getId(),
-            // 'giver' => $donation->getUsers()[0]
         ]);
     }
     
@@ -301,12 +272,9 @@ class DonationController extends AbstractController
         // On utilise le zipcode pour récupérer les coordonées GPS
         $zipCode = $address->getZipCode();
         
-        // $city = $address->getCity();
-        // $plussedCity = $addresser->addresser($city); 
         // On remplace les espaces du nom de la rue par des + grâce au service
         $street1 = $address->getStreet1();
         $plussedStreet = $addresser->addresser($street1);
-        // dd($plussedStreet);
         // On récupere le contenu de la page (retour json sur la page donc on recupere du json) avec ou sans numéro
         if($number != null){
             // On construit l'url avec les valeurs de la donation concernée avec chiffre
@@ -339,7 +307,6 @@ class DonationController extends AbstractController
     {
         // on crée un nouvel objet Status 
         $newStatus = $statusRepository->findOneByName('Donné');
-        // dd($newStatus);
         // on change le status de la donnation
         $donation->setStatus($newStatus);
         // on persist et on flush

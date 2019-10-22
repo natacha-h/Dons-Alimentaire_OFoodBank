@@ -89,4 +89,12 @@ class Status
     {
         self::RESERVED;
     }
+    public function getDispo()
+    {
+        self::DISPO;
+    }
+    public function getGiven()
+    {
+        self::GIVEN;
+    }
 }
