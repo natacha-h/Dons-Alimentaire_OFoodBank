@@ -67,7 +67,7 @@ class DonationController extends AbstractController
         // dump($expiryDateArray);
         // dump($donationsList);
 
-        // on veut afficher un forulaire de tri par catégorie
+        // on veut afficher un formulaire de tri par catégorie
         //1. récupérer les catégories
         //$categories= $categoryRepository->findAll();
         $category = new Category();
@@ -82,16 +82,21 @@ class DonationController extends AbstractController
             $categoryName = $category->getName();
             // 2. ne récupérer que les dons correspondant à cette catégorie
             $filteredDonation = $donationRepository->findFilteredDonationWithProducts($categoryName);
-            dd($filteredDonation);
             // 3. renvoyer la vue adéquate
+            return $this->redirectToRoute('donation_list', [
+                'donations' => $filteredDonation,
+                // 'expiryDateArray' => $expiryDateArray,
+                'form'=>$form->createView(),
+            ]);
         }
-        //2. les passer à la vue
-        return $this->render('donation/list.html.twig', [
-            'donations' => $donationsList,
-            'expiryDateArray' => $expiryDateArray,
-            // 'categories' => $categories
-            'form'=>$form->createView(),
-        ]);
+
+            //2. les passer à la vue
+            return $this->render('donation/list.html.twig', [
+                'donations' => $donationsList,
+                'expiryDateArray' => $expiryDateArray,
+                'form'=>$form->createView(),
+            ]);
+        
     }
 
     /**
