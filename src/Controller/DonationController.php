@@ -6,6 +6,8 @@ use App\Entity\Address;
 use App\Entity\Product;
 use App\Utils\Rewarder;
 use App\Entity\Donation;
+use App\Entity\Category;
+use App\Form\CategoryType;
 use App\Utils\Addresser;
 use App\Form\ProductType;
 use App\Form\DonationType;
@@ -32,7 +34,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/", name="list", methods={"GET"})
      */
-    public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request)
+    public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request, CategoryRepository $categoryRepository)
     {
         //repo = $this->getDoctrine()->getRepository(Donation::class);
 
@@ -64,9 +66,31 @@ class DonationController extends AbstractController
         }
         // dump($expiryDateArray);
         // dump($donationsList);
+
+        // on veut afficher un forulaire de tri par catégorie
+        //1. récupérer les catégories
+        //$categories= $categoryRepository->findAll();
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category, [
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            //TODO : 
+            // 1.récupérer la catégorie sélectionnée
+            $category = $form->getData();
+            $categoryName = $category->getName();
+            // 2. ne récupérer que les dons correspondant à cette catégorie
+            $filteredDonation = $donationRepository->findFilteredDonationWithProducts($categoryName);
+            dd($filteredDonation);
+            // 3. renvoyer la vue adéquate
+        }
+        //2. les passer à la vue
         return $this->render('donation/list.html.twig', [
             'donations' => $donationsList,
-            'expiryDateArray' => $expiryDateArray
+            'expiryDateArray' => $expiryDateArray,
+            // 'categories' => $categories
+            'form'=>$form->createView(),
         ]);
     }
 

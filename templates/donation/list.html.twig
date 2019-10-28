@@ -8,6 +8,12 @@
 
 <h2 class="text-center my-3">Liste des dons</h2>
 
+{# J'ajoute un tri par catégorie #}
+<p>Trier par catégorie</p>
+
+{# ici il faut charger le formulaire de tri => inclure un template tierce#}
+{{ include('donation/_form-categories.html.twig') }}
+
 {% if is_granted('ROLE_GIVER') %}
 <div class="row justify-content-center">
     <a href="{{path('donation_new')}}" class="btn btn-success">Nouveau Don</a>

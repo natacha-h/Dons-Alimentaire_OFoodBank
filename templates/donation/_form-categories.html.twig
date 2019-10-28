@@ -1,0 +1,6 @@
+    <div class="text-center">
+        {{ form_start(form, {'method': 'GET'}) }}
+        {{ form_widget(form) }}
+           <button class="btn-success border rounded">{{ button_label|default('Afficher') }}</button>
+        {{ form_end(form) }}
+    </div>
