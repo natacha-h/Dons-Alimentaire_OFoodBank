@@ -9,8 +9,6 @@
 <h2 class="text-center my-3">Liste des dons</h2>
 
 {# J'ajoute un tri par catégorie #}
-<p>Trier par catégorie</p>
-
 {# ici il faut charger le formulaire de tri => inclure un template tierce#}
 {{ include('donation/_form-categories.html.twig') }}
 
@@ -55,5 +53,8 @@
 <div class="pagination col-md-5 mx-auto mt-4">
     {{ knp_pagination_render(donations) }}
 </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{asset('js/filter.js')}} "> </script>
 {% endblock %}
 

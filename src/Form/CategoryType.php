@@ -16,6 +16,7 @@ class CategoryType extends AbstractType
             ->add('name', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'data' => 'id'
             ])
             ->setMethod('GET')
         ;

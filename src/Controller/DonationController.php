@@ -69,42 +69,47 @@ class DonationController extends AbstractController
 
         // on veut afficher un formulaire de tri par catégorie
         //1. récupérer les catégories
-        //$categories= $categoryRepository->findAll();
-        $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category, [
-            'method' => 'GET',
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            //TODO : 
-            // 1.récupérer la catégorie sélectionnée
-            $category = $form->getData();
-            $categoryName = $category->getName();
-            // 2. ne récupérer que les dons correspondant à cette catégorie
-            $filteredDonation = $donationRepository->findFilteredDonationWithProducts($categoryName);
-            // 3. renvoyer la vue adéquate
-            return $this->redirectToRoute('donation_list', [
-                'donations' => $filteredDonation,
-                // 'expiryDateArray' => $expiryDateArray,
-                'form'=>$form->createView(),
-            ]);
-        }
+        $categories= $categoryRepository->findAll();
+        // $category = new Category();
+        // $form = $this->createForm(CategoryType::class, $category, [
+        //     'method' => 'GET',
+        // ]);
+        // $form->handleRequest($request);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     //TODO : 
+        //     // 1.récupérer la catégorie sélectionnée
+        //     $category = $form->getData();
+        //     dd($category);
+        //     $categoryName = $category->getName();
+        //     $catId = $request->request->get("value");
+        //     dd($catId);
+        //     // 2. ne récupérer que les dons correspondant à cette catégorie
+        //     $filteredDonation = $donationRepository->findFilteredDonationWithProducts($categoryName);
+        //     // 3. renvoyer la vue adéquate
+        //     return $this->redirectToRoute('donation_filter_cat', [
+        //         'id' => $catId,
+        //         'donations' => $filteredDonation,
+        //         // 'expiryDateArray' => $expiryDateArray,
+        //         'form'=>$form->createView(),
+        //     ]);
+        // }
 
             //2. les passer à la vue
             return $this->render('donation/list.html.twig', [
                 'donations' => $donationsList,
                 'expiryDateArray' => $expiryDateArray,
-                'form'=>$form->createView(),
+                // 'form'=>$form->createView(),
+                'categories' => $categories,
             ]);
         
     }
 
     /**
-     * @Route("/categorie/{id}", name="filter_cat", requirements={"id"=\d+"})
+     * @Route("/categorie/{id}", name="filter_cat", requirements={"id"="\d+"})
      */
     public function filterByCategory($id)
     {
-        
+        dump('something');
     }
 
     /**

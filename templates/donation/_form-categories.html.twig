@@ -1,6 +1,18 @@
-    <div class="text-center">
+<form action>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Filtrer par catégorie</label>
+        <select class="form-control col-6" id="exampleFormControlSelect1">
+            {% for category in categories %}
+                <option value="{{ category.name}}" data-id="{{category.id}}">{{ category.name }}</option>    
+            {% endfor %}    
+        </select>
+        <button id="Filter" class="btn btn-success"> Filtrer</button>
+  </div>
+</form>
+{# <div class="text-center">
         {{ form_start(form, {'method': 'GET'}) }}
-        {{ form_widget(form) }}
-           <button class="btn-success border rounded">{{ button_label|default('Afficher') }}</button>
+        {# {{ form_widget(form) }} #}
+        {# {{form_row(form)}}
+           <button class="btn-success border rounded">{{ button_label|default('Filtrer') }}</button>
         {{ form_end(form) }}
-    </div>
+    </div>  #}
