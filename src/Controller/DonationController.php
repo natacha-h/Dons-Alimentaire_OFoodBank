@@ -100,9 +100,17 @@ class DonationController extends AbstractController
     }
 
     /**
+     * @Route("/categorie/{id}", name="filter_cat", requirements={"id"=\d+"})
+     */
+    public function filterByCategory($id)
+    {
+        
+    }
+
+    /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
-    public function show(/*Donation $donation*/ $id, DonationRepository $donationRepository)
+    public function show($id, DonationRepository $donationRepository)
     {
         // on récupère le don
         $donation = $donationRepository->findDonationWithAllDetails($id);
