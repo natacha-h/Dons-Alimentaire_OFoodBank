@@ -1,13 +1,13 @@
-<form action>
-    <div class="form-group">
+<form action class="form-inline">
+
         <label for="exampleFormControlSelect1">Filtrer par catégorie</label>
-        <select class="form-control col-6" id="exampleFormControlSelect1">
+        <select class="form-control" id="exampleFormControlSelect1">
             {% for category in categories %}
-                <option value="{{ category.name}}" data-id="{{category.id}}">{{ category.name }}</option>    
+                <option id="choice"  data-id="{{category.id}}">{{ category.name }}</option>    
             {% endfor %}    
         </select>
-        <button id="Filter" class="btn btn-success"> Filtrer</button>
-  </div>
+        <button id="filter" class="btn btn-success"> Filtrer</button>
+ 
 </form>
 {# <div class="text-center">
         {{ form_start(form, {'method': 'GET'}) }}
