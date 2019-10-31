@@ -1,4 +1,4 @@
-<form action class="form-inline">
+{# <form action class="form-inline">
 
         <label for="exampleFormControlSelect1">Filtrer par catégorie</label>
         <select class="form-control" id="exampleFormControlSelect1">
@@ -8,11 +8,11 @@
         </select>
         <button id="filter" class="btn btn-success"> Filtrer</button>
  
-</form>
-{# <div class="text-center">
+</form> #}
+<div class="text-center">
         {{ form_start(form, {'method': 'GET'}) }}
-        {# {{ form_widget(form) }} #}
-        {# {{form_row(form)}}
+        {{ form_widget(form) }}
+        {# {{form_row(form)}} #}
            <button class="btn-success border rounded">{{ button_label|default('Filtrer') }}</button>
         {{ form_end(form) }}
-    </div>  #}
+    </div> 

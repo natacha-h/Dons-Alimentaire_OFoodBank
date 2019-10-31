@@ -15,7 +15,7 @@ class CategoryType extends AbstractType
         $builder
         ->add('name', EntityType::class, [
             'class' => Category::class,
-            'label' => 'Catégorie'
+            'label' => 'Trier par catégorie',
         ])
             ->setMethod('GET')
         ;

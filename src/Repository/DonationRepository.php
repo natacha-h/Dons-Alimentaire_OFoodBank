@@ -81,7 +81,7 @@ class DonationRepository extends ServiceEntityRepository
             ->addSelect('p')
             ->join('p.category', 'c')
             ->addSelect('c')
-            ->andwhere('c.name = :category')
+            ->andwhere('c.id = :category')
             ->setParameter('category', $category)
             ->orderBy('d.created_at', 'DESC');
 

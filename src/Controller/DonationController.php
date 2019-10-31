@@ -68,48 +68,40 @@ class DonationController extends AbstractController
         // dump($donationsList);
 
         // on veut afficher un formulaire de tri par catégorie
-        //1. récupérer les catégories
-        $categories= $categoryRepository->findAll();
-        // $category = new Category();
-        // $form = $this->createForm(CategoryType::class, $category, [
-        //     'method' => 'GET',
-        // ]);
-        // $form->handleRequest($request);
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     //TODO : 
-        //     // 1.récupérer la catégorie sélectionnée
-        //     $category = $form->getData();
-        //     dd($category);
-        //     $categoryName = $category->getName();
-        //     $catId = $request->request->get("value");
-        //     dd($catId);
-        //     // 2. ne récupérer que les dons correspondant à cette catégorie
-        //     $filteredDonation = $donationRepository->findFilteredDonationWithProducts($categoryName);
-        //     // 3. renvoyer la vue adéquate
-        //     return $this->redirectToRoute('donation_filter_cat', [
-        //         'id' => $catId,
-        //         'donations' => $filteredDonation,
-        //         // 'expiryDateArray' => $expiryDateArray,
-        //         'form'=>$form->createView(),
-        //     ]);
-        // }
-
-            //2. les passer à la vue
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category, [
+            'method' => 'GET',
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // 1.récupérer la catégorie sélectionnée
+            $category = $form->getData();
+            $categoryName = $category->getName();
+            // récupérer en BD la catégorie concernée
+            $category = $categoryRepository->findByName($categoryName);
+            // récupérer l'id de la catégorie
+            $catId = $category[0]->getId();
+            // 2. ne récupérer que les dons correspondant à cette catégorie et ajouter la pagination
+            $filteredDonation = $paginator->paginate(
+                $donationRepository->findFilteredDonationWithProducts($catId),
+                $request->query->getInt('page', 1),
+                10
+            );
+            // 3. renvoyer la vue adéquate
+            return $this->render('donation/filtered-list.html.twig', [
+                'id' => $catId,
+                'category' => $categoryName,
+                'donations' => $filteredDonation,
+                'expiryDateArray' => $expiryDateArray,
+                'form'=>$form->createView(),
+            ]);
+        }
             return $this->render('donation/list.html.twig', [
                 'donations' => $donationsList,
                 'expiryDateArray' => $expiryDateArray,
-                // 'form'=>$form->createView(),
-                'categories' => $categories,
+                'form'=>$form->createView(),
             ]);
         
-    }
-
-    /**
-     * @Route("/categorie/{id}", name="filter_cat", requirements={"id"="\d+"})
-     */
-    public function filterByCategory($id)
-    {
-        dump('something');
     }
 
     /**
