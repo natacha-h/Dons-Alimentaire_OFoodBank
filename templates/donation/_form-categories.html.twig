@@ -9,10 +9,11 @@
         <button id="filter" class="btn btn-success"> Filtrer</button>
  
 </form> #}
-<div class="text-center">
+
         {{ form_start(form, {'method': 'GET'}) }}
-        {{ form_widget(form) }}
+        <div class="form-inline">        
+        {{ form_widget(form, {'attr': {'class': 'mr-3'}}) }}
         {# {{form_row(form)}} #}
-           <button class="btn-success border rounded">{{ button_label|default('Filtrer') }}</button>
+           <button class="btn btn-success mr-3">{{ button_label|default('Filtrer') }}</button>
+        </div>
         {{ form_end(form) }}
-    </div> 
