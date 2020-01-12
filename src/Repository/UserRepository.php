@@ -59,4 +59,14 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findUserByZipCode($zipCode){
+        return $this->createQueryBuilder('u')
+            ->join('u.address', 'a')        
+            ->where('a.zip_code LIKE :zip_code')
+            ->setParameter('zip_code', $zipCode)
+            ->andWhere('u.role = 2')
+            ->getQuery()
+            ->getResult();
+    }
 }

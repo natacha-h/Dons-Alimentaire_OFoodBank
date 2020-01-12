@@ -32,10 +32,11 @@ class DonationController extends AbstractController
             $donationRepository->findByStatusQuery(),
             $request->query->getInt('page', 1),
             10
-        );       
+        );
         $expiryDateArray = [];
         foreach($donations as $donation){
             $currentExpiry = false;
+
             foreach($donation->getProducts() as $product){
                 $expiryDate = $product->getExpiryDate();
         
@@ -92,8 +93,7 @@ class DonationController extends AbstractController
     public function select(Donation $donation, StatusRepository $statusRepository, EntityManagerInterface $em, \Swift_Mailer $mailer)
     {
         //on vérifie le status actuel du don
-        $currentStatus = $donation->getStatus()->getName();
-        
+        $currentStatus = $donation->getStatus()->getName();        
         // si le don est déjà réservé
         if ($donation->getStatus()->getReserved() == $currentStatus){
             // on affiche un flashMessage pour informer l'utilisateur
@@ -271,7 +271,6 @@ class DonationController extends AbstractController
         $number = $address->getNumber();
         // On utilise le zipcode pour récupérer les coordonées GPS
         $zipCode = $address->getZipCode();
-        
         // On remplace les espaces du nom de la rue par des + grâce au service
         $street1 = $address->getStreet1();
         $plussedStreet = $addresser->addresser($street1);
@@ -370,13 +369,10 @@ class DonationController extends AbstractController
             $mailer->send($mail);
             }
         }
-
-  
         return $this->json([
             'response' => $response,
             'code' => 1
-            ]);
-        
+            ]);        
     }
 
     /**
@@ -450,24 +446,16 @@ class DonationController extends AbstractController
             //2- on boucle sur la collection pour récupérer le user_role 'ROLE_ASSOC'
         $asso = null;
         foreach ($users as $user){
-            // dump($user->getRole()->getCode());
             //si le role de user est 'ROLE_ASSOC', on le donne en valeur de la variable $asso
             if ('ROLE_ASSOC' == $user->getRole()->getCode()){
                 $asso = $user;
             }
         }
-        // dd($asso);
         // on retire l'id de l'association
         $donation->removeUser($asso);
         // on persist et on flush
         $em->persist($donation);
         $em->flush();
-        // ajout d'un Flash Message
-        // $this->addFlash(
-        //     'success',
-        //     'Vous avez refusé la demande de l\'association'
-        // );
-        // dd($donation->getUsers());
         $response = 'Don refusé';
         return $this->json([
             'response' => $response,
@@ -479,16 +467,9 @@ class DonationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"POST", "GET"})
      */
-    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder)
+    public function new(Request $request, CategoryRepository $cateRepo, EntityManagerInterface $em, StatusRepository $StatusRepo, Rewarder $rewarder, UserRepository $userRepo, \Swift_Mailer $mailer)
     {
         $donation = new Donation();
-        // $product = new Product();
-        // $product->setName('');
-        // $product->setQuantity(1);
-        // $product->setDescription('');
-        // $product->setExpiryDate(new \DateTime());
-        // $product->setCategory($cateRepo->findOneById(64));
-        // $donation->addProduct($product);
         $donation->setCreatedAt(new \Datetime());
         $donation->setUpdatedAt(new \Datetime());
         $form = $this->createForm(DonationType::class, $donation);
@@ -497,15 +478,12 @@ class DonationController extends AbstractController
         $addressFormStreet2 = $request->request->get('street2');
         $addressFormZipCode = $request->request->get('zipCode');
         $addressFormCity = $request->request->get('city');
-        $addressId = $request->request->get('index');
         $form->handleRequest($request);
-        // dump($form->getData());
-        // dump($form->getData()->getProducts());
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             //avant l'enregistrement d'un don je dois recupérer l'objet fichier qui n'est pas une chaine de caractère
             $file = $donation->getPicture();
-            // dd($donation);
             if(!is_null($file)){
                 $extension = $file->guessExtension();
                 
@@ -537,8 +515,6 @@ class DonationController extends AbstractController
             // Je lui fournis un status disponible directement
             $status = $StatusRepo->findOneByName('Dispo');
             $donation->setStatus($status);
-            // // Je persist l'adresse
-            // $em->persist($donation->getAddress());
             
             // si les champs du formulaire sont vides, alors l'utilisateur a gardé l'adresse d'origine (= la sienne)
             if (null == $addressFormNumber && null == $addressFormStreet1 && null == $addressFormStreet2 && null == $addressFormZipCode && null == $addressFormCity) {
@@ -550,12 +526,10 @@ class DonationController extends AbstractController
                 
                 // Je crée un tableau qui va contenir les erreurs vides.
                 $errorList = [];
-
                 // Si le numero est saisi alors je peux le setter
                 if($addressFormNumber){
                     $donationAddress->setNumber($addressFormNumber);
                 }
-
                 // Si l'adresse n'est pas vide je la sette
                 if(trim($addressFormStreet1) != ''){
                     $donationAddress->setStreet1($addressFormStreet1);
@@ -565,12 +539,10 @@ class DonationController extends AbstractController
                     $this->addFlash('warning', 'Veuillez renseigner un nom de rue');
                     $errorList['street'] = 'Veuillez renseigner le nom de la rue';
                 }
-
                 // Si complément est rempli alors je le sette
                 if($addressFormStreet2){
                     $donationAddress->setStreet2($addressFormStreet2);
                 }
-
                 // Si zipCode pas vide alors je sette
                 if(trim($addressFormZipCode) != ''){
                     $donationAddress->setZipCode($addressFormZipCode);
@@ -580,7 +552,6 @@ class DonationController extends AbstractController
                     $this->addFlash('warning', 'Veuillez renseigner un code postal');
                     $errorList['zipCode'] = 'Veuillez renseigner le code postal';
                 }
-
                 // Si city pas vide alors je sette
                 if(trim($addressFormCity) != ''){
                     $donationAddress->setCity($addressFormCity);
@@ -590,7 +561,6 @@ class DonationController extends AbstractController
                     $this->addFlash('warning', 'Veuillez renseigner un nom de ville');
                     $errorList['city'] = 'Veuillez renseigner le nom de la ville';
                 }
-
                 // Si mon tableau d'erreur est vide alors je peux enregistrer en base de données
                 // Le tableau me permet uniquement de vérifier si il y a des erreurs
                 if(count($errorList) == 0){
@@ -605,17 +575,13 @@ class DonationController extends AbstractController
                         'form' => $form->createView()
                     ]); 
                 }
-
-
             }
-            // dd($donation->getAddress());
             // Je persist tous les produits
             foreach($donation->getProducts() as $product){
                 if($product->getExpiryDate() == null){
                     $this->addFlash('danger', 'Veuillez renseigner la date d\'expiration');
                     return $this->redirectToRoute('donation_new');
                 }
-                // dump($product->getName());
                 if($product->getName() == null){
                     $this->addFlash('danger', 'Veuillez renseigner le nom du produit');
                     return $this->redirectToRoute('donation_new');
@@ -628,8 +594,7 @@ class DonationController extends AbstractController
             $donation->addUser($user);
             $currentPoints = $user->getPoints();
             $newPoints = $currentPoints + 5;
-            $user->setPoints($newPoints);
-            
+            $user->setPoints($newPoints);           
             // on utilise rewarder pour metre à jour (si besoin) le reward
             $reward = $rewarder->rewarder($newPoints);
             $user->setReward($reward);
@@ -647,6 +612,42 @@ class DonationController extends AbstractController
             $em->flush();
             // J'ajoute un flashMessage pour indiquer que tout s'est bien passé
             $this->addFlash('success', 'Le don a bien été publié !');
+
+            //envoi d'un e-mail aux associations situées dans le département du nouveau don
+            // 1 / récupérer le code postal du don
+            $department = strval($donation->getAddress()->getZipCode());
+            $splitDepartment = str_split($department, 2);
+            $shortDepartment = $splitDepartment[0] . '%';
+            // 2/ récupérer la collection des associations situées dans le département
+            $associations = $userRepo->findUserByZipCode($shortDepartment);
+            // 3/ envoyer l'e-mail
+            // on boucle sur la collection d'association
+            foreach($associations as $asso) {
+
+                $email = $asso->getEmail(); // Déclaration de l'adresse de destination.
+                        $firstName = $asso->getFirstName();
+                        $lastName = $asso->getLastName();         
+                        $mail = (new \Swift_Message('Un nouveau don a été publié dans votre département'))
+                        ->setFrom('ofoodbank@gmail.com')
+                        ->setTo($email)
+                        ->setBody(
+                                $this->renderView(
+                                    'mailer/mail-new-donation-in-area.html.twig',
+                                    [
+                                        'email' => $email,
+                                        'donationTitle' => $donation->getTitle(),
+                                        'donationId' => $donation->getId(),
+                                        'donationCity' =>$donation->getAddress()->getCity(),
+                                        'donationZipCode'=>$department,
+                                        'firstName' => $firstName,
+                                        'lastName' => $lastName
+                                    ]
+                                ),
+                                'text/html'
+                            );                            
+                    $mailer->send($mail);
+            }
+
             // Je retourne a la liste des tags
             return $this->redirectToRoute('donation_list');
         }
@@ -702,9 +703,7 @@ class DonationController extends AbstractController
         }
         return $this->redirectToRoute('donation_show', [
             'id' => $id
-        ]);
-        
-    }
-    
+        ]);        
+    }  
 }
 
