@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Address;
 use App\Utils\Rewarder;
 use App\Entity\Donation;
+use App\Entity\Category;
+use App\Form\CategoryType;
 use App\Utils\Addresser;
 use App\Form\DonationType;
 use App\Repository\UserRepository;
@@ -25,7 +27,7 @@ class DonationController extends AbstractController
     /**
      * @Route("/", name="list", methods={"GET"})
      */
-    public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request)
+    public function list(DonationRepository $donationRepository, PaginatorInterface $paginator, Request $request, CategoryRepository $categoryRepository)
     {
         $donations = $donationRepository->findDonationWithProducts();
         $donationsList = $paginator->paginate(
@@ -51,16 +53,47 @@ class DonationController extends AbstractController
             }
             $expiryDateArray[$donation->getId()] = $currentExpiry;
         }
-        return $this->render('donation/list.html.twig', [
-            'donations' => $donationsList,
-            'expiryDateArray' => $expiryDateArray
+        // on veut afficher un formulaire de tri par catégorie
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category, [
+            'method' => 'GET',
         ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // 1.récupérer la catégorie sélectionnée
+            $category = $form->getData();
+            $categoryName = $category->getName();
+            // récupérer en BD la catégorie concernée
+            $category = $categoryRepository->findByName($categoryName);
+            // récupérer l'id de la catégorie
+            $catId = $category[0]->getId();
+            // 2. ne récupérer que les dons correspondant à cette catégorie et ajouter la pagination
+            $filteredDonation = $paginator->paginate(
+                $donationRepository->findFilteredDonationWithProducts($catId),
+                $request->query->getInt('page', 1),
+                10
+            );
+            // 3. renvoyer la vue adéquate
+            return $this->render('donation/filtered-list.html.twig', [
+                'id' => $catId,
+                'category' => $categoryName,
+                'donations' => $filteredDonation,
+                'expiryDateArray' => $expiryDateArray,
+                'form'=>$form->createView(),
+            ]);
+        }
+            return $this->render('donation/list.html.twig', [
+                'donations' => $donationsList,
+                'expiryDateArray' => $expiryDateArray,
+                'form'=>$form->createView(),
+            ]);
+        
     }
 
     /**
      * @Route("/{id}", name="show", requirements={"id"="\d+"})
      */
-    public function show(/*Donation $donation*/ $id, DonationRepository $donationRepository)
+    public function show($id, DonationRepository $donationRepository)
     {
         // on récupère le don
         $donation = $donationRepository->findDonationWithAllDetails($id);

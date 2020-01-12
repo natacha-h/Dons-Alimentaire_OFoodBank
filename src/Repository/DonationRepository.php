@@ -61,6 +61,33 @@ class DonationRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * renvoit la liste de don trié sur une catégorie
+     * @return Donation[] Returns an array of Donation objects
+     */
+    
+    public function findFilteredDonationWithProducts($category)
+    {
+        $query = $this->createQueryBuilder('d')
+            ->join('d.status', 's')
+            ->addSelect('s')
+            ->where('s.name = :status')
+            ->orWhere('s.name = :status2')
+            ->setParameters([
+                'status' => 'Dispo',
+                'status2' => 'Réservé'
+            ])
+            ->join('d.products', 'p')
+            ->addSelect('p')
+            ->join('p.category', 'c')
+            ->addSelect('c')
+            ->andwhere('c.id = :category')
+            ->setParameter('category', $category)
+            ->orderBy('d.created_at', 'DESC');
+
+        return $query->getQuery()->getResult();
+    }
+
         /**
      * @return Donation[] Returns an array of Donation objects
      */

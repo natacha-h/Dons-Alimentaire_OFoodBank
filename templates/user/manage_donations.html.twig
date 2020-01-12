@@ -10,20 +10,14 @@
             <tbody>
                 {% for donation in reserved %}
                 <tr data-id="{{donation.id}}">
-                    {# <pre>
-                        {{ dump(donation) }}
-                    </pre> #}
                     <td><a href="{{path('donation_show', {'id': donation.id })}}" >{{donation.title}}</a></td>
                     <td> 
                         {% for user in donation.users %}
-                        {# <pre>
-                            {{ dump(user.role) }}
-                        </pre> #}
+
                             {% if 'ROLE_ASSOC' == user.role.code %}
                                 {{user.company}}
                             {% endif %}                    
-                        {% endfor %}
-                    
+                        {% endfor %}                
                     </td>
                     <td> 
                         <form action="{{path('donation_accept', {'id': donation.id}, {'method' : 'POST'})}} " method="POST" data-id="{{donation.id}}">
